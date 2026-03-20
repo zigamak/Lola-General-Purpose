@@ -7044,3 +7044,28 @@ NameError: name 'datetime' is not defined. Did you forget to import 'datetime'
  * Running on http://127.0.0.1:8000
 2026-03-20 14:49:29,034 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
 2026-03-20 14:50:34,308 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:50:34] "POST /webhook HTTP/1.1" 200 -
+2026-03-20 15:01:33,511 - __main__ - INFO - Starting Wallpaper.ng AI Assistant server...
+2026-03-20 15:01:41,980 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 15:01:41,985 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 15:01:41,985 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 15:01:41,986 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 15:01:41,988 - app - INFO - Core services initialized for AfyaBot (Gynecology Medical AI)
+2026-03-20 15:01:41,995 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 15:01:42,105 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 15:01:42,105 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 15:01:42,111 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 15:01:42,127 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 15:01:42,128 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 15:01:42,129 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-03-20 15:01:42,130 - app - INFO - AfyaBot handlers and message processor initialized.
+2026-03-20 15:01:42,131 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 15:01:42,135 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 15:01:42,135 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 15:01:42,135 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 15:01:42,136 - services.payment_service - INFO - PaymentService initialized
+2026-03-20 15:01:42,136 - app - INFO - WebhookHandler initialized with message processor.
+2026-03-20 15:01:42,173 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-03-20 15:01:42,175 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 15:02:12,684 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 15:02:12] "POST /webhook HTTP/1.1" 200 -
+2026-03-20 15:07:46,105 - __main__ - ERROR - Environment check failed. Please fix the issues above.

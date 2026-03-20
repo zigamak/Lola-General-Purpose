@@ -36,11 +36,20 @@ MENU_TEXT = """Our *Signature Loaded Fries* menu:
 7. *Chilli Pepper Prawn Loaded Fries* — ₦10,000
    Slow-cooked prawns in chilli pepper sauce, slaw & crispy shallots"""
 
+# Fallback chain — tries each model in order until one works.
+# Free-tier Gemini API supports all of these.
+GEMINI_MODELS = [
+    "gemini-2.0-flash",           # Latest flash — fastest, free tier
+    "gemini-2.0-flash-lite",      # Lighter version of 2.0 flash
+    "gemini-1.5-flash-latest",    # 1.5 flash via latest alias
+    "gemini-1.5-flash-002",       # Pinned stable 1.5 flash version
+]
+
 
 class AIService:
     """
     Handles conversational AI ordering for Chowder.ng WhatsApp bot.
-    Uses Google Gemini (via langchain-google-genai) as the LLM backend.
+    Uses Google Gemini (via langchain-google-genai) with model fallback support.
     """
 
     def __init__(self, config, data_manager):
@@ -49,6 +58,7 @@ class AIService:
         self.menu_image_url = MENU_IMAGE_URL
         self.agent_executor = None
         self.llm = None
+        self.active_model = None
 
         try:
             if isinstance(config, dict):
@@ -63,37 +73,61 @@ class AIService:
             logger.info(f"Chowder.ng AIService - Gemini Key: {'set' if self.gemini_api_key else 'missing'}")
 
             if self.ai_enabled:
-                self.llm = ChatGoogleGenerativeAI(
-                    model="gemini-1.5-flash",
+                self._init_agent_with_fallback()
+            else:
+                logger.warning("AI disabled — missing GEMINI_API_KEY.")
+
+        except Exception as e:
+            logger.error(f"AIService init error: {e}", exc_info=True)
+            self.ai_enabled = False
+
+    def _init_agent_with_fallback(self):
+        """Try each model in GEMINI_MODELS until one initialises successfully."""
+        tools = [self._create_menu_tool()]
+
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self._get_system_prompt()),
+            MessagesPlaceholder(variable_name="chat_history", optional=True),
+            ("human", "{input}"),
+            MessagesPlaceholder(variable_name="agent_scratchpad"),
+        ])
+
+        for model_name in GEMINI_MODELS:
+            try:
+                logger.info(f"Trying Gemini model: {model_name}")
+                llm = ChatGoogleGenerativeAI(
+                    model=model_name,
                     temperature=0.7,
                     google_api_key=self.gemini_api_key,
                     convert_system_message_to_human=False,
                 )
 
-                tools = [self._create_menu_tool()]
-
-                prompt = ChatPromptTemplate.from_messages([
-                    ("system", self._get_system_prompt()),
-                    MessagesPlaceholder(variable_name="chat_history", optional=True),
-                    ("human", "{input}"),
-                    MessagesPlaceholder(variable_name="agent_scratchpad"),
-                ])
-
-                agent = create_tool_calling_agent(self.llm, tools, prompt)
-                self.agent_executor = AgentExecutor(
+                agent = create_tool_calling_agent(llm, tools, prompt)
+                executor = AgentExecutor(
                     agent=agent,
                     tools=tools,
                     verbose=True,
                     handle_parsing_errors=True,
                     max_iterations=3
                 )
-                logger.info("Chowder.ng Gemini order agent initialized successfully.")
-            else:
-                logger.warning("AI disabled — missing GEMINI_API_KEY / GOOGLE_API_KEY.")
 
-        except Exception as e:
-            logger.error(f"AIService init error: {e}", exc_info=True)
-            self.ai_enabled = False
+                # Quick smoke-test — invoke with a minimal message
+                executor.invoke({"input": "ping", "chat_history": []})
+
+                # If we get here, it worked
+                self.llm = llm
+                self.agent_executor = executor
+                self.active_model = model_name
+                logger.info(f"Chowder.ng order agent ready using model: {model_name}")
+                return
+
+            except Exception as e:
+                logger.warning(f"Model '{model_name}' failed: {e}. Trying next fallback...")
+                continue
+
+        # All models failed
+        logger.error("All Gemini model fallbacks exhausted. AI disabled.")
+        self.ai_enabled = False
 
     def _create_menu_tool(self):
         @tool
@@ -105,7 +139,7 @@ class AIService:
     def _get_system_prompt(self) -> str:
         return f"""You are the friendly WhatsApp order-taking assistant for *Chowder.ng* — a Nigerian food brand serving Signature Loaded Fries.
 
-Your job is to take food orders conversationally over WhatsApp. Be warm, casual, and fun.
+Your job is to take food orders conversationally over WhatsApp. Be warm, casual, and fun — like a great waiter who genuinely loves the food.
 
 The menu:
 {MENU_TEXT}
@@ -164,11 +198,11 @@ Important rules:
             if not ai_response:
                 raise ValueError("Empty response from Gemini agent")
 
-            logger.info(f"Chowder.ng response [{session_id}]: {ai_response[:120]}")
+            logger.info(f"[{self.active_model}] Response [{session_id}]: {ai_response[:120]}")
             return ai_response, False, None, None
 
         except Exception as e:
-            logger.error(f"Error generating order response for session {session_id}: {e}", exc_info=True)
+            logger.error(f"Error generating response [{session_id}] via {self.active_model}: {e}", exc_info=True)
             return (
                 "Ah, something went wrong on our end 😅 Try again or send *menu* to see what we've got!",
                 False, None, None
