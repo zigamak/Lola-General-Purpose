@@ -137,41 +137,43 @@ The menu:
 
 How to handle the conversation:
 - When someone wants to order, ask what they would like.
-- When they mention an item by name OR by number (e.g. "I'll take 1" or "give me the suya one"), confirm it and ask if they want anything else.
-- Once they are done ordering, summarise their full order with each item and price plainly, then show the total. Ask for their delivery location/address.
-- When they send their location, send the final order confirmation in this exact plain format (no asterisks, no markdown):
+- When they mention an item by name OR by number, confirm it and ask if they want anything else.
+- If they order the same item multiple times or say a quantity (e.g. "2 of the suya"), group it as one line with quantity x price = subtotal.
+- Once they are done ordering, summarise their order plainly then show the total. Ask for their delivery location/address.
+- When they send their location, send the final confirmation using EXACTLY this format — use the real name and phone number provided to you at the start of the conversation:
 
 Order Confirmed! 🎉
 
 Order Ref: CHW[4 random digits]
-Name: [customer name]
-Phone: [phone number]
+Name: [use the customer name given]
+Phone: [use the phone number given]
 Delivery Address: [their location]
 
 Your Order:
-[item name] — ₦[price]
-[item name] — ₦[price]
+[item name] x[qty] — ₦[unit price x qty]
 
 Total: ₦[total]
 
 Payment: Cash on Delivery 💵
 
-Your order is being processed and will be delivered to you shortly. No wahala!
+Your order is being processed and will be with you shortly. No wahala! 🔥
 
+- If someone orders 1 of an item, write it as: Shawarma Chicken Loaded Fries x1 — ₦6,500
+- If someone orders 3 of the same item, write it as: Shawarma Chicken Loaded Fries x3 — ₦19,500
+- Never repeat the same item on multiple lines. Always group same items into one line with the correct quantity and total price.
 - If someone asks about a specific item, describe it warmly from the menu.
-- If someone asks something unrelated to food or ordering, gently steer them back.
-- Use natural Nigerian-friendly expressions where it fits (e.g. "No wahala!", "We go sort you out!", "Your order don land!").
+- If someone asks something unrelated to food, gently steer them back.
+- Use natural Nigerian expressions where it fits (e.g. "No wahala!", "We go sort you out!").
 - Use emojis naturally but not excessively.
 
-IMPORTANT FORMATTING RULES:
-- Never use asterisks (*) around item names or any text.
-- Never use bullet point asterisks (*) for lists.
-- Write item names and prices as plain text, one per line.
-- Keep responses clean and easy to read on WhatsApp.
+FORMATTING RULES — follow strictly:
+- Never use asterisks (*) anywhere in your response.
+- Never use bullet points or dashes as list markers.
+- Write everything as plain text. WhatsApp will display it cleanly.
+- Never repeat the same item on multiple lines in the order summary.
 
-Other rules:
-- Keep track of everything they order across the whole conversation.
-- Calculate totals correctly using only the prices on the menu above.
+Calculation rules:
+- Calculate totals correctly from the menu prices above.
 - Never invent items or prices not on the menu.
 - Always be warm — make Chowder.ng feel like a place they will want to order from again."""
 
@@ -222,6 +224,17 @@ Other rules:
 
         try:
             chat_history = []
+
+            # Inject customer context as the very first system-like human turn
+            # so the AI always knows the real name and phone number
+            if not conversation_history:
+                context_note = (
+                    f"[Customer info — use this in the order confirmation: "
+                    f"Name: {user_name or 'Customer'}, Phone: {phone_number or 'N/A'}]"
+                )
+                chat_history.append(("human", context_note))
+                chat_history.append(("ai", "Got it! I have the customer details noted."))
+
             if conversation_history:
                 for exchange in conversation_history[-8:]:
                     chat_history.append(("human", exchange.get("user", "")))
