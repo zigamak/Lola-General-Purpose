@@ -1,7 +1,6 @@
 import logging
-import os
 import re
-from typing import Dict, List, Any
+from typing import Dict, List
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -35,11 +34,12 @@ MENU_TEXT = """Our *Signature Loaded Fries* menu:
 7. *Chilli Pepper Prawn Loaded Fries* — ₦10,000
    Slow-cooked prawns in chilli pepper sauce, slaw & crispy shallots"""
 
+# Confirmed working models on this API key (tested 2026-03-20)
 GEMINI_MODELS = [
-    "gemini-2.0-flash",
-    "gemini-2.0-flash-lite",
-    "gemini-1.5-flash-latest",
-    "gemini-1.5-flash-002",
+    "gemini-2.5-flash",       # ✅ primary — best quality
+    "gemini-flash-latest",    # ✅ fallback 1 — alias to current stable flash
+    "gemini-flash-lite-latest", # ✅ fallback 2 — lighter/faster
+    "gemini-2.5-flash-lite",  # ✅ fallback 3 — pinned lite version
 ]
 
 
@@ -66,14 +66,13 @@ class AIService:
                     getattr(config, 'GOOGLE_API_KEY', None)
                 )
 
-            # Log exactly what we got so we can see in Render logs
             if self.gemini_api_key:
-                masked = self.gemini_api_key[:6] + "..." + self.gemini_api_key[-4:]
-                logger.info(f"Chowder.ng AIService - Gemini key found: {masked}")
+                masked = self.gemini_api_key[:8] + "..." + self.gemini_api_key[-4:]
+                logger.info(f"Chowder.ng AIService — Gemini key found: {masked}")
             else:
                 logger.error(
-                    "Chowder.ng AIService - GEMINI_API_KEY is missing or None. "
-                    "Check your environment variables on Render."
+                    "GEMINI_API_KEY is missing. "
+                    "Get a free key at https://aistudio.google.com/app/apikey"
                 )
                 return
 
@@ -81,17 +80,17 @@ class AIService:
 
             if self._executors:
                 self.ai_enabled = True
-                logger.info(f"AIService ready. Agents built for: {list(self._executors.keys())}")
+                logger.info(f"AIService ready. Models: {list(self._executors.keys())}")
             else:
-                logger.error("AIService: No agents could be built — check logs above for errors.")
+                logger.error("AIService: No agents could be built.")
 
         except Exception as e:
             logger.error(f"AIService init error: {e}", exc_info=True)
 
     def _build_agents(self):
         """
-        Build AgentExecutor objects for each model — pure object construction,
-        no API calls made here. Gemini is only contacted on first invoke().
+        Build one AgentExecutor per model — pure object construction, zero API calls.
+        Gemini is only contacted when a real message is processed.
         """
         tools = [self._create_menu_tool()]
         prompt = ChatPromptTemplate.from_messages([
@@ -117,7 +116,7 @@ class AIService:
                     handle_parsing_errors=True,
                     max_iterations=3
                 )
-                logger.info(f"Agent object built for model: {model_name}")
+                logger.info(f"Agent built for: {model_name}")
             except Exception as e:
                 logger.warning(f"Could not build agent for '{model_name}': {e}")
 
@@ -153,9 +152,7 @@ Important rules:
 - Always be warm — make Chowder.ng feel like a place they will want to order from again."""
 
     def _invoke_with_fallback(self, input_data: dict) -> str:
-        """
-        Try each model in order at runtime. Remembers the last working model.
-        """
+        """Try each model in order. Remember the last working one to skip retrying failed ones."""
         model_order = GEMINI_MODELS[:]
         if self.active_model and self.active_model in model_order:
             model_order.remove(self.active_model)
@@ -171,11 +168,11 @@ Important rules:
                 if not ai_response:
                     raise ValueError("Empty response")
                 if self.active_model != model_name:
-                    logger.info(f"Active model set to: {model_name}")
+                    logger.info(f"Active model: {model_name}")
                     self.active_model = model_name
                 return ai_response
             except Exception as e:
-                logger.warning(f"Model '{model_name}' invoke failed: {e}. Trying next...")
+                logger.warning(f"'{model_name}' failed: {str(e)[:80]}. Trying next...")
                 continue
 
         raise RuntimeError("All Gemini model fallbacks exhausted.")
@@ -193,10 +190,7 @@ Important rules:
             return "Hey! What would you like to order today? 😊", False, None, None
 
         if not self.ai_enabled or not self._executors:
-            logger.error(
-                f"generate_order_response called but ai_enabled={self.ai_enabled}, "
-                f"executors={list(self._executors.keys())}"
-            )
+            logger.error(f"AI unavailable — ai_enabled={self.ai_enabled}, executors={list(self._executors.keys())}")
             return (
                 "Sorry, our ordering system is having a moment 😅 Please try again shortly!",
                 False, None, None
@@ -218,7 +212,7 @@ Important rules:
             return ai_response, False, None, None
 
         except Exception as e:
-            logger.error(f"All models failed for session {session_id}: {e}", exc_info=True)
+            logger.error(f"All models failed [{session_id}]: {e}", exc_info=True)
             return (
                 "Ah, something went wrong on our end 😅 "
                 "Try again or send *menu* to see what we've got!",
