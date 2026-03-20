@@ -6960,3 +6960,87 @@ NameError: name 'datetime' is not defined. Did you forget to import 'datetime'
  * Running on http://127.0.0.1:8000
 2026-01-17 13:56:21,036 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
 >>>>>>> ce5cffb (Chowder.ng)
+2026-03-20 14:40:32,924 - __main__ - INFO - Starting Wallpaper.ng AI Assistant server...
+2026-03-20 14:40:34,161 - __main__ - ERROR - Import error: No module named 'langchain_google_genai'
+2026-03-20 14:41:55,594 - __main__ - INFO - Starting Wallpaper.ng AI Assistant server...
+2026-03-20 14:42:14,918 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 14:42:14,920 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 14:42:14,922 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 14:42:14,924 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 14:42:14,924 - app - INFO - Core services initialized for AfyaBot (Gynecology Medical AI)
+2026-03-20 14:42:14,929 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 14:42:15,013 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 14:42:15,013 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 14:42:15,021 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 14:42:15,031 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 14:42:15,031 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 14:42:15,031 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-03-20 14:42:15,031 - app - INFO - AfyaBot handlers and message processor initialized.
+2026-03-20 14:42:15,033 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 14:42:15,033 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 14:42:15,033 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 14:42:15,033 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 14:42:15,033 - services.payment_service - INFO - PaymentService initialized
+2026-03-20 14:42:15,033 - app - INFO - WebhookHandler initialized with message processor.
+2026-03-20 14:42:15,095 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-03-20 14:42:15,096 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 14:42:18,725 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:42:18] "[33mGET / HTTP/1.1[0m" 404 -
+2026-03-20 14:42:19,473 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:42:19] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-20 14:42:29,501 - handlers.webhook_handler - ERROR - WhatsApp webhook verification failed. Mismatched tokens or mode.
+2026-03-20 14:42:29,501 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:42:29] "[31m[1mGET /webhook HTTP/1.1[0m" 403 -
+2026-03-20 14:43:40,411 - __main__ - INFO - Starting Wallpaper.ng AI Assistant server...
+2026-03-20 14:43:47,877 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 14:43:47,881 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 14:43:47,881 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 14:43:47,882 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 14:43:47,883 - app - INFO - Core services initialized for AfyaBot (Gynecology Medical AI)
+2026-03-20 14:43:47,896 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 14:43:47,975 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 14:43:47,976 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 14:43:47,987 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 14:43:48,005 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 14:43:48,005 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 14:43:48,005 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-03-20 14:43:48,006 - app - INFO - AfyaBot handlers and message processor initialized.
+2026-03-20 14:43:48,007 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 14:43:48,012 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 14:43:48,013 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 14:43:48,013 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 14:43:48,014 - services.payment_service - INFO - PaymentService initialized
+2026-03-20 14:43:48,014 - app - INFO - WebhookHandler initialized with message processor.
+2026-03-20 14:43:48,046 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-03-20 14:43:48,046 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 14:43:57,462 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:43:57] "[33mGET / HTTP/1.1[0m" 404 -
+2026-03-20 14:43:57,507 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:43:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-20 14:44:02,359 - handlers.webhook_handler - ERROR - WhatsApp webhook verification failed. Mismatched tokens or mode.
+2026-03-20 14:44:02,359 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:44:02] "[31m[1mGET /webhook HTTP/1.1[0m" 403 -
+2026-03-20 14:45:11,217 - handlers.webhook_handler - INFO - WhatsApp webhook verified successfully!
+2026-03-20 14:45:11,217 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:45:11] "GET /webhook?hub.mode=subscribe&hub.challenge=1620675385&hub.verify_token=123456&hub_mode=subscribe&hub_challenge=1620675385&hub_verify_token=123456 HTTP/1.1" 200 -
+2026-03-20 14:47:12,393 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:47:12] "POST /webhook HTTP/1.1" 200 -
+2026-03-20 14:47:34,999 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:47:34] "POST /webhook HTTP/1.1" 200 -
+2026-03-20 14:49:24,303 - __main__ - INFO - Starting Wallpaper.ng AI Assistant server...
+2026-03-20 14:49:28,961 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 14:49:28,961 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 14:49:28,961 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 14:49:28,961 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 14:49:28,961 - app - INFO - Core services initialized for AfyaBot (Gynecology Medical AI)
+2026-03-20 14:49:28,961 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 14:49:28,993 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 14:49:28,993 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 14:49:29,002 - services.ai_service - INFO - Chowder.ng AIService - Gemini Key: set
+2026-03-20 14:49:29,009 - services.ai_service - INFO - Chowder.ng Gemini order agent initialized successfully.
+2026-03-20 14:49:29,009 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 14:49:29,009 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-03-20 14:49:29,009 - app - INFO - AfyaBot handlers and message processor initialized.
+2026-03-20 14:49:29,009 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 14:49:29,012 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 14:49:29,012 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 14:49:29,012 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 838417836017240
+2026-03-20 14:49:29,012 - services.payment_service - INFO - PaymentService initialized
+2026-03-20 14:49:29,012 - app - INFO - WebhookHandler initialized with message processor.
+2026-03-20 14:49:29,034 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-03-20 14:49:29,034 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 14:50:34,308 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 14:50:34] "POST /webhook HTTP/1.1" 200 -

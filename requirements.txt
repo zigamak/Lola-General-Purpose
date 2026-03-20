@@ -6,14 +6,14 @@ gunicorn==21.2.0
 langchain==0.3.19
 langchain-community==0.3.18
 langchain-core==0.3.40
-langchain-openai==0.3.7
+langchain-google-genai>=2.0.0
+google-generativeai>=0.8.0
 langchain-text-splitters==0.3.6
 langsmith==0.3.11
-openai==1.64.0  # Updated from 1.30.1
 tiktoken==0.9.0
 
 # --- Environment and Config ---
-python-dotenv==1.0.1  # Using 1.0.1 (from first list)
+python-dotenv==1.0.1
 pydantic==2.10.6
 pydantic-settings==2.8.1
 pydantic_core==2.27.2
@@ -24,9 +24,10 @@ typing_extensions==4.12.2
 pandas==2.2.3
 numpy==1.26.4
 SQLAlchemy==2.0.38
+
 # --- Database ---
 psycopg2-binary
-pyarrow==19.0.1 
+pyarrow==19.0.1
 
 # --- Supabase/Storage ---
 postgrest==0.19.3
@@ -36,12 +37,12 @@ supabase==2.13.0
 supafunc==0.9.3
 
 # --- HTTP/Networking ---
-requests==2.32.3  # Using 2.32.3 (from first list)
+requests==2.32.3
 requests-toolbelt==1.0.0
 urllib3==2.3.0
 multidict==6.1.0
 yarl==1.18.3
-httpx==0.27.0  # Added as a common dependency for 'openai' package
+httpx==0.27.0
 
 # --- Utility/Other ---
 markdown-it-py==3.0.0
