@@ -33,3 +33,34 @@
 2026-03-20 15:23:10,923 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 15:23:10] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
 2026-03-20 15:23:16,580 - handlers.webhook_handler - ERROR - WhatsApp webhook verification failed. Mismatched tokens or mode.
 2026-03-20 15:23:16,581 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 15:23:16] "[31m[1mGET /webhook HTTP/1.1[0m" 403 -
+2026-03-20 15:47:32,765 - __main__ - INFO - Starting Chowder.ng order bot...
+2026-03-20 15:47:37,636 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 15:47:37,636 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 15:47:37,636 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 15:47:37,636 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 863932753459638
+2026-03-20 15:47:37,642 - app - INFO - Core services initialized for AfyaBot (Gynecology Medical AI)
+2026-03-20 15:47:37,646 - services.ai_service - INFO - Chowder.ng AIService — Gemini key found: AIzaSyD1...38Lk
+2026-03-20 15:47:37,695 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-03-20 15:47:37,709 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-03-20 15:47:37,717 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-03-20 15:47:37,722 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-03-20 15:47:37,722 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-03-20 15:47:37,722 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 15:47:37,733 - services.ai_service - INFO - Chowder.ng AIService — Gemini key found: AIzaSyD1...38Lk
+2026-03-20 15:47:37,740 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-03-20 15:47:37,746 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-03-20 15:47:37,749 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-03-20 15:47:37,754 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-03-20 15:47:37,754 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-03-20 15:47:37,754 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 15:47:37,754 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-03-20 15:47:37,757 - app - INFO - AfyaBot handlers and message processor initialized.
+2026-03-20 15:47:37,757 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 15:47:37,759 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 15:47:37,759 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 15:47:37,759 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 863932753459638
+2026-03-20 15:47:37,760 - services.payment_service - INFO - PaymentService initialized
+2026-03-20 15:47:37,760 - app - INFO - WebhookHandler initialized with message processor.
+2026-03-20 15:47:37,778 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-03-20 15:47:37,778 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

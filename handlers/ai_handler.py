@@ -6,12 +6,19 @@ from services.ai_service import AIService
 
 logger = logging.getLogger(__name__)
 
+MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
+
+WELCOME_TEXT = (
+    "👋 Welcome to *Chowder.ng!* 🍟\n\n"
+    "Here's our menu — what would you like to order?"
+)
+
 
 class AIHandler(BaseHandler):
     """
     Conversational order handler for Chowder.ng.
-    Every message goes straight to the AI agent — no rigid state machine.
-    The AI handles the full flow: menu → order → total → location → confirmation.
+    Entry: short welcome text + menu image.
+    After that: every message goes to the AI agent.
     """
 
     def __init__(self, config, session_manager, data_manager, whatsapp_service):
@@ -31,7 +38,7 @@ class AIHandler(BaseHandler):
         return self._process_message(state, session_id, original_message)
 
     def handle_ai_menu_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict:
-        """Treat menu state the same as chat — let AI handle it."""
+        """Treat menu state the same as chat."""
         if message in ("ai_chat", "start_ai_chat", "initial_greeting"):
             return self._handle_start(state, session_id, original_message)
         if message in ("back_to_main", "menu"):
@@ -39,13 +46,34 @@ class AIHandler(BaseHandler):
         return self._handle_start(state, session_id, original_message)
 
     def _handle_start(self, state: Dict, session_id: str, user_message: str = None) -> Dict:
-        """Entry point — set up state then pass to the AI."""
+        """
+        Entry point for new sessions / trigger words.
+        Send short welcome text + menu image — no AI call needed here.
+        The AI only kicks in from the next message onwards.
+        """
         state["current_state"] = "ai_chat"
         state["current_handler"] = "ai_handler"
-        if "conversation_history" not in state:
-            state["conversation_history"] = []
+        state["conversation_history"] = []
+        state["welcome_sent"] = True
         self.session_manager.update_session_state(session_id, state)
-        return self._process_message(state, session_id, user_message or "hi")
+
+        # 1. Send short welcome text
+        self.whatsapp_service.send_message(
+            self.whatsapp_service.create_text_message(session_id, WELCOME_TEXT)
+        )
+
+        # 2. Send menu image
+        try:
+            self.whatsapp_service.send_image_message(
+                session_id,
+                MENU_IMAGE_URL,
+                caption=""
+            )
+        except Exception as e:
+            logger.warning(f"Could not send menu image for {session_id}: {e}")
+
+        # Return empty — both messages already sent above
+        return {"status": "welcome_sent"}
 
     def _process_message(self, state: Dict, session_id: str, user_message: str) -> Dict:
         """Send the message to the AI agent and return its response."""
@@ -68,14 +96,12 @@ class AIHandler(BaseHandler):
                 session_id
             )
 
-            # Save exchange to conversation history
             conversation_history.append({
                 "user": user_message,
                 "assistant": ai_response,
                 "timestamp": datetime.now().isoformat()
             })
 
-            # Keep last 10 exchanges to manage context size
             if len(conversation_history) > 10:
                 conversation_history = conversation_history[-10:]
 
