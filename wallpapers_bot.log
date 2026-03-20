@@ -7069,3 +7069,37 @@ NameError: name 'datetime' is not defined. Did you forget to import 'datetime'
 2026-03-20 15:01:42,175 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
 2026-03-20 15:02:12,684 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 15:02:12] "POST /webhook HTTP/1.1" 200 -
 2026-03-20 15:07:46,105 - __main__ - ERROR - Environment check failed. Please fix the issues above.
+2026-03-20 15:17:59,875 - __main__ - INFO - Starting Wallpaper.ng AI Assistant server...
+2026-03-20 15:18:06,690 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 15:18:06,694 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 15:18:06,694 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 15:18:06,694 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 863932753459638
+2026-03-20 15:18:06,694 - app - INFO - Core services initialized for AfyaBot (Gynecology Medical AI)
+2026-03-20 15:18:06,699 - services.ai_service - INFO - Chowder.ng AIService - Gemini key found: AIzaSy...crPs
+2026-03-20 15:18:06,738 - services.ai_service - INFO - Agent object built for model: gemini-2.0-flash
+2026-03-20 15:18:06,746 - services.ai_service - INFO - Agent object built for model: gemini-2.0-flash-lite
+2026-03-20 15:18:06,752 - services.ai_service - INFO - Agent object built for model: gemini-1.5-flash-latest
+2026-03-20 15:18:06,754 - services.ai_service - INFO - Agent object built for model: gemini-1.5-flash-002
+2026-03-20 15:18:06,754 - services.ai_service - INFO - AIService ready. Agents built for: ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-1.5-flash-latest', 'gemini-1.5-flash-002']
+2026-03-20 15:18:06,754 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 15:18:06,763 - services.ai_service - INFO - Chowder.ng AIService - Gemini key found: AIzaSy...crPs
+2026-03-20 15:18:06,772 - services.ai_service - INFO - Agent object built for model: gemini-2.0-flash
+2026-03-20 15:18:06,778 - services.ai_service - INFO - Agent object built for model: gemini-2.0-flash-lite
+2026-03-20 15:18:06,782 - services.ai_service - INFO - Agent object built for model: gemini-1.5-flash-latest
+2026-03-20 15:18:06,790 - services.ai_service - INFO - Agent object built for model: gemini-1.5-flash-002
+2026-03-20 15:18:06,790 - services.ai_service - INFO - AIService ready. Agents built for: ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-1.5-flash-latest', 'gemini-1.5-flash-002']
+2026-03-20 15:18:06,790 - handlers.ai_handler - INFO - AIHandler: Chowder.ng conversational order bot ready.
+2026-03-20 15:18:06,790 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-03-20 15:18:06,791 - app - INFO - AfyaBot handlers and message processor initialized.
+2026-03-20 15:18:06,791 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-03-20 15:18:06,794 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-03-20 15:18:06,794 - utils.data_manager - INFO - Loaded 20 customer records
+2026-03-20 15:18:06,794 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 863932753459638
+2026-03-20 15:18:06,795 - services.payment_service - INFO - PaymentService initialized
+2026-03-20 15:18:06,795 - app - INFO - WebhookHandler initialized with message processor.
+2026-03-20 15:18:06,816 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-03-20 15:18:06,816 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 15:19:49,390 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 15:19:49] "[33mGET / HTTP/1.1[0m" 404 -
+2026-03-20 15:19:55,281 - handlers.webhook_handler - ERROR - WhatsApp webhook verification failed. Mismatched tokens or mode.
+2026-03-20 15:19:55,281 - werkzeug - INFO - 127.0.0.1 - - [20/Mar/2026 15:19:55] "[31m[1mGET /webhook HTTP/1.1[0m" 403 -
