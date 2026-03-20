@@ -8,11 +8,6 @@ logger = logging.getLogger(__name__)
 
 MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
 
-WELCOME_TEXT = (
-    "👋 Welcome to *Chowder.ng!* 🍟\n\n"
-    "Here's our menu — what would you like to order?"
-)
-
 
 class AIHandler(BaseHandler):
     """
@@ -47,9 +42,8 @@ class AIHandler(BaseHandler):
 
     def _handle_start(self, state: Dict, session_id: str, user_message: str = None) -> Dict:
         """
-        Entry point for new sessions / trigger words.
-        Send short welcome text + menu image — no AI call needed here.
-        The AI only kicks in from the next message onwards.
+        Entry point — send short welcome text with user's name + menu image.
+        No AI call here. AI only kicks in from next message onwards.
         """
         state["current_state"] = "ai_chat"
         state["current_handler"] = "ai_handler"
@@ -57,9 +51,17 @@ class AIHandler(BaseHandler):
         state["welcome_sent"] = True
         self.session_manager.update_session_state(session_id, state)
 
+        user_name = state.get("user_name", "")
+        greeting_name = f", {user_name}" if user_name and user_name != "Guest" else ""
+
+        welcome_text = (
+            f"👋 Welcome to Chowder.ng{greeting_name}! 🍟\n\n"
+            "Here's our menu — what would you like to order?"
+        )
+
         # 1. Send short welcome text
         self.whatsapp_service.send_message(
-            self.whatsapp_service.create_text_message(session_id, WELCOME_TEXT)
+            self.whatsapp_service.create_text_message(session_id, welcome_text)
         )
 
         # 2. Send menu image
@@ -72,7 +74,6 @@ class AIHandler(BaseHandler):
         except Exception as e:
             logger.warning(f"Could not send menu image for {session_id}: {e}")
 
-        # Return empty — both messages already sent above
         return {"status": "welcome_sent"}
 
     def _process_message(self, state: Dict, session_id: str, user_message: str) -> Dict:
