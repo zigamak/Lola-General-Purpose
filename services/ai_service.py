@@ -1,5 +1,6 @@
 import logging
 import re
+from datetime import datetime
 from typing import Dict, List
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -140,13 +141,13 @@ How to handle the conversation:
 - When they mention an item by name OR by number, confirm it and ask if they want anything else.
 - If they order the same item multiple times or say a quantity (e.g. "2 of the suya"), group it as one line with quantity x price = subtotal.
 - Once they are done ordering, summarise their order plainly then show the total. Ask for their delivery location/address.
-- When they send their location, send the final confirmation using EXACTLY this format — use the real name and phone number provided to you at the start of the conversation:
+- When they send their location, send the final confirmation using EXACTLY this format:
 
 Order Confirmed! 🎉
 
-Order Ref: CHW[4 random digits]
-Name: [use the customer name given]
-Phone: [use the phone number given]
+Order Ref: [use the order ref given to you in context, never invent one]
+Name: [use ONLY the exact name from the customer info given — never write "Chowder Customer" or any placeholder]
+Phone: [use ONLY the exact phone from the customer info given — if it says "not provided", leave this line out completely]
 Delivery Address: [their location]
 
 Your Order:
@@ -157,6 +158,8 @@ Total: ₦[total]
 Payment: Cash on Delivery 💵
 
 Your order is being processed and will be with you shortly. No wahala! 🔥
+
+CRITICAL: Never invent, guess or use placeholder values for Name, Phone or Order Ref. Use only what was given to you.
 
 - If someone orders 1 of an item, write it as: Shawarma Chicken Loaded Fries x1 — ₦6,500
 - If someone orders 3 of the same item, write it as: Shawarma Chicken Loaded Fries x3 — ₦19,500
@@ -215,6 +218,10 @@ Calculation rules:
         if not user_message or not isinstance(user_message, str):
             return "Hey! What would you like to order today? 😊", False, None, None
 
+        # Generate order ref in code — never let the AI invent it
+        import random
+        order_ref = f"CHW{random.randint(1000, 9999)}"
+
         if not self.ai_enabled or not self._executors:
             logger.error(f"AI unavailable — ai_enabled={self.ai_enabled}, executors={list(self._executors.keys())}")
             return (
@@ -225,16 +232,24 @@ Calculation rules:
         try:
             chat_history = []
 
-            # Inject customer context as the very first system-like human turn
-            # so the AI always knows the real name and phone number
-            if not conversation_history:
-                context_note = (
-                    f"[Customer info — use this in the order confirmation: "
-                    f"Name: {user_name or 'Customer'}, Phone: {phone_number or 'N/A'}]"
-                )
-                chat_history.append(("human", context_note))
-                chat_history.append(("ai", "Got it! I have the customer details noted."))
+            # Always inject customer context as first turn so the AI has it
+            # regardless of whether this is the first or subsequent message
+            real_phone = phone_number if phone_number and str(phone_number).strip() not in ("", "N/A", "None") else None
+            real_name = user_name if user_name and user_name.strip() not in ("", "Guest", "Customer", "None") else None
 
+            phone_line = f"Phone: {real_phone}" if real_phone else "Phone: [omit this line from confirmation]"
+            name_line = f"Name: {real_name}" if real_name else "Name: [omit this line from confirmation]"
+
+            context_note = (
+                f"[SYSTEM — customer details, copy exactly, never invent:\n"
+                f"Order Ref: {order_ref}\n"
+                f"{name_line}\n"
+                f"{phone_line}]"
+            )
+            chat_history.append(("human", context_note))
+            chat_history.append(("ai", "Noted. I will use only these exact details and omit any line marked [omit]."))
+
+            # Add conversation history after the context
             if conversation_history:
                 for exchange in conversation_history[-8:]:
                     chat_history.append(("human", exchange.get("user", "")))
