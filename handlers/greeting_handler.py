@@ -1,53 +1,17 @@
-from handlers.base_handler import BaseHandler
+from .base_handler import BaseHandler
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, List, Optional
+import sys
 
 logger = logging.getLogger(__name__)
+handler = logging.StreamHandler(stream=sys.stdout)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+handler.stream.reconfigure(encoding='utf-8')
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 
 class GreetingHandler(BaseHandler):
-<<<<<<< HEAD
-    """Greeting handler for BEDC Support Bot - redirects to LLM-powered AI chat."""
-
-    def handle_greeting_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict[str, Any]:
-        """Handle greeting state messages - redirect to AI chat."""
-        logger.info(f"GreetingHandler: Redirecting to AI chat for session {session_id}")
-        return self._redirect_to_ai_chat(state, session_id, original_message)
-
-    def generate_initial_greeting(self, state: Dict, session_id: str, user_name: Optional[str] = None) -> Dict[str, Any]:
-        """Generate initial greeting and redirect to AI chat."""
-        logger.info(f"Session {session_id}: Generating initial greeting for '{user_name}'")
-        return self._redirect_to_ai_chat(state, session_id)
-
-    def handle_back_to_main(self, state: Dict, session_id: str, message: str = "") -> Dict[str, Any]:
-        """Handle back to main navigation - redirect to AI chat."""
-        logger.info(f"Session {session_id}: Returning to main")
-        return self._redirect_to_ai_chat(state, session_id, message)
-
-    def _redirect_to_ai_chat(self, state: Dict, session_id: str, user_message: str = "") -> Dict[str, Any]:
-        """Redirect user to LLM-powered AI chat with proper state management."""
-        
-        # Check if user wants FAQ
-        if user_message and user_message.lower() in ['faq', 'faqs', 'questions', 'help']:
-            state["current_state"] = "faq"
-            state["current_handler"] = "faq_handler"
-            state["conversation_history"] = []
-            
-            self.session_manager.update_session_state(session_id, state)
-            
-            return {
-                "redirect": "faq_handler",
-                "redirect_message": "show_categories",
-                "additional_message": None
-            }
-        
-        # Set up state for AI chat
-        state["current_state"] = "ai_chat"
-        state["current_handler"] = "ai_handler"
-        state["conversation_history"] = []
-        
-        # Preserve user info
-=======
     """
     Greeting handler for Chowder.ng WhatsApp order bot.
     Sends the menu image on first contact, then hands off to the AI order handler.
@@ -84,27 +48,10 @@ class GreetingHandler(BaseHandler):
         state["current_handler"] = "ai_handler"
         state["conversation_history"] = []
 
->>>>>>> ce5cffb (Chowder.ng)
         if not state.get("user_name"):
-            state["user_name"] = "Customer"
+            state["user_name"] = "Guest"
         if not state.get("phone_number"):
             state["phone_number"] = session_id
-<<<<<<< HEAD
-        
-        # Clear any temporary states
-        if "fault_data" in state:
-            del state["fault_data"]
-        if "billing_checked" in state:
-            del state["billing_checked"]
-            
-        self.session_manager.update_session_state(session_id, state)
-        
-        # Return redirect instruction with the user's message if any
-        return {
-            "redirect": "ai_handler", 
-            "redirect_message": user_message if user_message else "initial_greeting",
-            "additional_message": None
-=======
 
         self.session_manager.update_session_state(session_id, state)
 
@@ -129,5 +76,4 @@ class GreetingHandler(BaseHandler):
             "redirect": "ai_handler",
             "redirect_message": "initial_greeting",
             "additional_message": additional_message if additional_message else None
->>>>>>> ce5cffb (Chowder.ng)
         }
