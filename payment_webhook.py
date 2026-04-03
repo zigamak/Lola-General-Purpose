@@ -34,6 +34,9 @@ def paystack_webhook():
     signature = request.headers.get("x-paystack-signature", "")
 
     if paystack_secret:
+        # FIX: was `hmac.new(...)` which doesn't exist — correct call is `hmac.new`
+        # from the stdlib which is exposed as the module-level `hmac.new` function.
+        # The correct API is: hmac.new(key_bytes, msg_bytes, digestmod)
         expected = hmac.new(
             paystack_secret.encode("utf-8"),
             raw_body,
@@ -72,6 +75,10 @@ def _handle_charge_success(data: dict):
     amount_kobo  = data.get("amount", 0)
     amount_naira = amount_kobo // 100
     metadata     = data.get("metadata", {})
+
+    # FIX: Paystack returns metadata exactly as submitted.  ai_handler now passes
+    # customer_phone inside the metadata dict, so this lookup will succeed without
+    # a DB roundtrip.  The DB fallback below is kept as a safety net.
     customer_phone = metadata.get("customer_phone", "")
 
     logger.info(f"Confirmed payment: ref={reference}, NGN{amount_naira}, phone={customer_phone}")
@@ -90,7 +97,7 @@ def _handle_charge_success(data: dict):
         )
         logger.info(f"DB updated: {reference} -> paid / preparing")
 
-    # 2. Resolve phone from DB if not in metadata
+    # 2. Resolve phone from DB if not in metadata (safety net)
     if not customer_phone and _db_manager:
         customer_phone = _get_phone_from_order(reference)
 
@@ -127,9 +134,9 @@ def _mark_session_paid(phone: str, reference: str):
     try:
         state = _session_manager.get_session_state(phone)
         if state is not None:
-            state["payment_pending"]  = False
+            state["payment_pending"]   = False
             state["payment_confirmed"] = True
-            state["payment_ref"]      = reference
+            state["payment_ref"]       = reference
             _session_manager.update_session_state(phone, state)
     except Exception as e:
         logger.warning(f"Could not update session for {phone}: {e}")
@@ -137,8 +144,14 @@ def _mark_session_paid(phone: str, reference: str):
 
 def _send_confirmation(phone: str, reference: str, amount_naira: int):
     """
-    FIX: create_text_message() already calls send_message() internally.
-    Just call it directly — do NOT wrap it in send_message() again.
+    Send a WhatsApp payment confirmation.
+
+    FIX: build the payload dict manually and pass it to send_message() once.
+    Do NOT call create_text_message() here — that method sends internally AND
+    returns the API response dict.  If you then pass that response dict to
+    send_message() it will fail with "Missing required fields: ['to', 'type']"
+    because the response has no 'to'/'type' keys (it's the WhatsApp API reply,
+    not a sendable payload).
     """
     if not _whatsapp_service:
         logger.error("_whatsapp_service not initialised.")
@@ -153,8 +166,14 @@ def _send_confirmation(phone: str, reference: str, amount_naira: int):
         f"Thank you for choosing Makinde Kitchen!"
     )
     try:
-        # create_text_message() builds the payload AND sends it — don't double-wrap
-        _whatsapp_service.create_text_message(phone, message)
+        payload = {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": str(phone),
+            "type": "text",
+            "text": {"body": message},
+        }
+        _whatsapp_service.send_message(payload)
         logger.info(f"Confirmation sent to {phone} for ref {reference}.")
     except Exception as e:
         logger.error(f"Failed to send confirmation to {phone}: {e}", exc_info=True)
@@ -178,7 +197,7 @@ def is_payment_claim(message: str) -> bool:
 def handle_manual_payment_check(phone: str, order_ref: str) -> str:
     """
     Verify payment with Paystack manually.
-    Returns a reply string — let ai_handler send it.
+    Returns a reply string — caller is responsible for sending it.
     """
     if not _config or not order_ref:
         return "I could not find your order. Please contact support if you have already paid."

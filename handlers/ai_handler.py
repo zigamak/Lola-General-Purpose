@@ -8,6 +8,7 @@ from .base_handler import BaseHandler
 from services.ai_service import AIService, set_db
 from services.payment_service import PaymentService
 from db_manager import DBManager
+from payment_webhook import is_payment_claim, handle_manual_payment_check
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,24 @@ class AIHandler(BaseHandler):
     def handle_ai_chat_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict:
         """Handle all incoming messages through the AI agent."""
         logger.info(f"AIHandler: message from {session_id}: '{original_message[:80]}'")
+
+        # ── Manual payment fallback ───────────────────────────────────────────
+        # Intercept "I've paid" messages and verify with Paystack directly,
+        # BEFORE spending a Gemini call on it.
+        if is_payment_claim(original_message):
+            order_ref = state.get("payment_ref") or state.get("order_ref")
+            if order_ref:
+                logger.info(f"Payment claim detected from {session_id}, checking ref={order_ref}")
+                reply = handle_manual_payment_check(session_id, order_ref)
+                self.whatsapp_service.send_message({
+                    "messaging_product": "whatsapp",
+                    "recipient_type": "individual",
+                    "to": str(session_id),
+                    "type": "text",
+                    "text": {"body": reply},
+                })
+                return {"status": "payment_check_sent"}
+
         return self._process_message(state, session_id, original_message)
 
     def handle_ai_menu_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict:
@@ -96,9 +115,16 @@ class AIHandler(BaseHandler):
             customer_name=user_name if user_name not in ("Guest", "") else None,
         )
 
-        self.whatsapp_service.send_message(
-            self.whatsapp_service.create_text_message(session_id, welcome_text)
-        )
+        # FIX: send_message() takes a payload dict — build it directly rather than
+        # calling create_text_message() (which sends internally) and then wrapping
+        # the API *response* in send_message() a second time.
+        self.whatsapp_service.send_message({
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": str(session_id),
+            "type": "text",
+            "text": {"body": welcome_text},
+        })
 
         try:
             self.whatsapp_service.send_image_message(session_id, MENU_IMAGE_URL, caption="")
@@ -133,10 +159,16 @@ class AIHandler(BaseHandler):
         is_returning         = is_returning or state.get("is_returning", False)
 
         if not self.ai_enabled:
-            return self.whatsapp_service.create_text_message(
-                session_id,
-                "Sorry, our ordering system is currently unavailable. Please try again shortly!"
-            )
+            # FIX: don't return create_text_message() result to be re-sent by caller;
+            # send it here and return a sentinel dict.
+            self.whatsapp_service.send_message({
+                "messaging_product": "whatsapp",
+                "recipient_type": "individual",
+                "to": str(session_id),
+                "type": "text",
+                "text": {"body": "Sorry, our ordering system is currently unavailable. Please try again shortly!"},
+            })
+            return {"status": "ai_disabled"}
 
         try:
             # Save user message to DB
@@ -159,7 +191,7 @@ class AIHandler(BaseHandler):
                     is_returning=is_returning,
                 )
 
-            state["order_ref"]   = order_ref
+            state["order_ref"]    = order_ref
             state["is_returning"] = True  # all subsequent messages are returning
 
             # Update conversation history
@@ -194,14 +226,27 @@ class AIHandler(BaseHandler):
                 message=clean_response,
                 order_id=state.get('db_order_id')
             )
-            return self.whatsapp_service.create_text_message(session_id, clean_response)
+
+            # FIX: send here; return a sentinel so the caller never double-sends.
+            self.whatsapp_service.send_message({
+                "messaging_product": "whatsapp",
+                "recipient_type": "individual",
+                "to": str(session_id),
+                "type": "text",
+                "text": {"body": clean_response},
+            })
+            return {"status": "message_sent"}
 
         except Exception as e:
             logger.error(f"AIHandler error for {session_id}: {e}", exc_info=True)
-            return self.whatsapp_service.create_text_message(
-                session_id,
-                "Something went wrong on our end. Please try again!"
-            )
+            self.whatsapp_service.send_message({
+                "messaging_product": "whatsapp",
+                "recipient_type": "individual",
+                "to": str(session_id),
+                "type": "text",
+                "text": {"body": "Something went wrong on our end. Please try again!"},
+            })
+            return {"status": "error"}
 
     # ── Payment trigger ───────────────────────────────────────────────────────
 
@@ -226,12 +271,27 @@ class AIHandler(BaseHandler):
 
         if not amount_kobo:
             logger.error(f"Payment tag found but could not parse amount for {session_id}.")
-            return self.whatsapp_service.create_text_message(session_id, clean_response)
+            # FIX: send directly, don't return a payload for the caller to re-send.
+            self.whatsapp_service.send_message({
+                "messaging_product": "whatsapp",
+                "recipient_type": "individual",
+                "to": str(session_id),
+                "type": "text",
+                "text": {"body": clean_response},
+            })
+            return {"status": "payment_amount_missing"}
 
         # 1. Send the order summary
-        self.whatsapp_service.send_message(
-            self.whatsapp_service.create_text_message(session_id, clean_response)
-        )
+        # FIX: build payload manually — create_text_message() already sends internally,
+        # so calling it here AND having the caller send the return value causes the
+        # "Missing required fields" double-send error seen in the logs.
+        self.whatsapp_service.send_message({
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": str(session_id),
+            "type": "text",
+            "text": {"body": clean_response},
+        })
 
         # 2. Save order to DB
         amount_naira = amount_kobo // 100
@@ -261,6 +321,8 @@ class AIHandler(BaseHandler):
                 logger.warning(f"No ORDER_ITEMS tag found in response for {session_id}")
 
         # 3. Generate Paystack link
+        # FIX: include customer_phone in the metadata dict so the webhook can resolve
+        # the phone number without a DB roundtrip when Paystack fires charge.success.
         payment_url = None
         try:
             customer_email = self.payment_service.generate_customer_email(phone_number, user_name)
@@ -270,7 +332,11 @@ class AIHandler(BaseHandler):
                 reference=order_ref,
                 customer_name=user_name,
                 customer_phone=phone_number,
-                metadata={"order_ref": order_ref, "channel": "whatsapp"},
+                metadata={
+                    "order_ref":      order_ref,
+                    "channel":        "whatsapp",
+                    "customer_phone": phone_number,   # ← FIX: webhook reads this
+                },
             )
         except Exception as e:
             logger.error(f"Paystack link generation failed for {session_id}: {e}", exc_info=True)
@@ -297,7 +363,15 @@ class AIHandler(BaseHandler):
         state["payment_amount_kobo"] = amount_kobo
         self.session_manager.update_session_state(session_id, state)
 
-        return self.whatsapp_service.create_text_message(session_id, payment_message)
+        # FIX: send directly — do not return a payload for the caller to re-send.
+        self.whatsapp_service.send_message({
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": str(session_id),
+            "type": "text",
+            "text": {"body": payment_message},
+        })
+        return {"status": "payment_link_sent"}
 
     # ── Helpers ───────────────────────────────────────────────────────────────
 
