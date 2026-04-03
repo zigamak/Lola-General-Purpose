@@ -11,7 +11,7 @@ from db_manager import DBManager
 
 logger = logging.getLogger(__name__)
 
-MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
+MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg"
 
 
 class AIHandler(BaseHandler):
