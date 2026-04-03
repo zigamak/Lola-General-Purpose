@@ -77,6 +77,23 @@
         /* ── Layout ── */
         .layout { display: flex; min-height: 100vh; }
 
+        /* ── Mobile Overlay ── */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.5);
+            backdrop-filter: blur(2px);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+            opacity: 1;
+        }
+
         /* ── Sidebar ── */
         .sidebar {
             width: var(--sidebar-w);
@@ -87,6 +104,7 @@
             top: 0; left: 0; bottom: 0;
             z-index: 100;
             overflow: hidden;
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar::after {
@@ -101,7 +119,12 @@
             padding: 28px 22px 22px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
         }
+
+        .sidebar-brand-content { flex: 1; }
 
         .brand-logo {
             display: flex;
@@ -141,6 +164,26 @@
             text-transform: uppercase;
             padding-left: 46px;
         }
+
+        /* Sidebar close button (mobile only) */
+        .sidebar-close {
+            display: none;
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: background 0.15s;
+        }
+
+        .sidebar-close:hover { background: rgba(255,255,255,0.12); color: white; }
+        .sidebar-close svg { width: 15px; height: 15px; }
 
         .sidebar-nav {
             flex: 1;
@@ -283,6 +326,25 @@
             justify-content: space-between;
             z-index: 50;
         }
+
+        /* Mobile menu toggle button */
+        .menu-toggle {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .menu-toggle:hover { background: var(--surface2); color: var(--text); }
+        .menu-toggle svg { width: 18px; height: 18px; }
 
         .topbar-left { display: flex; align-items: center; gap: 12px; }
 
@@ -547,9 +609,7 @@
 
         tr:last-child td { border-bottom: none; }
 
-        tbody tr {
-            transition: background 0.12s;
-        }
+        tbody tr { transition: background 0.12s; }
 
         tbody tr:hover { background: var(--surface2); }
 
@@ -635,9 +695,7 @@
             border: 1px solid var(--accent-mid);
         }
 
-        .btn-soft:hover {
-            background: var(--accent-mid);
-        }
+        .btn-soft:hover { background: var(--accent-mid); }
 
         .btn-danger {
             background: var(--red-soft);
@@ -716,6 +774,7 @@
             z-index: 200;
             align-items: center;
             justify-content: center;
+            padding: 16px;
         }
 
         .modal-overlay.open { display: flex; }
@@ -797,20 +856,107 @@
         .content > *:nth-child(2) { animation-delay: 0.05s; }
         .content > *:nth-child(3) { animation-delay: 0.1s; }
         .content > *:nth-child(4) { animation-delay: 0.15s; }
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — Tablet (≤ 1024px)
+        ════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .content { padding: 24px; }
+            .topbar  { padding: 0 24px; }
+        }
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — Mobile (≤ 768px)
+        ════════════════════════════════════════ */
+        @media (max-width: 768px) {
+
+            /* Hide desktop sidebar by default, slide in on toggle */
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 8px 0 40px rgba(15,23,42,0.25);
+            }
+
+            /* Show close button inside sidebar on mobile */
+            .sidebar-close { display: flex; }
+
+            /* Show hamburger in topbar */
+            .menu-toggle { display: flex; }
+
+            /* Main takes full width */
+            .main { margin-left: 0; }
+
+            /* Topbar tighter padding */
+            .topbar { padding: 0 16px; gap: 8px; }
+
+            /* Hide "Makinde Kitchen ›" breadcrumb prefix on mobile */
+            .topbar-breadcrumb .breadcrumb-prefix { display: none; }
+            .topbar-breadcrumb .breadcrumb-sep    { display: none; }
+
+            /* Hide user name text, just show avatar */
+            .topbar-user-name { display: none; }
+            .topbar-user { padding: 4px 6px; border-radius: 50%; }
+
+            /* Hide topbar divider on mobile */
+            .topbar-divider { display: none; }
+
+            /* Content padding */
+            .content { padding: 16px; }
+
+            /* Grid utilities: force single column */
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+
+            /* Modal full-screen on mobile */
+            .modal {
+                padding: 24px 20px;
+                border-radius: var(--radius);
+                max-height: 95vh;
+            }
+
+            /* Modal actions stack on small screens */
+            .modal-actions { flex-direction: column-reverse; }
+            .modal-actions .btn { width: 100%; justify-content: center; }
+        }
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — Small Mobile (≤ 480px)
+        ════════════════════════════════════════ */
+        @media (max-width: 480px) {
+            .topbar { padding: 0 12px; }
+            .content { padding: 12px; }
+            .card { padding: 16px; }
+            .stat-card { padding: 16px; }
+            .stat-value { font-size: 24px; }
+        }
     </style>
     {% block extra_styles %}{% endblock %}
 </head>
 <body>
+
+<!-- Mobile sidebar overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="layout">
 
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="brand-logo">
-                <div class="brand-icon">🍽️</div>
-                <div class="brand-name">LOLA</div>
+            <div class="sidebar-brand-content">
+                <div class="brand-logo">
+                    <div class="brand-icon">🍽️</div>
+                    <div class="brand-name">LOLA</div>
+                </div>
+                <div class="brand-sub">Makinde Kitchen</div>
             </div>
-            <div class="brand-sub">Makinde Kitchen</div>
+            <!-- Close button (mobile only) -->
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
         </div>
 
         <nav class="sidebar-nav">
@@ -866,9 +1012,17 @@
     <main class="main">
         <div class="topbar">
             <div class="topbar-left">
+                <!-- Mobile hamburger -->
+                <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6"  x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
                 <div class="topbar-breadcrumb">
-                    <span style="color:var(--muted-light); font-size:12px;">Makinde Kitchen</span>
-                    <span>›</span>
+                    <span class="breadcrumb-prefix" style="color:var(--muted-light); font-size:12px;">Makinde Kitchen</span>
+                    <span class="breadcrumb-sep">›</span>
                     <span style="color:var(--text-2); font-weight:500;">{% block page_title %}Dashboard{% endblock %}</span>
                 </div>
             </div>
@@ -897,6 +1051,45 @@
         </div>
     </main>
 </div>
+
+<!-- Mobile menu JavaScript -->
+<script>
+(function () {
+    const sidebar  = document.getElementById('sidebar');
+    const overlay  = document.getElementById('sidebarOverlay');
+    const toggle   = document.getElementById('menuToggle');
+    const closeBtn = document.getElementById('sidebarClose');
+
+    function openMenu() {
+        sidebar.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    if (toggle)   toggle.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    if (overlay)  overlay.addEventListener('click', closeMenu);
+
+    // Close menu on nav link click (for smooth SPA-like feel)
+    sidebar.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) closeMenu();
+        });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeMenu();
+    });
+})();
+</script>
+
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>

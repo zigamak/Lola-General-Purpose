@@ -10,6 +10,8 @@
         align-items: center;
         justify-content: space-between;
         margin-bottom: 24px;
+        gap: 12px;
+        flex-wrap: wrap;
     }
 
     .welcome-text h1 {
@@ -27,7 +29,7 @@
         margin-top: 4px;
     }
 
-    .welcome-actions { display: flex; gap: 10px; align-items: center; }
+    .welcome-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
     /* ── Revenue highlight card ── */
     .revenue-card {
@@ -118,7 +120,6 @@
     }
 
     .spark-bar:hover { background: rgba(99,179,237,0.5); }
-
     .spark-bar.active { background: rgba(99,179,237,0.8); }
 
     /* ── Dashboard grid layout ── */
@@ -144,6 +145,8 @@
         justify-content: space-between;
         padding: 20px 24px 16px;
         border-bottom: 1px solid var(--border-light);
+        flex-wrap: wrap;
+        gap: 12px;
     }
 
     .orders-card-title {
@@ -226,9 +229,7 @@
         width: 240px;
     }
 
-    .search-wrap {
-        position: relative;
-    }
+    .search-wrap { position: relative; }
 
     .search-icon {
         position: absolute;
@@ -242,10 +243,7 @@
     .search-icon svg { width: 13px; height: 13px; }
 
     /* ── Hover row highlight ── */
-    tbody tr:hover .row-actions .btn-ghost {
-        opacity: 1;
-    }
-
+    tbody tr:hover .row-actions .btn-ghost { opacity: 1; }
     .row-actions .btn-ghost { opacity: 0.5; transition: opacity 0.15s; }
 
     /* ── No orders state ── */
@@ -256,6 +254,94 @@
 
     .empty-orders .empty-icon { font-size: 44px; margin-bottom: 12px; opacity: 0.5; }
     .empty-orders p { color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
+
+    /* ════════════════════════════════════════
+       DASHBOARD — Tablet responsive (≤ 1024px)
+    ════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+        .dash-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .revenue-card {
+            grid-column: span 2;
+        }
+
+        .revenue-value { font-size: 36px; }
+    }
+
+    /* ════════════════════════════════════════
+       DASHBOARD — Mobile responsive (≤ 768px)
+    ════════════════════════════════════════ */
+    @media (max-width: 768px) {
+        .dash-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .revenue-card {
+            grid-column: span 2;
+            padding: 20px;
+        }
+
+        .revenue-value { font-size: 30px; letter-spacing: -1px; }
+
+        .welcome-bar { margin-bottom: 16px; }
+        .welcome-text h1 { font-size: 20px; }
+
+        .orders-card-header {
+            padding: 16px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .orders-card-header > div:last-child {
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Table: hide less important columns on mobile */
+        th:nth-child(3),   /* Phone */
+        td:nth-child(3),
+        th:nth-child(7),   /* Date */
+        td:nth-child(7) {
+            display: none;
+        }
+
+        .table-search {
+            width: 100%;
+        }
+
+        .table-search:focus {
+            width: 100%;
+        }
+
+        .search-wrap { flex: 1; }
+    }
+
+    /* ════════════════════════════════════════
+       DASHBOARD — Small mobile (≤ 480px)
+    ════════════════════════════════════════ */
+    @media (max-width: 480px) {
+        .dash-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .revenue-card { grid-column: span 1; }
+
+        /* On very small screens, hide even more table columns */
+        th:nth-child(5),   /* Status */
+        td:nth-child(5) {
+            display: none;
+        }
+
+        .welcome-actions { width: 100%; }
+        .welcome-actions .btn { flex: 1; justify-content: center; }
+
+        .filter-tabs { width: 100%; }
+        .filter-tab  { flex: 1; text-align: center; }
+    }
 </style>
 {% endblock %}
 
@@ -420,7 +506,7 @@
             </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
             {% if stats.recent_orders %}
             <div class="search-wrap">
                 <span class="search-icon">

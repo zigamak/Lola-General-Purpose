@@ -64,9 +64,7 @@
         gap: 10px;
     }
 
-    .search-wrap {
-        position: relative;
-    }
+    .search-wrap { position: relative; }
 
     .search-icon {
         position: absolute;
@@ -115,6 +113,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
     .orders-card-title {
@@ -148,10 +148,7 @@
 
     .ref-link:hover { text-decoration: underline; }
 
-    .customer-name {
-        font-weight: 500;
-        color: var(--text);
-    }
+    .customer-name { font-weight: 500; color: var(--text); }
 
     .total-val {
         font-family: var(--font-mono);
@@ -166,35 +163,73 @@
     }
 
     /* No results row */
-    .no-results {
-        padding: 70px 20px;
-        text-align: center;
-    }
-
+    .no-results { padding: 70px 20px; text-align: center; }
     .no-results .icon { font-size: 40px; margin-bottom: 14px; opacity: 0.45; }
     .no-results p { color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
 
     /* Row animation */
-    tbody tr {
-        animation: rowIn 0.2s ease both;
-    }
+    tbody tr { animation: rowIn 0.2s ease both; }
 
     @keyframes rowIn {
         from { opacity: 0; transform: translateY(4px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    tbody tr:nth-child(1)  { animation-delay: 0.02s; }
-    tbody tr:nth-child(2)  { animation-delay: 0.04s; }
-    tbody tr:nth-child(3)  { animation-delay: 0.06s; }
-    tbody tr:nth-child(4)  { animation-delay: 0.08s; }
-    tbody tr:nth-child(5)  { animation-delay: 0.10s; }
-    tbody tr:nth-child(6)  { animation-delay: 0.12s; }
-    tbody tr:nth-child(7)  { animation-delay: 0.14s; }
-    tbody tr:nth-child(8)  { animation-delay: 0.16s; }
+    tbody tr:nth-child(1) { animation-delay: 0.02s; }
+    tbody tr:nth-child(2) { animation-delay: 0.04s; }
+    tbody tr:nth-child(3) { animation-delay: 0.06s; }
+    tbody tr:nth-child(4) { animation-delay: 0.08s; }
+    tbody tr:nth-child(5) { animation-delay: 0.10s; }
+    tbody tr:nth-child(6) { animation-delay: 0.12s; }
+    tbody tr:nth-child(7) { animation-delay: 0.14s; }
+    tbody tr:nth-child(8) { animation-delay: 0.16s; }
 
     tbody tr:hover .view-btn { opacity: 1 !important; }
     .view-btn { opacity: 0.4; transition: opacity 0.15s; }
+
+    /* ════════════════════════════════════════
+       ORDERS — Mobile responsive (≤ 768px)
+    ════════════════════════════════════════ */
+    @media (max-width: 768px) {
+        .orders-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .status-filters {
+            /* Horizontally scrollable pill row on mobile */
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .status-filters::-webkit-scrollbar { display: none; }
+
+        .toolbar-right { width: 100%; }
+
+        .table-search {
+            width: 100%;
+        }
+
+        .table-search:focus { width: 100%; }
+
+        .orders-card-header { padding: 14px 16px; }
+
+        /* Hide less critical columns */
+        th:nth-child(3), td:nth-child(3),   /* Phone */
+        th:nth-child(7), td:nth-child(7) {  /* Date */
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        /* Also hide Payment column on very small screens */
+        th:nth-child(6), td:nth-child(6) { display: none; }
+
+        .status-pill { font-size: 11.5px; padding: 5px 11px; }
+    }
 </style>
 {% endblock %}
 
@@ -216,7 +251,7 @@
     </div>
 
     <div class="toolbar-right">
-        <div class="search-wrap">
+        <div class="search-wrap" style="flex:1;">
             <span class="search-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
