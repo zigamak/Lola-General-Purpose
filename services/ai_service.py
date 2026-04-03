@@ -64,9 +64,8 @@ OPERATING HOURS
 """
 
 GEMINI_MODELS = [
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-flash-8b",
+    "gemini-2.5-flash",
+
 ]
 
 # Injected at runtime by AIHandler so the order status tool can query the DB
