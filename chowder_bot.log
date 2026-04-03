@@ -64,3 +64,401 @@
 2026-03-20 15:47:37,778 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:8000
 2026-03-20 15:47:37,778 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 18:53:26,850 - __main__ - INFO - Starting Chowder.ng order bot...
+2026-04-03 18:53:45,166 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 18:53:45,166 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 18:53:45,166 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 18:53:45,166 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 18:53:45,166 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 18:53:45,180 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 18:53:45,224 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 18:53:45,226 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 18:53:45,234 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 18:53:45,238 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 18:53:45,238 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 18:53:45,238 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 18:53:45,238 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 18:53:45,244 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 18:53:45,251 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 18:53:45,257 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 18:53:45,264 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 18:53:45,264 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 18:53:45,264 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 18:53:45,264 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 18:53:45,264 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 18:53:45,264 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 18:53:45,264 - app - INFO - Handlers and message processor initialised.
+2026-04-03 18:53:45,264 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 18:53:45,276 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 18:53:45,276 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 18:53:45,276 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 18:53:45,277 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 18:53:45,277 - app - INFO - WebhookHandler initialised.
+2026-04-03 18:53:45,277 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 18:53:45,278 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 18:53:45,323 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 18:53:45,323 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 18:57:20,738 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 18:57:20,739 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 18:57:20,739 - message_processor - INFO - Session 2348055614455: Trigger word 'hello' — starting order chat.
+2026-04-03 18:57:20,739 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' — msg: 'Hello'.
+2026-04-03 18:57:20,739 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 18:57:22,352 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkJEMjJFMDUwRjUyRjE3QzNENgA='}]}
+2026-04-03 18:57:22,352 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkJEMjJFMDUwRjUyRjE3QzNENgA='}]}
+2026-04-03 18:57:22,352 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 18:57:22,352 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg'}}
+2026-04-03 18:57:23,368 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkU5MTQ4RDgzRjI2M0UyMTg4RQA='}]}
+2026-04-03 18:57:23,369 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 18:57:23,370 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 18:57:23] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 18:57:23,586 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 18:57:23] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 18:57:24,783 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 18:57:24] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 18:57:25,382 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 18:57:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 18:57:25,747 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 18:57:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 18:57:25,802 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 18:57:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 18:57:26,434 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 18:57:26] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:01:00,605 - __main__ - INFO - Starting Chowder.ng order bot...
+2026-04-03 19:01:06,179 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:01:06,179 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:01:06,179 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:01:06,179 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:01:06,179 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 19:01:06,179 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 19:01:06,217 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:01:06,224 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:01:06,226 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:01:06,233 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:01:06,233 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:01:06,233 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:01:06,233 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:01:06,236 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 19:01:06,244 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:01:06,250 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:01:06,255 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:01:06,258 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:01:06,258 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:01:06,258 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:01:06,258 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:01:06,258 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 19:01:06,258 - app - INFO - Handlers and message processor initialised.
+2026-04-03 19:01:06,258 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:01:06,262 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:01:06,263 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:01:06,263 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:01:06,263 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:01:06,264 - app - INFO - WebhookHandler initialised.
+2026-04-03 19:01:06,264 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 19:01:06,265 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 19:01:06,276 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 19:01:06,281 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 19:01:11,502 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 19:01:11,502 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 19:01:11,502 - message_processor - INFO - Session 2348055614455: Trigger word 'hello' — starting order chat.
+2026-04-03 19:01:11,503 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' — msg: 'Hello'.
+2026-04-03 19:01:11,503 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:01:12,526 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkRBODk2RkFFRTVGMDQ0NzI2QwA='}]}
+2026-04-03 19:01:12,528 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkRBODk2RkFFRTVGMDQ0NzI2QwA='}]}
+2026-04-03 19:01:12,529 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 19:01:12,529 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose-scaled.png'}}
+2026-04-03 19:01:13,368 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:01:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:01:13,529 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkFGMTFCNDREMjc1QjJCOEVGNgA='}]}
+2026-04-03 19:01:13,529 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 19:01:13,529 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:01:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:01:13,789 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:01:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:01:14,184 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:01:14] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:01:15,971 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:01:15] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:06:47,660 - __main__ - INFO - Starting Chowder.ng order bot...
+2026-04-03 19:06:55,674 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:06:55,681 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:06:55,681 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:06:55,681 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:06:55,682 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 19:06:55,686 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 19:06:55,763 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:06:55,783 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:06:55,787 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:06:55,792 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:06:55,792 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:06:55,792 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:06:55,793 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:06:55,800 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 19:06:55,807 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:06:55,816 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:06:55,820 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:06:55,826 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:06:55,826 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:06:55,826 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:06:55,827 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:06:55,827 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 19:06:55,827 - app - INFO - Handlers and message processor initialised.
+2026-04-03 19:06:55,828 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:06:55,831 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:06:55,831 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:06:55,831 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:06:55,832 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:06:55,832 - app - INFO - WebhookHandler initialised.
+2026-04-03 19:06:55,833 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 19:06:55,834 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 19:06:55,852 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 19:06:55,853 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 19:08:40,704 - __main__ - INFO - Starting Chowder.ng order bot...
+2026-04-03 19:08:45,074 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:08:45,085 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:08:45,085 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:08:45,085 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:08:45,085 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 19:08:45,085 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-03 19:08:45,124 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:08:45,129 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:08:45,136 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:08:45,140 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:08:45,140 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:08:45,140 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:08:45,140 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:08:45,146 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-03 19:08:45,159 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:08:45,164 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:08:45,173 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:08:45,175 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:08:45,175 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:08:45,175 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:08:45,175 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:08:45,175 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 19:08:45,175 - app - INFO - Handlers and message processor initialised.
+2026-04-03 19:08:45,175 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:08:45,182 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:08:45,183 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:08:45,183 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:08:45,184 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:08:45,184 - app - INFO - WebhookHandler initialised.
+2026-04-03 19:08:45,185 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 19:08:45,185 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 19:08:45,203 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 19:08:45,203 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 19:10:22,856 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 19:10:22,856 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 19:10:22,856 - message_processor - INFO - Session 2348055614455: Trigger word 'hello' — starting order chat.
+2026-04-03 19:10:22,856 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' — msg: 'Hello'.
+2026-04-03 19:10:22,856 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:10:23,906 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjI3NjQ4MDc0M0M0NTM4NEM2RQA='}]}
+2026-04-03 19:10:23,916 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjI3NjQ4MDc0M0M0NTM4NEM2RQA='}]}
+2026-04-03 19:10:23,916 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 19:10:23,916 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 19:10:24,893 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkUxQ0MzNjdFRjlGNTk0NENFRQA='}]}
+2026-04-03 19:10:24,893 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 19:10:24,893 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:10:24] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:10:25,171 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:10:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:10:25,385 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:10:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:10:25,386 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:10:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:10:34,532 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:10:34] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:10:34,935 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:10:34] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:11:09,064 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:11:09] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:11:35,471 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'I want three small chops platter\n3 peices of chkec  and 1 plate of trice'}
+2026-04-03 19:11:35,471 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I want three small chops platter
+3 peices of chkec  and 1 plate of trice'
+2026-04-03 19:11:36,313 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing..
+2026-04-03 19:11:38,646 - services.ai_service - WARNING - 'gemini-2.5-flash' failed: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.s. Trying next...
+2026-04-03 19:11:39,346 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing..
+2026-04-03 19:11:41,541 - services.ai_service - WARNING - 'gemini-flash-latest' failed: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.s. Trying next...
+2026-04-03 19:11:42,162 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing..
+2026-04-03 19:11:44,367 - services.ai_service - WARNING - 'gemini-flash-lite-latest' failed: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.s. Trying next...
+2026-04-03 19:11:44,976 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing..
+2026-04-03 19:11:47,190 - services.ai_service - WARNING - 'gemini-2.5-flash-lite' failed: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.s. Trying next...
+2026-04-03 19:11:47,190 - services.ai_service - ERROR - All models failed [2348055614455]: All Gemini model fallbacks exhausted.
+Traceback (most recent call last):
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 349, in generate_order_response
+    raw_response = self._invoke_with_fallback({
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 290, in _invoke_with_fallback
+    raise RuntimeError("All Gemini model fallbacks exhausted.")
+RuntimeError: All Gemini model fallbacks exhausted.
+2026-04-03 19:11:47,190 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:11:47,190 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'Something went wrong on our end. Try again or send *menu* to browse!'}}
+2026-04-03 19:11:48,158 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkU5RDg3MkIxMjhEQTJCMEY0MwA='}]}
+2026-04-03 19:11:48,158 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkU5RDg3MkIxMjhEQTJCMEY0MwA='}]}
+2026-04-03 19:11:48,158 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:11:48] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:11:49,360 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:11:49] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:11:49,421 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:11:49] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:04,972 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 19:13:04,972 - message_processor - INFO - Session 2348055614455: Trigger word 'hello' — starting order chat.
+2026-04-03 19:13:04,972 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' — msg: 'Hello'.
+2026-04-03 19:13:04,972 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:13:05,173 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:05] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:05,995 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjQwMTZBOTc0NEQ0MkJFRkM1NwA='}]}
+2026-04-03 19:13:05,995 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjQwMTZBOTc0NEQ0MkJFRkM1NwA='}]}
+2026-04-03 19:13:05,995 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 19:13:05,995 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 19:13:06,991 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjFFNkJCRjlFQ0VBNzBFQjM0QQA='}]}
+2026-04-03 19:13:06,992 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 19:13:06,997 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:06] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:06,997 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:06] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:07,444 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:07] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:09,181 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:09] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:09,481 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:09] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:09,643 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:09] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:09,752 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:09] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:09,854 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:09] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:17,712 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'I want three small chops platter\n3 peices of chkec  and 1 plate of trice'}
+2026-04-03 19:13:17,712 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I want three small chops platter
+3 peices of chkec  and 1 plate of trice'
+2026-04-03 19:13:18,020 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing..
+2026-04-03 19:13:20,235 - services.ai_service - WARNING - 'gemini-2.5-flash' failed: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.s. Trying next...
+2026-04-03 19:13:20,436 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing..
+2026-04-03 19:13:33,139 - __main__ - INFO - Starting Chowder.ng order bot...
+2026-04-03 19:13:38,507 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:13:38,507 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:13:38,507 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:13:38,507 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:13:38,507 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 19:13:38,507 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 19:13:38,539 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:13:38,549 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:13:38,554 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:13:38,558 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:13:38,558 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:13:38,558 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:13:38,558 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:13:38,563 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 19:13:38,571 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 19:13:38,577 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 19:13:38,581 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 19:13:38,585 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 19:13:38,585 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 19:13:38,585 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:13:38,585 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 19:13:38,585 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 19:13:38,585 - app - INFO - Handlers and message processor initialised.
+2026-04-03 19:13:38,585 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 19:13:38,590 - utils.data_manager - INFO - DataManager initialized with JSON file storage
+2026-04-03 19:13:38,590 - utils.data_manager - INFO - Loaded 20 customer records
+2026-04-03 19:13:38,590 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 19:13:38,591 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 19:13:38,591 - app - INFO - WebhookHandler initialised.
+2026-04-03 19:13:38,592 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 19:13:38,593 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 19:13:38,606 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 19:13:38,607 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 19:13:44,608 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 19:13:44,608 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 19:13:44,608 - message_processor - INFO - Session 2348055614455: Trigger word 'hello' — starting order chat.
+2026-04-03 19:13:44,608 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' — msg: 'Hello'.
+2026-04-03 19:13:44,608 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:13:45,629 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjEzMkU3N0EwQ0Y1QkQyOTVGRgA='}]}
+2026-04-03 19:13:45,629 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjEzMkU3N0EwQ0Y1QkQyOTVGRgA='}]}
+2026-04-03 19:13:45,629 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 19:13:45,629 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 19:13:46,057 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'I want three small chops platter\n3 peices of chkec  and 1 plate of trice'}
+2026-04-03 19:13:46,058 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I want three small chops platter
+3 peices of chkec  and 1 plate of trice'
+2026-04-03 19:13:46,503 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:46] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:46,611 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjMxQzVFMUYwNDBGRDBCQjRCMgA='}]}
+2026-04-03 19:13:46,611 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 19:13:46,611 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:46] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:46,805 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:46] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:47,095 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:47] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:47,912 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:47] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:47,984 - services.ai_service - INFO - Active model switched to: gemini-2.5-flash
+2026-04-03 19:13:47,984 - services.ai_service - INFO - [gemini-2.5-flash] [2348055614455] payment_triggered=False: I have "3 Small Chops Platter" and "3 pieces of Chicken". Which type of rice would you like? We have
+2026-04-03 19:13:47,986 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:47] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:47,986 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:13:47,987 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:47] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:47,987 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'I have "3 Small Chops Platter" and "3 pieces of Chicken". Which type of rice would you like? We have Jollof, Fried, Coconut, and White Rice + Stew.'}}
+2026-04-03 19:13:48,191 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:48] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:48,927 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjI2ODVDQTk2REFBMTk1NjQ5MwA='}]}
+2026-04-03 19:13:48,927 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjI2ODVDQTk2REFBMTk1NjQ5MwA='}]}
+2026-04-03 19:13:48,927 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:48] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:49,739 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:49] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:50,315 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:50] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:13:50,635 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:13:50] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:01,149 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Jellof rice'}
+2026-04-03 19:14:01,149 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Jellof rice'
+2026-04-03 19:14:02,605 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:14:03,674 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkM3QjUzOTgyMjhEREM4MTIyQQA='}]}
+2026-04-03 19:14:03,675 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkM3QjUzOTgyMjhEREM4MTIyQQA='}]}
+2026-04-03 19:14:03,676 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:03] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:04,678 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:04] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:04,790 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:04] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:04,992 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:04] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:13,525 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': "No that's all thank you"}
+2026-04-03 19:14:13,525 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'No that's all thank you'
+2026-04-03 19:14:15,120 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:14:15,751 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM5NDlDMzIwNDE0QTM0MkFCNQA='}]}
+2026-04-03 19:14:15,752 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM5NDlDMzIwNDE0QTM0MkFCNQA='}]}
+2026-04-03 19:14:15,752 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:15] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:16,853 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:16] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:16,991 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:16] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:34,098 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:34] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:36,352 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Yes'}
+2026-04-03 19:14:36,353 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Yes'
+2026-04-03 19:14:37,158 - services.ai_service - INFO - [gemini-2.5-flash] [2348055614455] payment_triggered=False: Great! Please provide your delivery address and nearest landmark, and your preferred delivery time.
+2026-04-03 19:14:37,158 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:14:37,158 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'Great! Please provide your delivery address and nearest landmark, and your preferred delivery time.'}}
+2026-04-03 19:14:37,808 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjAyOTVFNkNENkYyMUU1RTQyNQA='}]}
+2026-04-03 19:14:37,808 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjAyOTVFNkNENkYyMUU1RTQyNQA='}]}
+2026-04-03 19:14:37,808 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:37] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:38,894 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:38] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:39,050 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:39] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:39,338 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:39] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:14:54,886 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Ojota, Lagos and 1Pm is fine'}
+2026-04-03 19:14:54,886 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Ojota, Lagos and 1Pm is fine'
+2026-04-03 19:14:57,901 - services.ai_service - INFO - [gemini-2.5-flash] [2348055614455] payment_triggered=True: Order Summary
+
+Order Ref: MK59901
+Name: Ziga
+Phone: 2348055614455
+Delivery Address: Ojota, Lagos
+Pre
+2026-04-03 19:14:57,901 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:14:59,042 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjBFNEJERENGM0IzQzE5MzFBNAA='}]}
+2026-04-03 19:14:59,042 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjBFNEJERENGM0IzQzE5MzFBNAA='}]}
+2026-04-03 19:14:59,043 - services.payment_service - INFO - Attempting to create payment link for reference: MK59901 with amount: 2350000, email: ziga4455@lola.com
+2026-04-03 19:14:59,844 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:14:59] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:15:00,000 - services.payment_service - INFO - Payment link created for Ziga Ziga (2348055614455), URL: https://checkout.paystack.com/i1b59e7gtcbph5u
+2026-04-03 19:15:00,001 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:15:00,104 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:15:00] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:15:00,605 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkQ5OTBBNTEwMEREODVDN0EwRAA='}]}
+2026-04-03 19:15:00,605 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkQ5OTBBNTEwMEREODVDN0EwRAA='}]}
+2026-04-03 19:15:00,605 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:15:00] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:15:01,568 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:15:01] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:15:01,749 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:15:01] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:15:02,038 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:15:02] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:15:19,154 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:15:19] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:15:19,364 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:15:19] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:16:39,396 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:16:39] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-03 19:16:49,562 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': "I've paid"}
+2026-04-03 19:16:49,562 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I've paid'
+2026-04-03 19:16:51,151 - services.ai_service - INFO - [gemini-2.5-flash] [2348055614455] payment_triggered=False: Thank you for confirming! Your order is confirmed and will be processed for delivery to Ojota, Lagos
+2026-04-03 19:16:51,151 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:16:51,151 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'Thank you for confirming! Your order is confirmed and will be processed for delivery to Ojota, Lagos by 1 PM.'}}
+2026-04-03 19:16:52,124 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjlDNDU5REI2NTQ4ODc3M0VBNwA='}]}
+2026-04-03 19:16:52,124 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjlDNDU5REI2NTQ4ODc3M0VBNwA='}]}
+2026-04-03 19:16:52,124 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:16:52] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:16:53,179 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:16:53] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:16:53,459 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:16:53] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:16:53,620 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:16:53] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:21:37,393 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:21:37] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-03 19:25:05,913 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:05] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-03 19:25:11,742 - handlers.webhook_handler - INFO - Processing message from 2348055614455 (User: Ziga): {'type': 'text', 'text': 'Hi'}
+2026-04-03 19:25:11,745 - message_processor - INFO - Session 2348055614455: Trigger word 'hi' — starting order chat.
+2026-04-03 19:25:11,745 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' — msg: 'Hi'.
+2026-04-03 19:25:11,747 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 19:25:13,074 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM2ODdEREM3MDI2NkU4NkFBRgA='}]}
+2026-04-03 19:25:13,074 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM2ODdEREM3MDI2NkU4NkFBRgA='}]}
+2026-04-03 19:25:13,074 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 19:25:13,074 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 19:25:13,942 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:25:14,024 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkIwNjQzRjczRTcwRUY2RjkxNQA='}]}
+2026-04-03 19:25:14,040 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 19:25:14,040 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:14] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:25:14,379 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:14] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:25:14,727 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:14] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:25:16,162 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:16] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:25:16,508 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:16] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:25:17,063 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:25:17] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 19:28:32,322 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:28:32] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-03 19:31:57,913 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:31:57] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-03 19:35:18,530 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 19:35:18] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -

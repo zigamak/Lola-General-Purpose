@@ -1,9 +1,8 @@
-import json
 import logging
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 
-from config import Config
+from config import Config, configure_logging
 from handlers.webhook_handler import WebhookHandler
 from handlers.greeting_handler import GreetingHandler
 from handlers.ai_handler import AIHandler
@@ -11,154 +10,85 @@ from utils.session_manager import SessionManager
 from utils.data_manager import DataManager
 from services.whatsapp_service import WhatsAppService
 from message_processor import MessageProcessor
+from payment_webhook import payment_webhook_bp, init_payment_webhook
 
-# Load environment variables from .env file
 load_dotenv()
+configure_logging()
 
-# Configure logging for the application
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("afyabot.log"),
-        logging.StreamHandler()
-    ]
-)
 logger = logging.getLogger(__name__)
 
-# Initialize the Flask application
 app = Flask(__name__)
-
-# Initialize the configuration object
 config = Config()
 
-# --- Initialize core service objects ---
+# ── Core services ─────────────────────────────────────────────────────────────
 try:
     session_manager = SessionManager(config.SESSION_TIMEOUT)
     data_manager = DataManager(config)
     whatsapp_service = WhatsAppService(config)
-    
-    logger.info("Core services initialized for AfyaBot (Gynecology Medical AI)")
-    
+    logger.info("Core services initialised — Makinde Kitchen (Lola Demo Bot)")
 except Exception as e:
-    logger.error(f"Error initializing core services: {e}", exc_info=True)
+    logger.error(f"Failed to initialise core services: {e}", exc_info=True)
     exit(1)
 
-# --- Initialize handlers for AfyaBot ---
+# ── Handlers ──────────────────────────────────────────────────────────────────
 try:
     greeting_handler = GreetingHandler(config, session_manager, data_manager, whatsapp_service)
     ai_handler = AIHandler(config, session_manager, data_manager, whatsapp_service)
-    
-    # Initialize message processor
-    message_processor = MessageProcessor(
-        config, 
-        session_manager, 
-        data_manager, 
-        whatsapp_service
-    )
-    
-    logger.info("AfyaBot handlers and message processor initialized.")
-    
+    message_processor = MessageProcessor(config, session_manager, data_manager, whatsapp_service)
+    logger.info("Handlers and message processor initialised.")
 except Exception as e:
-    logger.error(f"Error initializing handlers: {e}", exc_info=True)
+    logger.error(f"Failed to initialise handlers: {e}", exc_info=True)
     exit(1)
 
-# Initialize the WebhookHandler with message processor
+# ── Webhook handler ───────────────────────────────────────────────────────────
 try:
     webhook_handler = WebhookHandler(config, message_processor)
-    logger.info("WebhookHandler initialized with message processor.")
+    logger.info("WebhookHandler initialised.")
 except Exception as e:
-    logger.error(f"Error initializing WebhookHandler: {e}", exc_info=True)
+    logger.error(f"Failed to initialise WebhookHandler: {e}", exc_info=True)
     exit(1)
+
+# ── Paystack payment webhook ──────────────────────────────────────────────────
+init_payment_webhook(config, session_manager, whatsapp_service)
+app.register_blueprint(payment_webhook_bp)
+logger.info("Paystack payment webhook registered at /paystack/webhook")
+
+# ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.route("/webhook", methods=["GET"])
 def verify_webhook():
-    """
-    Endpoint for WhatsApp webhook verification.
-    Handles the GET request from Meta to verify the webhook URL.
-    """
+    """WhatsApp webhook verification."""
     return webhook_handler.verify_webhook(request)
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    """
-    Endpoint for receiving incoming WhatsApp messages.
-    Handles the POST request containing message data from WhatsApp.
-    """
+    """Receive incoming WhatsApp messages."""
     return webhook_handler.handle_webhook(request)
 
 @app.route("/health", methods=["GET"])
 def health_check():
-    """
-    Health check endpoint for monitoring service status.
-    """
     try:
-        # Basic health checks
-        ai_status = "enabled" if ai_handler.ai_enabled else "disabled"
-        
         return jsonify({
             "status": "healthy",
-            "service": "AfyaBot - Gynecology Medical AI",
-            "ai_service": ai_status,
-            "session_count": len(session_manager._sessions) if hasattr(session_manager, '_sessions') else 0
+            "service": "Lola — Makinde Kitchen Demo Bot",
+            "ai_service": "enabled" if ai_handler.ai_enabled else "disabled",
+            "active_sessions": len(session_manager._sessions) if hasattr(session_manager, '_sessions') else 0,
         }), 200
-        
     except Exception as e:
         logger.error(f"Health check failed: {e}", exc_info=True)
-        return jsonify({
-            "status": "unhealthy",
-            "error": str(e)
-        }), 500
-
-@app.route("/api/analytics", methods=["GET"])
-def get_analytics():
-    """
-    Endpoint to get basic analytics about conversations and usage.
-    """
-    try:
-        # Basic analytics
-        total_sessions = len(session_manager._sessions) if hasattr(session_manager, '_sessions') else 0
-        # Placeholder: Add medical-specific metrics if supported by DataManager
-        kit_requests = data_manager.get_kit_request_count() if hasattr(data_manager, 'get_kit_request_count') else 0
-        screening_completions = data_manager.get_screening_completion_count() if hasattr(data_manager, 'get_screening_completion_count') else 0
-        
-        return jsonify({
-            "status": "success",
-            "data": {
-                "total_active_sessions": total_sessions,
-                "kit_requests": kit_requests,
-                "screening_completions": screening_completions,
-                "ai_service_status": "enabled" if ai_handler.ai_enabled else "disabled"
-            }
-        }), 200
-        
-    except Exception as e:
-        logger.error(f"Error getting analytics: {e}", exc_info=True)
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 500
+        return jsonify({"status": "unhealthy", "error": str(e)}), 500
 
 @app.route("/api/cleanup", methods=["POST"])
 def manual_cleanup():
-    """
-    Endpoint to manually trigger cleanup of expired sessions.
-    """
     try:
         message_processor.cleanup_expired_resources()
-        return jsonify({
-            "status": "success",
-            "message": "Cleanup completed successfully"
-        }), 200
-        
+        return jsonify({"status": "success", "message": "Cleanup completed"}), 200
     except Exception as e:
-        logger.error(f"Error during manual cleanup: {e}", exc_info=True)
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 500
+        logger.error(f"Cleanup error: {e}", exc_info=True)
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-# Error handlers
+# ── Error handlers ────────────────────────────────────────────────────────────
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({"status": "error", "message": "Endpoint not found"}), 404
@@ -168,20 +98,15 @@ def internal_error(error):
     logger.error(f"Internal server error: {error}", exc_info=True)
     return jsonify({"status": "error", "message": "Internal server error"}), 500
 
+# ── Entry point ───────────────────────────────────────────────────────────────
+
 if __name__ == "__main__":
-    logger.info("Starting AfyaBot - Gynecology Medical AI WhatsApp Bot...")
-    logger.info(f"Webhook URL: {config.CALLBACK_BASE_URL}/webhook")
-    logger.info(f"Health Check: {config.CALLBACK_BASE_URL}/health")
-    logger.info(f"Analytics: {config.CALLBACK_BASE_URL}/api/analytics")
-    logger.info("Logs: Check afyabot.log file for detailed logs")
-    logger.info(f"AI Service Status: {'Enabled' if ai_handler.ai_enabled else 'Disabled'}")
-    logger.info("To run this application, use Gunicorn from your terminal:")
-    logger.info(
-        "gunicorn -w 4 -k gevent --timeout 120 --preload -b 0.0.0.0:{port} app:app".format(
-            port=config.APP_PORT
-        )
-    )
-    logger.info("AfyaBot is ready to assist with women's health queries! 🌸")
-    
-    # Run the Flask development server (for development only)
-    app.run(debug=True, host="0.0.0.0", port=config.APP_PORT)
+    logger.info("Starting Lola — Makinde Kitchen Demo Bot")
+    logger.info(f"Webhook:         {config.CALLBACK_BASE_URL}/webhook")
+    logger.info(f"Payment webhook: {config.CALLBACK_BASE_URL}/paystack/webhook")
+    logger.info(f"Health:          {config.CALLBACK_BASE_URL}/health")
+    logger.info(f"AI:              {'enabled' if ai_handler.ai_enabled else 'DISABLED — check GEMINI_API_KEY'}")
+    logger.info("Run with: gunicorn -w 4 -k gevent --timeout 120 --preload -b 0.0.0.0:{port} app:app".format(
+        port=config.APP_PORT
+    ))
+    app.run(debug=config.FLASK_DEBUG, host="0.0.0.0", port=config.APP_PORT)

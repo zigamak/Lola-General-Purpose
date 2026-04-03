@@ -1,7 +1,7 @@
 import logging
 import re
-from datetime import datetime
-from typing import Dict, List
+import random
+from typing import Dict, List, Tuple
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -12,48 +12,79 @@ logger = logging.getLogger(__name__)
 
 MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
 
-MENU_TEXT = """Our *Signature Loaded Fries* menu:
+MENU_TEXT = """
+MAKINDE KITCHEN — Full Menu
 
-1. *Shawarma Chicken Loaded Fries* — ₦6,500
-   Grilled chicken shavings, garlic toum, creamy shawarma sauce
+RICE & GRAINS
+- Jollof Rice — ₦2,500 (party-style smoky jollof, cooked to order)
+- Fried Rice — ₦2,800 (mixed veggies, liver and prawns)
+- Coconut Rice — ₦3,000 (fragrant coconut base with assorted protein)
+- White Rice + Stew — ₦2,000 (plain rice with rich tomato beef stew)
 
-2. *Dirty Bacon & Cheese Fries* — ₦8,000
-   Cheddar melt, bacon bits, mozzarella pull, smoky chipotle mayo & crunchy onions
+SWALLOWS
+- Pounded Yam — ₦1,500
+- Eba (Garri) — ₦800 (regular or yellow, soft or firm on request)
+- Amala — ₦1,200 (dark yam flour swallow)
+- Wheat (Semovita) — ₦1,000
 
-3. *Suya Beef Loaded Fries* — ₦7,500
-   Soft spicy suya beef strips, yaji crumble, fresh onions & tomato chunks, suya-butter drizzle
+SOUPS
+- Egusi Soup — ₦2,500 (ground melon with assorted meat and stockfish)
+- Efo Riro — ₦2,500 (rich Yoruba vegetable soup with assorted)
+- Banga Soup — ₦3,000 (Delta-style palm nut soup with catfish)
+- Oha Soup — ₦2,800 (Igbo-style oha leaf soup with cocoyam)
+- Okro Soup — ₦2,200 (fresh cut okro with assorted meat)
 
-4. *Asun Sweet & Spicy Loaded Fries* — ₦9,000
-   Peppery soft goat meat, sweet chili glaze, bell peppers and fire mayo
+SMALL CHOPS & SNACKS
+- Small Chops Platter — ₦5,500 (puff puff, spring rolls, samosa, peppered gizzard — serves 4)
+- Puff Puff (10 pcs) — ₦1,000
+- Spring Rolls (5 pcs) — ₦1,500
+- Peppered Gizzard — ₦2,000 (100g grilled and peppered chicken gizzard)
+- Moin Moin — ₦700 (steamed bean pudding)
 
-5. *Honey Mustard Chicken Fries* — ₦7,000
-   Crispy chicken bites, honey-mustard glaze, sesame & herbs
+PROTEINS (Add-ons)
+- Chicken (1 piece) — ₦1,500 (grilled or fried)
+- Beef (large cut) — ₦1,500 (peppered or plain)
+- Fish (1 piece) — ₦2,000 (catfish or titus)
+- Goat Meat (3 pcs) — ₦2,500
+- Shrimp (50g) — ₦2,000
 
-6. *BBQ Pulled Beef Loaded Fries* — ₦8,500
-   Slow-cooked shredded beef, tangy BBQ sauce, slaw & crispy shallots
+DRINKS
+- Zobo (500ml) — ₦800
+- Kunu (500ml) — ₦700
+- Chapman (can) — ₦1,200
+- Bottled Water (75cl) — ₦300
 
-7. *Chilli Pepper Prawn Loaded Fries* — ₦10,000
-   Slow-cooked prawns in chilli pepper sauce, slaw & crispy shallots"""
+DELIVERY
+- Free delivery for orders above ₦5,000
+- ₦500 flat delivery fee for orders below ₦5,000
 
-# Confirmed working models on this API key (tested 2026-03-20)
+OPERATING HOURS
+- Monday to Saturday: 10am - 9pm
+- Sunday: 12pm - 7pm
+"""
+
 GEMINI_MODELS = [
-    "gemini-2.5-flash",       # ✅ primary — best quality
-    "gemini-flash-latest",    # ✅ fallback 1 — alias to current stable flash
-    "gemini-flash-lite-latest", # ✅ fallback 2 — lighter/faster
-    "gemini-2.5-flash-lite",  # ✅ fallback 3 — pinned lite version
+    "gemini-2.5-flash",
+    "gemini-flash-latest",
+    "gemini-flash-lite-latest",
+    "gemini-2.5-flash-lite",
 ]
 
 
 class AIService:
     """
-    Handles conversational AI ordering for Chowder.ng WhatsApp bot.
+    Conversational AI ordering service for Makinde Kitchen.
     Uses Google Gemini with lazy runtime fallback — no API calls at startup.
+
+    Payment trigger: when the AI is ready to send a payment link it appends
+    [PAYMENT_READY:amount=XXXXX] at the END of its response. The ai_handler
+    intercepts this tag, strips it, generates the Paystack link, and sends
+    the payment message separately.
     """
 
     def __init__(self, config, data_manager):
         load_dotenv()
-        self.data_manager = data_manager
-        self.menu_image_url = MENU_IMAGE_URL
+        self.data_manager = data_manager  # available for future order saving
         self.active_model = None
         self._executors = {}
         self.ai_enabled = False
@@ -67,15 +98,12 @@ class AIService:
                     getattr(config, 'GOOGLE_API_KEY', None)
                 )
 
-            if self.gemini_api_key:
-                masked = self.gemini_api_key[:8] + "..." + self.gemini_api_key[-4:]
-                logger.info(f"Chowder.ng AIService — Gemini key found: {masked}")
-            else:
-                logger.error(
-                    "GEMINI_API_KEY is missing. "
-                    "Get a free key at https://aistudio.google.com/app/apikey"
-                )
+            if not self.gemini_api_key:
+                logger.error("GEMINI_API_KEY is missing.")
                 return
+
+            masked = self.gemini_api_key[:8] + "..." + self.gemini_api_key[-4:]
+            logger.info(f"Makinde Kitchen AIService — Gemini key: {masked}")
 
             self._build_agents()
 
@@ -88,11 +116,10 @@ class AIService:
         except Exception as e:
             logger.error(f"AIService init error: {e}", exc_info=True)
 
+    # ── Agent construction ────────────────────────────────────────────────────
+
     def _build_agents(self):
-        """
-        Build one AgentExecutor per model — pure object construction, zero API calls.
-        Gemini is only contacted when a real message is processed.
-        """
+        """Build one AgentExecutor per model — pure object construction, zero API calls."""
         tools = [self._create_menu_tool()]
         prompt = ChatPromptTemplate.from_messages([
             ("system", self._get_system_prompt()),
@@ -124,94 +151,120 @@ class AIService:
     def _create_menu_tool(self):
         @tool
         def get_menu() -> str:
-            """Get the full Chowder.ng menu with all item names and prices."""
+            """Get the full Makinde Kitchen menu with all items and prices."""
             return MENU_TEXT
         return get_menu
 
     def _get_system_prompt(self) -> str:
-        return f"""You are the official WhatsApp order assistant for Chowder.ng, a Nigerian food brand serving Signature Loaded Fries.
+        return f"""You are Lola, the official WhatsApp ordering assistant for Makinde Kitchen — a Lagos-based Nigerian comfort food brand.
 
-Your role is strictly to take and confirm food orders. You are professional, warm, and concise. You do not roleplay, invent information, or make promises you cannot keep.
-
-WHAT YOU CAN DO:
-- Show the menu and help customers choose what to order
-- Take and confirm orders with a reference number
-- Answer questions about menu items, prices, and ingredients
-- Tell customers that payment is cash on delivery
-
-WHAT YOU CANNOT DO — never attempt these, no exceptions:
-- You cannot check order status, delivery progress, or driver location
-- You cannot contact dispatch, drivers, or any internal team
-- You cannot offer refunds, discounts, free items, or compensation
-- You cannot access any previous orders or order history
-- You cannot make promises about delivery time
-- You cannot invent or assume any information not given to you in this conversation
-
----
-
-ESCALATION SCRIPTS — use these exact responses for complaints:
-
-If a customer says their order has not arrived or is delayed:
-"Thank you for reaching out. I am sorry to hear your order has not arrived yet. As the ordering assistant, I am not able to check delivery status directly. Please contact our support team who can look into this for you:
-📞 Call or WhatsApp: [support number]
-They will be able to follow up with the delivery team on your behalf."
-
-If a customer asks for a refund or compensation:
-"I understand your frustration and I am sorry for the experience. Refund and compensation requests need to be handled by our support team directly — I am not able to process these here.
-Please reach out to:
-📞 Call or WhatsApp: [support number]
-They will review your case and get back to you."
-
-If a customer asks for an update on an order they already placed:
-"I only handle new orders and cannot access order history or delivery updates. For updates on an existing order, please contact our support team:
-📞 Call or WhatsApp: [support number]"
-
-If a customer is upset or angry:
-"I hear you and I am truly sorry you are having this experience. I want to make sure you get the right help — please contact our support team directly so they can resolve this for you:
-📞 Call or WhatsApp: [support number]
-I will stay here if you would like to place a new order."
+Your only job is to help customers browse the menu, place food orders, collect their delivery details, and trigger payment. You are warm, professional, and concise.
 
 ---
 
 THE MENU:
 {MENU_TEXT}
 
-HOW TO TAKE AN ORDER:
-- Greet the customer professionally and ask what they would like to order
-- When they mention an item by name or number, confirm it and ask if they want anything else
-- If they order the same item multiple times, group as one line: item name x[qty] — ₦[total for that item]
-- Once done, summarise the order plainly and ask for their delivery address
-- When they give their location, send the order confirmation in this exact format:
+---
 
-Order Confirmed
+ORDER FLOW — follow these steps in order:
 
-Order Ref: [use the ref given in context]
-Name: [use the name given in context, omit line if not provided]
-Phone: [use the phone given in context, omit line if not provided]
+STEP 1 — MENU & BROWSING
+When a customer first messages or asks to see the menu, show the categories:
+  1. Rice & Grains
+  2. Swallows
+  3. Soups
+  4. Small Chops & Snacks
+  5. Proteins (Add-ons)
+  6. Drinks
+Let them pick a category or just tell you what they want.
+
+STEP 2 — TAKING THE ORDER
+- Confirm each item and quantity as the customer selects
+- Ask if they want anything else
+- When they say they are done or have nothing to add, go straight to STEP 3
+- Do NOT show an order summary here, do NOT ask them to reply YES or EDIT
+
+STEP 3 — DELIVERY ADDRESS
+Ask ONLY for their delivery address. Nothing else. Just:
+"What is your delivery address?"
+
+STEP 4 — PAYMENT TRIGGER
+Once you have the delivery address, send the final order summary and trigger payment.
+Use this EXACT format — each item MUST be on its own separate line with a line break between them:
+
+Order Summary
+
+Order Ref: [use the ref from context]
+Name: [customer name if provided, else omit this line]
+Phone: [customer phone if provided, else omit this line]
 Delivery Address: [their address]
 
-Your Order:
-[item name] x[qty] — ₦[price]
+Items:
+[item name] x[qty] — ₦[subtotal for that item]
+[item name] x[qty] — ₦[subtotal for that item]
+[item name] x[qty] — ₦[subtotal for that item]
 
-Total: ₦[total]
-Payment: Cash on Delivery
+Subtotal: ₦[subtotal]
+Delivery: ₦[500 or Free]
+Total: ₦[grand total]
 
-Your order has been received and is being prepared. Thank you for choosing Chowder.ng.
+A payment link will be sent to you now. Please complete payment within 10 minutes to confirm your order.
+[PAYMENT_READY:amount=[grand total in kobo, i.e. multiply naira by 100]]
+
+CRITICAL FORMATTING RULES FOR THE ORDER SUMMARY:
+- Every single item MUST be on its own line — never combine two items on one line
+- Put a newline character after every item line without exception
+- The amount in [PAYMENT_READY:amount=] must be in KOBO (multiply the naira total by 100)
+- Example: ₦3,500 total = [PAYMENT_READY:amount=350000]
+- Always place the tag on the very last line with nothing after it
+- Never show the tag text to the customer — it is stripped by the system before sending
 
 ---
 
-TONE AND STYLE:
-- Professional and clear at all times
-- Warm but not overly casual or playful
-- Occasional light Nigerian expressions are fine (e.g. "No wahala") but keep it measured
-- Never use asterisks (*) for formatting — plain text only
-- Never use bullet point asterisks
-- Short and direct responses — do not over-explain
-- Never fabricate facts, order history, delivery times, or internal processes
-- If you do not know something, say so honestly and direct the customer to support"""
+DELIVERY RULES:
+- Orders above ₦5,000: free delivery
+- Orders ₦5,000 and below: ₦500 flat delivery fee
+- Add the delivery fee to the total before putting it in the payment tag
+
+OPERATING HOURS:
+- Monday to Saturday: 10am - 9pm
+- Sunday: 12pm - 7pm
+- If a customer messages outside hours, acknowledge it warmly, take their pre-order, and let them know it will be processed when the kitchen opens
+
+---
+
+FAQ RESPONSES — handle these automatically:
+
+If asked about delivery areas: "We deliver across Lagos — Surulere, Lagos Island, VI, Yaba, Lekki and surrounding areas."
+If asked about minimum order: "No minimum order! Delivery is free for orders above ₦5,000. Below that, a flat ₦500 delivery fee applies."
+If asked about payment: "We accept card and bank transfer via Paystack — completely safe and instant."
+If asked about allergies or customisation: "Of course! Just tell me your preferences — no pepper, extra sauce, no onions, more protein — and we will make it happen."
+If asked about advance orders: "Yes! Tell me your preferred date and time. Please order at least 3 hours in advance."
+If asked to order for someone else: "No problem! Just give me the delivery address and recipient name."
+
+---
+
+COMPLAINT / ESCALATION:
+If a customer reports a missing order, asks for a refund, or is upset:
+"I am sorry to hear that. For issues with existing orders, please contact our support team directly:
+WhatsApp/Call: +2348000000000
+They will resolve this for you as quickly as possible."
+
+---
+
+TONE:
+- Warm, clear, and professional
+- Light Nigerian expressions are fine (e.g. "No wahala") but keep it measured
+- Plain text only — no markdown asterisks for bold, no bullet dashes in the order summary
+- Short responses — do not over-explain
+- Never invent prices, delivery times, or order history
+- If unsure, be honest and direct the customer to support"""
+
+    # ── Inference ─────────────────────────────────────────────────────────────
 
     def _invoke_with_fallback(self, input_data: dict) -> str:
-        """Try each model in order. Remember the last working one to skip retrying failed ones."""
+        """Try each model in order. Stick to the last working one."""
         model_order = GEMINI_MODELS[:]
         if self.active_model and self.active_model in model_order:
             model_order.remove(self.active_model)
@@ -227,7 +280,7 @@ TONE AND STYLE:
                 if not ai_response:
                     raise ValueError("Empty response")
                 if self.active_model != model_name:
-                    logger.info(f"Active model: {model_name}")
+                    logger.info(f"Active model switched to: {model_name}")
                     self.active_model = model_name
                 return ai_response
             except Exception as e:
@@ -242,73 +295,81 @@ TONE AND STYLE:
         conversation_history: List[Dict] = None,
         phone_number: str = None,
         user_name: str = None,
-        session_id: str = None
-    ) -> tuple[str, bool, str, str]:
-        """Generate a conversational order response using the Gemini agent."""
+        session_id: str = None,
+        order_ref: str = None,
+    ) -> Tuple[str, bool, str, str]:
+        """
+        Generate a conversational order response.
+
+        Returns:
+            Tuple of (ai_response, payment_triggered, order_ref, raw_response)
+            - ai_response: cleaned text to send to the customer (payment tag stripped)
+            - payment_triggered: True if [PAYMENT_READY:amount=...] was found
+            - order_ref: the order ref injected into context
+            - raw_response: full response including tag (for handler to parse amount)
+        """
         if not user_message or not isinstance(user_message, str):
             return "Hey! What would you like to order today? 😊", False, None, None
 
-        # Generate order ref in code — never let the AI invent it
-        import random
-        order_ref = f"CHW{random.randint(1000, 9999)}"
-
         if not self.ai_enabled or not self._executors:
-            logger.error(f"AI unavailable — ai_enabled={self.ai_enabled}, executors={list(self._executors.keys())}")
             return (
-                "Sorry, our ordering system is having a moment 😅 Please try again shortly!",
+                "Sorry, our ordering system is having a moment. Please try again shortly!",
                 False, None, None
             )
+
+        # Use passed ref or generate a new one
+        if not order_ref:
+            order_ref = f"MK{random.randint(10000, 99999)}"
 
         try:
             chat_history = []
 
-            # Always inject customer context as first turn so the AI has it
-            # regardless of whether this is the first or subsequent message
+            # Inject customer context as the first turn so the AI always has it
             real_phone = phone_number if phone_number and str(phone_number).strip() not in ("", "N/A", "None") else None
             real_name = user_name if user_name and user_name.strip() not in ("", "Guest", "Customer", "None") else None
 
-            phone_line = f"Phone: {real_phone}" if real_phone else "Phone: [omit this line from confirmation]"
-            name_line = f"Name: {real_name}" if real_name else "Name: [omit this line from confirmation]"
+            phone_line = f"Phone: {real_phone}" if real_phone else "Phone: [omit from summary]"
+            name_line = f"Name: {real_name}" if real_name else "Name: [omit from summary]"
 
             context_note = (
-                f"[SYSTEM — customer details, copy exactly, never invent:\n"
+                f"[SYSTEM — use these exact details in the order summary, never invent them:\n"
                 f"Order Ref: {order_ref}\n"
                 f"{name_line}\n"
                 f"{phone_line}]"
             )
             chat_history.append(("human", context_note))
-            chat_history.append(("ai", "Noted. I will use only these exact details and omit any line marked [omit]."))
+            chat_history.append(("ai", "Understood. I will use only these exact details and omit any line marked [omit]."))
 
-            # Add conversation history after the context
+            # Append conversation history
             if conversation_history:
                 for exchange in conversation_history[-8:]:
                     chat_history.append(("human", exchange.get("user", "")))
                     chat_history.append(("ai", exchange.get("assistant", "")))
 
-            ai_response = self._invoke_with_fallback({
+            raw_response = self._invoke_with_fallback({
                 "input": user_message,
                 "chat_history": chat_history
             })
 
-            logger.info(f"[{self.active_model}] [{session_id}]: {ai_response[:120]}")
-            return ai_response, False, None, None
+            # Detect and strip the payment trigger tag
+            payment_triggered = False
+            clean_response = raw_response
+
+            payment_match = re.search(r'\[PAYMENT_READY:amount=(\d+)\]', raw_response)
+            if payment_match:
+                payment_triggered = True
+                # Strip the tag from the customer-facing message
+                clean_response = re.sub(r'\[PAYMENT_READY:amount=\d+\]', '', raw_response).strip()
+
+            logger.info(
+                f"[{self.active_model}] [{session_id}] payment_triggered={payment_triggered}: "
+                f"{clean_response[:100]}"
+            )
+            return clean_response, payment_triggered, order_ref, raw_response
 
         except Exception as e:
             logger.error(f"All models failed [{session_id}]: {e}", exc_info=True)
             return (
-                "Ah, something went wrong on our end 😅 "
-                "Try again or send *menu* to see what we've got!",
+                "Something went wrong on our end. Try again or send *menu* to browse!",
                 False, None, None
             )
-
-    # ── Compatibility stubs ────────────────────────────────────────────────────
-
-    def _is_swahili(self, message: str) -> bool:
-        return False
-
-    def _extract_location(self, message: str) -> str:
-        return message.strip() if message and len(message.strip()) > 3 else None
-
-    def _extract_name(self, message: str) -> str:
-        match = re.search(r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\b', message or "")
-        return match.group(0) if match else None

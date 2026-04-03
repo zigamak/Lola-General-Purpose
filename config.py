@@ -24,6 +24,7 @@ class Config:
         # Payment configuration
         self.PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY')
         self.PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY')
+        self.PAYSTACK_WEBHOOK_SECRET = os.getenv('PAYSTACK_WEBHOOK_SECRET', 'paystack_webhook_secret_placeholder')
         self.SUBACCOUNT_CODE = "ACCT_iwv6csej0ra4k7g"
         self.SUBACCOUNT_PERCENTAGE = 1
         self.MERCHANT_PHONE_NUMBER = "2347082345056"
@@ -59,6 +60,11 @@ class Config:
 
         # Session configuration
         self.SESSION_TIMEOUT = int(os.getenv('SESSION_TIMEOUT', 3600))
+
+        # Business details — Makinde Kitchen demo
+        self.BUSINESS_NAME = os.getenv('BUSINESS_NAME', 'Makinde Kitchen')
+        self.BUSINESS_SUPPORT_PHONE = os.getenv('BUSINESS_SUPPORT_PHONE', '+2348000000000')
+        self.BUSINESS_EMAIL = os.getenv('BUSINESS_EMAIL', 'orders@makindekitchen.com')
 
 
 def configure_logging():

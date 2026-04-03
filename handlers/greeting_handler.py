@@ -1,7 +1,8 @@
-from .base_handler import BaseHandler
 import logging
-from typing import Dict, Any, List, Optional
 import sys
+from typing import Dict, Any, Optional
+
+from .base_handler import BaseHandler
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(stream=sys.stdout)
@@ -13,33 +14,33 @@ logger.setLevel(logging.INFO)
 
 class GreetingHandler(BaseHandler):
     """
-    Greeting handler for Chowder.ng WhatsApp order bot.
+    Greeting handler for Makinde Kitchen WhatsApp order bot (Lola).
     Sends the menu image on first contact, then hands off to the AI order handler.
     """
 
     MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
 
     def handle_greeting_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict[str, Any]:
-        """Handle greeting state — send menu image and redirect to AI order handler."""
-        self.logger.info(f"GreetingHandler: session {session_id} — sending Chowder.ng welcome.")
+        """Handle greeting state — send menu image and redirect to AI handler."""
+        self.logger.info(f"GreetingHandler: session {session_id} — sending Makinde Kitchen welcome.")
         return self._send_welcome_and_redirect(state, session_id)
 
     def generate_initial_greeting(self, state: Dict, session_id: str, user_name: Optional[str] = None) -> Dict[str, Any]:
         """Generate initial greeting with menu image, then hand off to AI handler."""
-        self.logger.info(f"GreetingHandler: initial greeting for session {session_id}, user '{user_name}'.")
+        self.logger.info(f"GreetingHandler: initial greeting for {session_id}, user '{user_name}'.")
         return self._send_welcome_and_redirect(state, session_id)
 
     def handle_back_to_main(self, state: Dict, session_id: str, message: str = "") -> Dict[str, Any]:
         """Back to main — resend welcome and redirect."""
-        self.logger.info(f"GreetingHandler: back to main for session {session_id}.")
+        self.logger.info(f"GreetingHandler: back to main for {session_id}.")
         return self._send_welcome_and_redirect(state, session_id, additional_message=message)
 
     def _send_welcome_and_redirect(
         self, state: Dict, session_id: str, additional_message: str = ""
     ) -> Dict[str, Any]:
         """
-        Send the Chowder.ng menu image with a welcome caption,
-        then redirect to the AI order handler for conversational ordering.
+        Send the Makinde Kitchen menu image with a welcome caption,
+        then redirect to the AI order handler.
         """
         user_name = state.get("user_name", "there")
 
@@ -55,23 +56,19 @@ class GreetingHandler(BaseHandler):
 
         self.session_manager.update_session_state(session_id, state)
 
-        # Send menu image first
         try:
             self.whatsapp_service.send_image_message(
                 session_id,
                 self.MENU_IMAGE_URL,
                 caption=(
-                    f"👋 Welcome to *Chowder.ng*, {user_name}! 🍟\n\n"
-                    "Here's our Signature Loaded Fries menu.\n"
-                    "Just tell me what you'd like and we'll sort you out! 😋"
+                    f"Hi {user_name}! Welcome to *Makinde Kitchen* 🍛\n\n"
+                    "Nigerian comfort food — soups, rice, swallows, small chops and more.\n"
+                    "Just tell me what you'd like and I'll sort you out! 😋"
                 )
             )
         except Exception as e:
-            self.logger.error(
-                f"Session {session_id}: Could not send menu image: {e}. Continuing without image."
-            )
+            self.logger.error(f"Session {session_id}: Could not send menu image: {e}.")
 
-        # Hand off to AI handler for conversational ordering
         return {
             "redirect": "ai_handler",
             "redirect_message": "initial_greeting",
