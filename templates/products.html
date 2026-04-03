@@ -13,7 +13,7 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;">
         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
-    Add Product
+    <span class="add-label">Add Product</span>
 </button>
 {% endblock %}
 
@@ -93,7 +93,6 @@
 
 .summary-icon svg { width: 18px; height: 18px; }
 
-.summary-info {}
 .summary-label { font-size: 11.5px; color: var(--muted); margin-bottom: 3px; font-family: var(--font-mono); }
 .summary-value {
     font-family: var(--font-head);
@@ -209,9 +208,7 @@
 }
 
 /* ── Category sections ── */
-.category-section {
-    margin-bottom: 32px;
-}
+.category-section { margin-bottom: 32px; }
 
 .category-label {
     display: flex;
@@ -265,9 +262,7 @@
     transform: translateY(-1px);
 }
 
-.product-card.unavailable {
-    opacity: 0.58;
-}
+.product-card.unavailable { opacity: 0.58; }
 
 .product-card-top {
     display: flex;
@@ -473,14 +468,61 @@ body.list-mode .grid-view-section  { display: none; }
 .product-card:nth-child(5) { animation-delay: 0.10s; }
 .product-card:nth-child(6) { animation-delay: 0.12s; }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
+/* ════════════════════════════════════════
+   PRODUCTS — Responsive
+════════════════════════════════════════ */
+@media (max-width: 1024px) {
     .products-summary { grid-template-columns: 1fr 1fr; }
 }
-@media (max-width: 600px) {
-    .products-summary { grid-template-columns: 1fr; }
-    .products-toolbar { flex-direction: column; align-items: stretch; }
-    .search-wrap { max-width: 100%; }
+
+@media (max-width: 768px) {
+    .products-summary { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .summary-card     { padding: 14px 16px; gap: 10px; }
+    .summary-icon     { width: 34px; height: 34px; }
+    .summary-value    { font-size: 18px; }
+
+    .products-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .search-wrap { max-width: 100%; min-width: 0; }
+
+    /* Category tabs: scrollable row */
+    .category-filter-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .category-filter-tabs::-webkit-scrollbar { display: none; }
+
+    /* Availability filter: stretch full width */
+    .avail-filter { width: 100%; }
+    .avail-tab    { flex: 1; text-align: center; }
+
+    /* Grid: 2 columns on tablet, 1 on small */
+    .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
+    /* List view: hide Description column */
+    body.list-mode th:nth-child(3),
+    body.list-mode td:nth-child(3) { display: none; }
+
+    /* Hide "Add Product" text, keep just the + icon */
+    .add-label { display: none; }
+
+    /* View toggle hidden on mobile (force grid) */
+    #viewToggleBtn { display: none; }
+}
+
+@media (max-width: 480px) {
+    .products-summary { grid-template-columns: 1fr 1fr; }
+    .product-grid { grid-template-columns: 1fr; }
+
+    /* In list view on small screens, also hide Status column */
+    body.list-mode th:nth-child(5),
+    body.list-mode td:nth-child(5) { display: none; }
 }
 </style>
 {% endblock %}
@@ -593,7 +635,7 @@ body.list-mode .grid-view-section  { display: none; }
     </div>
 
     <div class="avail-filter">
-        <button class="avail-tab active" data-avail="all"       onclick="setAvail(this)">All</button>
+        <button class="avail-tab active" data-avail="all"        onclick="setAvail(this)">All</button>
         <button class="avail-tab"        data-avail="available"  onclick="setAvail(this)">Active</button>
         <button class="avail-tab"        data-avail="unavailable" onclick="setAvail(this)">Inactive</button>
     </div>
@@ -925,9 +967,10 @@ function animateCount(el) {
 }
 document.querySelectorAll('[id^="anim-"]').forEach(el => setTimeout(() => animateCount(el), 100));
 
-/* ── View toggle (grid/list) ── */
+/* ── View toggle (grid/list) — disabled on mobile ── */
 let isListMode = false;
 function toggleView() {
+    if (window.innerWidth <= 768) return; // force grid on mobile
     isListMode = !isListMode;
     document.body.classList.toggle('list-mode', isListMode);
     const icon = document.getElementById('viewIcon');
@@ -937,6 +980,14 @@ function toggleView() {
         icon.innerHTML = `<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>`;
     }
 }
+
+/* ── Force grid on resize to mobile ── */
+window.addEventListener('resize', () => {
+    if (window.innerWidth <= 768 && isListMode) {
+        isListMode = false;
+        document.body.classList.remove('list-mode');
+    }
+});
 
 /* ── Filtering ── */
 let activeCat   = 'all';

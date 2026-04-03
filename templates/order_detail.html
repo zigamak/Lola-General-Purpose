@@ -7,7 +7,7 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
     </svg>
-    Back to Orders
+    <span class="back-label">Back to Orders</span>
 </a>
 {% endblock %}
 
@@ -52,10 +52,6 @@
         gap: 20px;
         margin-bottom: 20px;
         align-items: start;
-    }
-
-    @media (max-width: 900px) {
-        .detail-grid { grid-template-columns: 1fr; }
     }
 
     /* ── Info card ── */
@@ -260,9 +256,7 @@
         align-items: flex-end;
     }
 
-    .status-select-wrap select {
-        flex: 1;
-    }
+    .status-select-wrap select { flex: 1; }
 
     /* ── Items card ── */
     .items-card {
@@ -309,9 +303,7 @@
         justify-content: flex-end;
     }
 
-    .totals-table {
-        width: 280px;
-    }
+    .totals-table { width: 280px; }
 
     .totals-row {
         display: flex;
@@ -370,6 +362,57 @@
         font-weight: 600;
         padding: 2px 9px;
         border-radius: 6px;
+    }
+
+    /* ════════════════════════════════════════
+       ORDER DETAIL — Responsive (≤ 900px)
+    ════════════════════════════════════════ */
+    @media (max-width: 900px) {
+        .detail-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ════════════════════════════════════════
+       ORDER DETAIL — Mobile (≤ 768px)
+    ════════════════════════════════════════ */
+    @media (max-width: 768px) {
+        .detail-header { margin-bottom: 16px; }
+        .detail-title-group h2 { font-size: 18px; }
+
+        /* Hide "Back to Orders" text, keep just the arrow icon */
+        .back-label { display: none; }
+
+        /* Info row: stack label above value on small screens */
+        .info-row {
+            flex-direction: column;
+            gap: 4px;
+            padding: 10px 16px;
+        }
+
+        .info-row-label { width: auto; }
+
+        .info-card-header,
+        .status-card-header,
+        .items-card-header { padding: 14px 16px; }
+
+        .status-card-body { padding: 16px; }
+
+        /* Totals: full width on mobile */
+        .totals-section {
+            justify-content: stretch;
+            padding: 6px 16px 16px;
+        }
+
+        .totals-table { width: 100%; }
+
+        /* Items table: hide Unit Price column */
+        th:nth-child(2), td:nth-child(2) { display: none; }
+    }
+
+    @media (max-width: 480px) {
+        .detail-header-badges .badge {
+            font-size: 11px;
+            padding: 4px 10px;
+        }
     }
 </style>
 {% endblock %}

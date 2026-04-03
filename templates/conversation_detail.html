@@ -3,7 +3,12 @@
 {% block page_title %}{{ customer.name or customer.phone_number }}{% endblock %}
 
 {% block topbar_actions %}
-<a href="{{ url_for('portal.conversations') }}" class="btn btn-ghost btn-sm">← Back</a>
+<a href="{{ url_for('portal.conversations') }}" class="btn btn-ghost btn-sm">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+    </svg>
+    <span class="back-label">Back</span>
+</a>
 {% endblock %}
 
 {% block extra_styles %}
@@ -126,6 +131,8 @@
         padding: 18px 24px;
         border-bottom: 1px solid var(--border-light);
         background: var(--surface);
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
     .chat-panel-title {
@@ -247,6 +254,62 @@
         background: var(--accent-soft);
         padding: 1px 7px;
         border-radius: 10px;
+    }
+
+    /* ════════════════════════════════════════
+       CHAT DETAIL — Mobile (≤ 900px)
+    ════════════════════════════════════════ */
+    @media (max-width: 900px) {
+        /* Stack: info panel goes above chat */
+        .chat-layout {
+            grid-template-columns: 1fr;
+        }
+
+        /* Un-sticky the info panel when stacked */
+        .info-panel {
+            position: static;
+        }
+
+        /* Compact the info panel header */
+        .info-panel-header { padding: 18px 16px; }
+        .info-avatar { width: 44px; height: 44px; font-size: 16px; margin-bottom: 8px; }
+        .info-name   { font-size: 14px; }
+
+        /* Make info-body a 2-col grid instead of vertical stack */
+        .info-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0;
+        }
+
+        .info-row {
+            border-bottom: 1px solid var(--border-light);
+            border-right: 1px solid var(--border-light);
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            padding: 10px 16px;
+        }
+
+        /* Remove right border on even items */
+        .info-row:nth-child(even) { border-right: none; }
+    }
+
+    @media (max-width: 768px) {
+        .chat-feed { padding: 16px; gap: 10px; }
+        .chat-panel-header { padding: 14px 16px; }
+
+        /* Wider bubbles on mobile */
+        .msg { max-width: 90%; }
+
+        /* Hide legend badges */
+        .chat-panel-header > div:last-child { display: none; }
+    }
+
+    @media (max-width: 480px) {
+        /* Full-width bubbles */
+        .msg { max-width: 95%; }
+        .bubble { font-size: 13px; padding: 9px 13px; }
     }
 </style>
 {% endblock %}
