@@ -300,14 +300,17 @@ Delivery: ₦[500 or Free]
 Total: ₦[grand total]
 
 A payment link will be sent to you now. Please complete payment within 10 minutes to confirm your order.
+[ORDER_ITEMS:name=[item name],qty=[qty],price=[unit price in naira],subtotal=[subtotal in naira];name=[item name],qty=[qty],price=[unit price in naira],subtotal=[subtotal in naira]]
 [PAYMENT_READY:amount=[grand total in kobo — multiply naira by 100]]
 
 CRITICAL FORMATTING RULES:
 - Every item MUST be on its own line — never run two items together
 - The amount in [PAYMENT_READY:amount=] must be in KOBO (naira x 100)
 - Example: ₦3,500 = [PAYMENT_READY:amount=350000]
-- Place the tag on the very last line with nothing after it
-- Never show the tag to the customer — it is stripped by the system
+- [ORDER_ITEMS] must list every item separated by semicolons, all on one line
+- Example with 2 items: [ORDER_ITEMS:name=Jollof Rice,qty=2,price=2500,subtotal=5000;name=Zobo (500ml),qty=1,price=800,subtotal=800]
+- Place [ORDER_ITEMS] on the second to last line, [PAYMENT_READY] on the very last line
+- Never show either tag to the customer — both are stripped by the system
 
 ---
 
@@ -443,14 +446,16 @@ TONE:
                 "chat_history": chat_history,
             })
 
-            # Detect and strip payment trigger tag
+            # Detect and strip both tags from customer-facing response
             payment_triggered = False
             clean_response    = raw_response
 
             payment_match = re.search(r'\[PAYMENT_READY:amount=(\d+)\]', raw_response)
             if payment_match:
                 payment_triggered = True
-                clean_response    = re.sub(r'\[PAYMENT_READY:amount=\d+\]', '', raw_response).strip()
+                # Strip both tags — customer never sees them
+                clean_response = re.sub(r'\[ORDER_ITEMS:[^\]]+\]', '', clean_response).strip()
+                clean_response = re.sub(r'\[PAYMENT_READY:amount=\d+\]', '', clean_response).strip()
 
             logger.info(
                 f"[{self.active_model}] [{session_id}] returning={is_returning} "

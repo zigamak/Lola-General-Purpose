@@ -8,95 +8,331 @@
 
 {% block extra_styles %}
 <style>
-.chat-meta {
-    display: flex; gap: 24px; margin-bottom: 28px;
-    padding: 16px 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-}
-.meta-item { display: flex; flex-direction: column; gap: 3px; }
-.meta-label { font-size: 10px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
-.meta-value { font-size: 14px; font-weight: 500; }
+    /* ── Two-column layout ── */
+    .chat-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 20px;
+        align-items: start;
+    }
 
-.chat-feed { display: flex; flex-direction: column; gap: 10px; }
+    /* ── Sidebar info panel ── */
+    .info-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: calc(var(--topbar-h) + 28px);
+    }
 
-.msg { display: flex; max-width: 72%; }
-.msg.user     { align-self: flex-end; flex-direction: row-reverse; }
-.msg.assistant{ align-self: flex-start; }
+    .info-panel-header {
+        background: linear-gradient(135deg, #0f1729 0%, #1e3a8a 100%);
+        padding: 24px 20px;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
 
-.bubble {
-    padding: 11px 15px;
-    border-radius: 16px;
-    font-size: 13.5px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-    word-break: break-word;
-}
+    .info-panel-header::before {
+        content: '';
+        position: absolute;
+        top: -40px; right: -40px;
+        width: 120px; height: 120px;
+        border-radius: 50%;
+        background: rgba(99,179,237,0.1);
+        pointer-events: none;
+    }
 
-.msg.user .bubble {
-    background: var(--accent);
-    color: #0f0f0f;
-    border-bottom-right-radius: 4px;
-}
+    .info-avatar {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-head);
+        font-size: 20px; font-weight: 800; color: #fff;
+        margin: 0 auto 12px;
+        box-shadow: 0 4px 16px rgba(37,99,235,0.4);
+        position: relative;
+    }
 
-.msg.assistant .bubble {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-bottom-left-radius: 4px;
-}
+    .info-name {
+        font-family: var(--font-head);
+        font-size: 15px; font-weight: 700; color: #fff;
+        line-height: 1.2;
+    }
 
-.msg-time {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    color: var(--muted);
-    margin-top: 4px;
-    padding: 0 4px;
-}
-.msg.user     .msg-time { text-align: right; }
-.msg.assistant .msg-time { text-align: left; }
+    .info-phone {
+        font-size: 11px; font-family: var(--font-mono);
+        color: rgba(255,255,255,0.45);
+        margin-top: 4px;
+    }
 
-.msg-wrap { display: flex; flex-direction: column; }
-.msg.user .msg-wrap { align-items: flex-end; }
+    .info-body { padding: 16px 0; }
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-row-label {
+        font-size: 10.5px;
+        font-family: var(--font-mono);
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+    }
+
+    .info-row-value {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .info-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 11px;
+        font-family: var(--font-mono);
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+
+    /* ── Chat panel ── */
+    .chat-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border-light);
+        background: var(--surface);
+    }
+
+    .chat-panel-title {
+        font-family: var(--font-head);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .msg-count-pill {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 11px;
+        font-family: var(--font-mono);
+        padding: 2px 8px;
+        border-radius: 20px;
+    }
+
+    /* ── Feed ── */
+    .chat-feed {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 200px;
+    }
+
+    /* ── Date divider ── */
+    .date-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 8px 0;
+    }
+
+    .date-divider::before,
+    .date-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border-light);
+    }
+
+    .date-divider span {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: var(--muted-light);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        white-space: nowrap;
+    }
+
+    /* ── Message bubbles ── */
+    .msg { display: flex; max-width: 75%; }
+    .msg.user      { align-self: flex-end;   flex-direction: row-reverse; }
+    .msg.assistant { align-self: flex-start; }
+
+    .msg-wrap { display: flex; flex-direction: column; }
+    .msg.user .msg-wrap      { align-items: flex-end; }
+    .msg.assistant .msg-wrap { align-items: flex-start; }
+
+    .bubble {
+        padding: 11px 15px;
+        border-radius: 16px;
+        font-size: 13.5px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+        max-width: 100%;
+    }
+
+    .msg.user .bubble {
+        background: linear-gradient(135deg, var(--accent), #1d4ed8);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+    }
+
+    .msg.assistant .bubble {
+        background: var(--surface2);
+        border: 1px solid var(--border-light);
+        color: var(--text);
+        border-bottom-left-radius: 4px;
+    }
+
+    .msg-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+        padding: 0 3px;
+    }
+
+    .msg-time {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: var(--muted-light);
+    }
+
+    .msg-role-tag {
+        font-size: 9.5px;
+        font-family: var(--font-mono);
+        padding: 1px 6px;
+        border-radius: 10px;
+        letter-spacing: 0.3px;
+        font-weight: 500;
+    }
+
+    .msg.user      .msg-role-tag { background: rgba(37,99,235,0.1);  color: var(--accent); }
+    .msg.assistant .msg-role-tag { background: var(--surface3);       color: var(--muted); }
+
+    .msg-order {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: var(--accent);
+        background: var(--accent-soft);
+        padding: 1px 7px;
+        border-radius: 10px;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="chat-meta">
-    <div class="meta-item">
-        <span class="meta-label">Name</span>
-        <span class="meta-value">{{ customer.name or '—' }}</span>
-    </div>
-    <div class="meta-item">
-        <span class="meta-label">Phone</span>
-        <span class="meta-value mono">{{ customer.phone_number }}</span>
-    </div>
-    <div class="meta-item">
-        <span class="meta-label">Messages</span>
-        <span class="meta-value">{{ messages | length }}</span>
-    </div>
-    <div class="meta-item">
-        <span class="meta-label">First Contact</span>
-        <span class="meta-value">{{ customer.created_at.strftime('%d %b %Y') if customer.created_at else '—' }}</span>
-    </div>
-</div>
+<div class="chat-layout">
 
-{% if messages %}
-<div class="chat-feed">
-    {% for msg in messages %}
-    <div class="msg {{ msg.role }}">
-        <div class="msg-wrap">
-            <div class="bubble">{{ msg.message }}</div>
-            <div class="msg-time">
-                {{ msg.created_at.strftime('%d %b, %H:%M') if msg.created_at else '' }}
-                {% if msg.order_id %} · order #{{ msg.order_id }}{% endif %}
+    <!-- Left: Customer info panel -->
+    <div class="info-panel">
+        <div class="info-panel-header">
+            <div class="info-avatar">
+                {{ (customer.name or customer.phone_number)[:2] | upper }}
+            </div>
+            <div class="info-name">{{ customer.name or 'Unknown' }}</div>
+            <div class="info-phone">{{ customer.phone_number }}</div>
+        </div>
+
+        <div class="info-body">
+            <div class="info-row">
+                <span class="info-row-label">Name</span>
+                <span class="info-row-value">{{ customer.name or '—' }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label">Phone</span>
+                <span class="info-row-value mono" style="font-size:12px;">{{ customer.phone_number }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label">Messages</span>
+                <span class="info-pill">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                    {{ messages | length }}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label">First Contact</span>
+                <span class="info-row-value" style="font-size:12px;">
+                    {{ customer.created_at.strftime('%d %b %Y') if customer.created_at else '—' }}
+                </span>
             </div>
         </div>
     </div>
-    {% endfor %}
+
+    <!-- Right: Chat panel -->
+    <div class="chat-panel">
+        <div class="chat-panel-header">
+            <div class="chat-panel-title">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent)">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                Chat History
+                <span class="msg-count-pill">{{ messages | length }} messages</span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:center;">
+                <span class="badge badge-assistant" style="font-size:10.5px;">🤖 AI</span>
+                <span class="badge badge-user" style="font-size:10.5px;">👤 Customer</span>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="chat-feed">
+            {% for msg in messages %}
+            <div class="msg {{ msg.role }}">
+                <div class="msg-wrap">
+                    <div class="bubble">{{ msg.message }}</div>
+                    <div class="msg-meta">
+                        <span class="msg-time">
+                            {{ msg.created_at.strftime('%d %b, %H:%M') if msg.created_at else '' }}
+                        </span>
+                        <span class="msg-role-tag">{{ 'you' if msg.role == 'user' else 'lola' }}</span>
+                        {% if msg.order_id %}
+                        <span class="msg-order">order #{{ msg.order_id }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty">
+            <div class="empty-icon">💬</div>
+            <div class="empty-text">No messages found</div>
+        </div>
+        {% endif %}
+    </div>
+
 </div>
-{% else %}
-<div class="empty"><div class="empty-icon">💬</div>No messages found</div>
-{% endif %}
 {% endblock %}

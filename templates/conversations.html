@@ -2,38 +2,363 @@
 {% block title %}Conversations{% endblock %}
 {% block page_title %}Conversations{% endblock %}
 
+{% block extra_styles %}
+<style>
+    /* ── Page header ── */
+    .welcome-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+
+    .welcome-text h1 {
+        font-family: var(--font-head);
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+
+    .welcome-text p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+    }
+
+    /* ── Summary stat strip ── */
+    .conv-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .conv-stat {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 22px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.22s ease;
+    }
+
+    .conv-stat:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        border-color: rgba(37,99,235,0.2);
+    }
+
+    .conv-stat-glow {
+        position: absolute;
+        top: -30px; right: -30px;
+        width: 90px; height: 90px;
+        border-radius: 50%;
+        background: var(--glow-color, rgba(37,99,235,0.06));
+        pointer-events: none;
+    }
+
+    .conv-stat.sky   { --glow-color: rgba(14,165,233,0.08); }
+    .conv-stat.green { --glow-color: rgba(16,185,129,0.08); }
+    .conv-stat.amber { --glow-color: rgba(245,158,11,0.08); }
+
+    .conv-stat-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+
+    .conv-stat-icon {
+        width: 34px; height: 34px;
+        border-radius: 9px;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    .conv-stat-icon.sky   { background: rgba(14,165,233,0.1);  color: var(--accent2); }
+    .conv-stat-icon.green { background: rgba(16,185,129,0.1);  color: var(--green); }
+    .conv-stat-icon.amber { background: rgba(245,158,11,0.1);  color: var(--amber); }
+    .conv-stat-icon svg { width: 17px; height: 17px; }
+
+    .conv-stat-label {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: var(--muted);
+        letter-spacing: 0.3px;
+        margin-bottom: 5px;
+    }
+
+    .conv-stat-value {
+        font-family: var(--font-head);
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -1px;
+        line-height: 1;
+    }
+
+    /* ── Main table card ── */
+    .conv-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .conv-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .conv-card-title {
+        font-family: var(--font-head);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .conv-count-pill {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 11px;
+        font-family: var(--font-mono);
+        padding: 2px 8px;
+        border-radius: 20px;
+    }
+
+    /* ── Search ── */
+    .search-wrap { position: relative; }
+
+    .search-icon {
+        position: absolute;
+        left: 10px; top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted-light);
+        pointer-events: none;
+        display: flex; align-items: center;
+    }
+
+    .search-icon svg { width: 13px; height: 13px; }
+
+    .table-search {
+        width: 200px;
+        padding: 7px 12px 7px 32px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        font-size: 12.5px;
+        color: var(--text);
+        outline: none;
+        transition: all 0.15s;
+        font-family: var(--font-body);
+    }
+
+    .table-search:focus {
+        background: var(--surface);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+        width: 240px;
+    }
+
+    /* ── Customer avatar chip ── */
+    .customer-chip {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .customer-avatar {
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 700; color: #fff;
+        flex-shrink: 0;
+    }
+
+    .customer-name { font-weight: 500; color: var(--text); font-size: 13.5px; }
+    .customer-sub  { font-size: 11px; color: var(--muted); font-family: var(--font-mono); margin-top: 1px; }
+
+    /* ── Message count badge ── */
+    .msg-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--surface2);
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 12px;
+        font-family: var(--font-mono);
+        color: var(--text-2);
+        font-weight: 500;
+    }
+
+    .msg-count svg { width: 11px; height: 11px; opacity: 0.5; }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="table-wrap">
-    <table>
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Phone</th>
-                <th>Messages</th>
-                <th>Last Active</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in customers %}
-            <tr>
-                <td>{{ c.name or '—' }}</td>
-                <td class="mono">{{ c.phone_number }}</td>
-                <td class="mono">{{ c.message_count }}</td>
-                <td class="muted mono">
-                    {{ c.last_message.strftime('%d %b %Y, %H:%M') if c.last_message else '—' }}
-                </td>
-                <td>
-                    <a href="{{ url_for('portal.conversation_detail', phone=c.phone_number) }}"
-                       class="btn btn-ghost btn-sm">View Chat</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr><td colspan="5">
-                <div class="empty"><div class="empty-icon">💬</div>No conversations yet</div>
-            </td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<!-- Page header -->
+<div class="welcome-bar">
+    <div class="welcome-text">
+        <h1>Conversations</h1>
+        <p>All customer chat threads via WhatsApp</p>
+    </div>
 </div>
+
+<!-- Stat strip -->
+<div class="conv-stats">
+    <div class="conv-stat sky">
+        <div class="conv-stat-glow"></div>
+        <div class="conv-stat-header">
+            <div class="conv-stat-icon sky">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+            </div>
+        </div>
+        <div class="conv-stat-label">Total Customers</div>
+        <div class="conv-stat-value">{{ customers | length }}</div>
+    </div>
+
+    <div class="conv-stat green">
+        <div class="conv-stat-glow"></div>
+        <div class="conv-stat-header">
+            <div class="conv-stat-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="conv-stat-label">Total Messages</div>
+        <div class="conv-stat-value">{{ customers | sum(attribute='message_count') }}</div>
+    </div>
+
+    <div class="conv-stat amber">
+        <div class="conv-stat-glow"></div>
+        <div class="conv-stat-header">
+            <div class="conv-stat-icon amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+        </div>
+        <div class="conv-stat-label">Avg. Messages / Customer</div>
+        <div class="conv-stat-value">
+            {% if customers | length > 0 %}
+                {{ ((customers | sum(attribute='message_count')) / (customers | length)) | round(1) }}
+            {% else %}0{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Conversations table card -->
+<div class="conv-card">
+    <div class="conv-card-header">
+        <div class="conv-card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent)">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            All Conversations
+            <span class="conv-count-pill">{{ customers | length }}</span>
+        </div>
+
+        {% if customers %}
+        <div class="search-wrap">
+            <span class="search-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </span>
+            <input class="table-search" type="text" placeholder="Search customers…" id="convSearch">
+        </div>
+        {% endif %}
+    </div>
+
+    {% if customers %}
+    <div style="overflow-x: auto;">
+        <table id="convTable">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Messages</th>
+                    <th>Last Active</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in customers %}
+                <tr data-search="{{ ((c.name or '') ~ ' ' ~ c.phone_number) | lower }}">
+                    <td>
+                        <div class="customer-chip">
+                            <div class="customer-avatar">
+                                {{ (c.name or c.phone_number)[:2] | upper }}
+                            </div>
+                            <div>
+                                <div class="customer-name">{{ c.name or '—' }}</div>
+                                {% if c.name %}
+                                <div class="customer-sub">{{ c.phone_number }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="mono muted" style="font-size:12px;">{{ c.phone_number }}</td>
+                    <td>
+                        <span class="msg-count">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                            </svg>
+                            {{ c.message_count }}
+                        </span>
+                    </td>
+                    <td class="muted mono" style="font-size:12px;">
+                        {{ c.last_message.strftime('%d %b %Y, %H:%M') if c.last_message else '—' }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('portal.conversation_detail', phone=c.phone_number) }}"
+                           class="btn btn-ghost btn-sm">View Chat →</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty">
+        <div class="empty-icon">💬</div>
+        <div class="empty-text">No conversations yet — they'll show up here</div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const convSearch = document.getElementById('convSearch');
+if (convSearch) {
+    convSearch.addEventListener('input', function () {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('#convTable tbody tr').forEach(row => {
+            row.style.display = !q || row.dataset.search.includes(q) ? '' : 'none';
+        });
+    });
+}
+</script>
 {% endblock %}

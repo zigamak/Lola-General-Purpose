@@ -3,75 +3,638 @@
 {% block page_title %}Products{% endblock %}
 
 {% block topbar_actions %}
+<button class="btn btn-ghost btn-sm" id="viewToggleBtn" onclick="toggleView()" title="Toggle view">
+    <svg id="viewIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+</button>
 <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
-    + Add Product
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Add Product
 </button>
 {% endblock %}
 
 {% block extra_styles %}
 <style>
+/* ── Products page header bar ── */
+.products-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.products-title-block h1 {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.4px;
+}
+
+.products-title-block p {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-family: var(--font-mono);
+}
+
+/* ── Summary bar ── */
+.products-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 26px;
+}
+
+.summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 2px 2px 0 0;
+}
+
+.summary-card.blue::before   { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.summary-card.green::before  { background: linear-gradient(90deg, var(--green), #34d399); }
+.summary-card.amber::before  { background: linear-gradient(90deg, var(--amber), #fbbf24); }
+.summary-card.red::before    { background: linear-gradient(90deg, var(--red), #f87171); }
+
+.summary-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+
+.summary-icon.blue   { background: var(--accent-soft); color: var(--accent); }
+.summary-icon.green  { background: var(--green-soft); color: var(--green); }
+.summary-icon.amber  { background: var(--amber-soft); color: var(--amber); }
+.summary-icon.red    { background: var(--red-soft); color: var(--red); }
+
+.summary-icon svg { width: 18px; height: 18px; }
+
+.summary-info {}
+.summary-label { font-size: 11.5px; color: var(--muted); margin-bottom: 3px; font-family: var(--font-mono); }
+.summary-value {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
+/* ── Toolbar ── */
+.products-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px; height: 15px;
+    color: var(--muted-light);
+    pointer-events: none;
+}
+
+.product-search {
+    width: 100%;
+    padding: 9px 12px 9px 34px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+}
+
+.product-search:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+}
+
+.category-filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+    flex-wrap: wrap;
+}
+
+.cat-tab {
+    padding: 5px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.15s;
+    font-family: var(--font-body);
+    white-space: nowrap;
+}
+
+.cat-tab.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+}
+
+.cat-tab:hover:not(.active) { color: var(--text-2); }
+
+.avail-filter {
+    display: flex;
+    gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+}
+
+.avail-tab {
+    padding: 5px 11px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.15s;
+    font-family: var(--font-body);
+}
+
+.avail-tab.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ── Category sections ── */
+.category-section {
+    margin-bottom: 32px;
+}
+
+.category-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-head);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.category-count {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+/* ── GRID VIEW ── */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
 }
+
 .product-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
+    border-radius: var(--radius);
+    padding: 20px;
     position: relative;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    animation: fadeSlideIn 0.3s ease both;
 }
-.product-card:hover { border-color: #bcd; }
-.product-card.unavailable { opacity: 0.5; }
-.product-card.unavailable::after {
-    content: 'UNAVAILABLE';
-    position: absolute;
-    top: 12px; right: 12px;
-    font-size: 9px;
+
+.product-card:hover {
+    border-color: #c5d5f0;
+    box-shadow: var(--shadow);
+    transform: translateY(-1px);
+}
+
+.product-card.unavailable {
+    opacity: 0.58;
+}
+
+.product-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.product-name {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    flex: 1;
+}
+
+.product-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.product-status-dot.available   { background: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+.product-status-dot.unavailable { background: var(--red);   box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+
+.product-desc {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    line-height: 1.5;
+    min-height: 38px;
+    flex: 1;
+}
+
+.product-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.product-price {
     font-family: var(--font-mono);
-    letter-spacing: 1px;
-    color: var(--danger);
-    background: rgba(220,38,38,0.1);
-    padding: 3px 8px;
-    border-radius: 4px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.5px;
 }
-.product-name { font-family: var(--font-head); font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-.product-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; min-height: 36px; }
-.product-price { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+
+.product-badge {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 3px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.product-badge.available   { background: var(--green-soft); color: #047857; }
+.product-badge.unavailable { background: var(--red-soft);   color: #b91c1c; }
+
 .product-actions {
-    display: flex; gap: 8px; margin-top: 16px;
-    padding-top: 14px; border-top: 1px solid var(--border);
+    display: flex;
+    gap: 7px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
     flex-wrap: wrap;
 }
-.category-section { margin-bottom: 36px; }
-.category-label {
+
+/* ── LIST VIEW ── */
+.product-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+}
+
+.product-table-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-light);
+    gap: 10px;
+}
+
+.product-table-title {
     font-family: var(--font-head);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
+    flex: 1;
+}
+
+/* hide list view by default */
+.list-view-section { display: none; }
+body.list-mode .list-view-section  { display: block; }
+body.list-mode .grid-view-section  { display: none; }
+
+/* ── No results ── */
+.no-results {
+    text-align: center;
+    padding: 52px 24px;
+    color: var(--muted);
+}
+
+.no-results-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.5; }
+.no-results-text { font-size: 13px; font-family: var(--font-mono); color: var(--muted-light); }
+
+/* ── quick action dots menu ── */
+.card-menu-wrap { position: relative; }
+
+.card-menu-btn {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.card-menu-btn:hover { background: var(--surface2); color: var(--text); }
+
+/* ── Empty state ── */
+.products-empty {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--muted);
+}
+
+.products-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.products-empty-title {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-2);
+    margin-bottom: 8px;
+}
+.products-empty-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+/* ── Modal enhancements ── */
+.modal-subtitle {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: -14px;
+    margin-bottom: 22px;
+    font-family: var(--font-mono);
+}
+
+.modal-section {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--muted-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 18px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.char-count {
+    font-size: 10.5px;
+    color: var(--muted-light);
+    font-family: var(--font-mono);
+    text-align: right;
+    margin-top: 4px;
+}
+
+/* ── Price preview in modal ── */
+.price-preview {
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+}
+
+.price-preview-val {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* ── Stagger card animations ── */
+.product-card:nth-child(1) { animation-delay: 0.02s; }
+.product-card:nth-child(2) { animation-delay: 0.04s; }
+.product-card:nth-child(3) { animation-delay: 0.06s; }
+.product-card:nth-child(4) { animation-delay: 0.08s; }
+.product-card:nth-child(5) { animation-delay: 0.10s; }
+.product-card:nth-child(6) { animation-delay: 0.12s; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .products-summary { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+    .products-summary { grid-template-columns: 1fr; }
+    .products-toolbar { flex-direction: column; align-items: stretch; }
+    .search-wrap { max-width: 100%; }
 }
 </style>
 {% endblock %}
 
 {% block content %}
 
+<!-- Page Header -->
+<div class="products-header">
+    <div class="products-title-block">
+        <h1>Menu Catalogue</h1>
+        <p>
+            {% set total = namespace(n=0) %}
+            {% set avail = namespace(n=0) %}
+            {% if grouped %}
+                {% for cat, items in grouped.items() %}
+                    {% set total.n = total.n + items|length %}
+                    {% for p in items %}{% if p.is_available %}{% set avail.n = avail.n + 1 %}{% endif %}{% endfor %}
+                {% endfor %}
+            {% endif %}
+            {{ total.n }} items across {{ grouped|length if grouped else 0 }} categories
+        </p>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+{% set total_items  = namespace(n=0) %}
+{% set avail_items  = namespace(n=0) %}
+{% set unavail_items = namespace(n=0) %}
+{% set cat_count    = namespace(n=0) %}
 {% if grouped %}
+    {% set cat_count.n = grouped|length %}
+    {% for cat, items in grouped.items() %}
+        {% set total_items.n = total_items.n + items|length %}
+        {% for p in items %}
+            {% if p.is_available %}{% set avail_items.n = avail_items.n + 1 %}
+            {% else %}{% set unavail_items.n = unavail_items.n + 1 %}{% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+<div class="products-summary">
+    <div class="summary-card blue">
+        <div class="summary-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
+                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+            </svg>
+        </div>
+        <div class="summary-info">
+            <div class="summary-label">Total Items</div>
+            <div class="summary-value" id="anim-total" data-target="{{ total_items.n }}">0</div>
+        </div>
+    </div>
+
+    <div class="summary-card green">
+        <div class="summary-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+        </div>
+        <div class="summary-info">
+            <div class="summary-label">Available</div>
+            <div class="summary-value" id="anim-avail" data-target="{{ avail_items.n }}">0</div>
+        </div>
+    </div>
+
+    <div class="summary-card red">
+        <div class="summary-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+            </svg>
+        </div>
+        <div class="summary-info">
+            <div class="summary-label">Unavailable</div>
+            <div class="summary-value" id="anim-unavail" data-target="{{ unavail_items.n }}">0</div>
+        </div>
+    </div>
+
+    <div class="summary-card amber">
+        <div class="summary-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 6h16M4 12h8m-8 6h16"/>
+            </svg>
+        </div>
+        <div class="summary-info">
+            <div class="summary-label">Categories</div>
+            <div class="summary-value" id="anim-cats" data-target="{{ cat_count.n }}">0</div>
+        </div>
+    </div>
+</div>
+
+<!-- Toolbar -->
+<div class="products-toolbar">
+    <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input class="product-search" type="text" placeholder="Search products..." id="productSearch" oninput="filterProducts()">
+    </div>
+
+    <div class="category-filter-tabs" id="catTabs">
+        <button class="cat-tab active" data-cat="all" onclick="setCat(this)">All</button>
+        {% if grouped %}
+            {% for cat in grouped.keys() %}
+            <button class="cat-tab" data-cat="{{ cat | lower | replace(' ', '-') }}" onclick="setCat(this)">{{ cat }}</button>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="avail-filter">
+        <button class="avail-tab active" data-avail="all"       onclick="setAvail(this)">All</button>
+        <button class="avail-tab"        data-avail="available"  onclick="setAvail(this)">Active</button>
+        <button class="avail-tab"        data-avail="unavailable" onclick="setAvail(this)">Inactive</button>
+    </div>
+</div>
+
+<!-- GRID VIEW -->
+{% if grouped %}
+
+<div id="gridViewRoot">
     {% for category, items in grouped.items() %}
-    <div class="category-section">
-        <div class="category-label">{{ category }} ({{ items | length }})</div>
+    <div class="category-section grid-view-section"
+         data-cat="{{ category | lower | replace(' ', '-') }}"
+         id="grid-cat-{{ loop.index }}">
+        <div class="category-label">
+            {{ category }}
+            <span class="category-count">{{ items | length }}</span>
+        </div>
         <div class="product-grid">
             {% for p in items %}
-            <div class="product-card {% if not p.is_available %}unavailable{% endif %}" id="product-{{ p.id }}">
-                <div class="product-name">{{ p.name }}</div>
-                <div class="product-desc">{{ p.description or '—' }}</div>
-                <div class="product-price">₦{{ "{:,}".format(p.price) }}</div>
+            <div class="product-card {% if not p.is_available %}unavailable{% endif %}"
+                 id="product-{{ p.id }}"
+                 data-name="{{ p.name | lower }}"
+                 data-desc="{{ (p.description or '') | lower }}"
+                 data-cat="{{ category | lower | replace(' ', '-') }}"
+                 data-available="{{ 'available' if p.is_available else 'unavailable' }}">
+
+                <div class="product-card-top">
+                    <div class="product-name">{{ p.name }}</div>
+                    <div class="product-status-dot {{ 'available' if p.is_available else 'unavailable' }}"
+                         title="{{ 'Available' if p.is_available else 'Unavailable' }}"></div>
+                </div>
+
+                <div class="product-desc">{{ p.description or 'No description provided.' }}</div>
+
+                <div class="product-price-row">
+                    <div class="product-price">₦{{ "{:,}".format(p.price) }}</div>
+                    <span class="product-badge {{ 'available' if p.is_available else 'unavailable' }}">
+                        {{ 'Active' if p.is_available else 'Inactive' }}
+                    </span>
+                </div>
+
                 <div class="product-actions">
                     <button class="btn btn-ghost btn-sm"
                             data-id="{{ p.id }}"
@@ -80,16 +643,40 @@
                             data-price="{{ p.price }}"
                             data-category="{{ p.category | e }}"
                             data-available="{{ 'true' if p.is_available else 'false' }}"
-                            onclick="openEditModal(this)">Edit</button>
+                            onclick="openEditModal(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        Edit
+                    </button>
                     <button class="btn btn-ghost btn-sm"
                             onclick="toggleProduct({{ p.id }}, this)"
                             data-available="{{ 'true' if p.is_available else 'false' }}">
-                        {% if p.is_available %}Disable{% else %}Enable{% endif %}
+                        {% if p.is_available %}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px">
+                            <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                        </svg>
+                        Disable
+                        {% else %}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Enable
+                        {% endif %}
                     </button>
                     <form method="POST"
                           action="{{ url_for('portal.delete_product', product_id=p.id) }}"
-                          onsubmit="return confirm('Delete {{ p.name | e }}?')">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                          onsubmit="return confirm('Delete {{ p.name | e }}? This cannot be undone.')">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6l-1 14H6L5 6"/>
+                                <path d="M10 11v6M14 11v6"/>
+                                <path d="M9 6V4h6v2"/>
+                            </svg>
+                            Delete
+                        </button>
                     </form>
                 </div>
             </div>
@@ -97,44 +684,147 @@
         </div>
     </div>
     {% endfor %}
-{% else %}
-    <div class="empty">
-        <div class="empty-icon">🍛</div>
-        No products yet. Add your first item!
+</div>
+
+<!-- LIST VIEW -->
+<div id="listViewRoot">
+    {% for category, items in grouped.items() %}
+    <div class="category-section list-view-section"
+         data-cat="{{ category | lower | replace(' ', '-') }}"
+         id="list-cat-{{ loop.index }}">
+        <div class="category-label">
+            {{ category }}
+            <span class="category-count">{{ items | length }}</span>
+        </div>
+        <div class="product-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:36px;"></th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th style="width:180px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in items %}
+                    <tr id="list-product-{{ p.id }}"
+                        data-name="{{ p.name | lower }}"
+                        data-desc="{{ (p.description or '') | lower }}"
+                        data-cat="{{ category | lower | replace(' ', '-') }}"
+                        data-available="{{ 'available' if p.is_available else 'unavailable' }}"
+                        class="{{ '' if p.is_available else 'muted' }}">
+                        <td>
+                            <div class="product-status-dot {{ 'available' if p.is_available else 'unavailable' }}"
+                                 style="margin: 0 auto;"
+                                 title="{{ 'Available' if p.is_available else 'Unavailable' }}"></div>
+                        </td>
+                        <td style="font-weight:600; color:var(--text); font-family:var(--font-head);">{{ p.name }}</td>
+                        <td style="color:var(--muted); font-size:12.5px; max-width:260px;">{{ p.description or '—' }}</td>
+                        <td class="mono" style="color:var(--accent); font-weight:600; font-size:14px;">₦{{ "{:,}".format(p.price) }}</td>
+                        <td>
+                            <span class="product-badge {{ 'available' if p.is_available else 'unavailable' }}">
+                                {{ 'Active' if p.is_available else 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:6px; justify-content:flex-end;">
+                                <button class="btn btn-ghost btn-sm"
+                                        data-id="{{ p.id }}"
+                                        data-name="{{ p.name | e }}"
+                                        data-desc="{{ (p.description or '') | e }}"
+                                        data-price="{{ p.price }}"
+                                        data-category="{{ p.category | e }}"
+                                        data-available="{{ 'true' if p.is_available else 'false' }}"
+                                        onclick="openEditModal(this)">Edit</button>
+                                <button class="btn btn-ghost btn-sm"
+                                        onclick="toggleProduct({{ p.id }}, this)"
+                                        data-available="{{ 'true' if p.is_available else 'false' }}">
+                                    {% if p.is_available %}Disable{% else %}Enable{% endif %}
+                                </button>
+                                <form method="POST"
+                                      action="{{ url_for('portal.delete_product', product_id=p.id) }}"
+                                      onsubmit="return confirm('Delete {{ p.name | e }}?')">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+    {% endfor %}
+</div>
+
+<!-- No results state -->
+<div id="noResults" class="no-results" style="display:none;">
+    <div class="no-results-icon">🔍</div>
+    <div class="no-results-text">No products match your filters.</div>
+</div>
+
+{% else %}
+<div class="products-empty">
+    <div class="products-empty-icon">🍛</div>
+    <div class="products-empty-title">No products yet</div>
+    <div class="products-empty-sub">Start building your menu by adding your first item.</div>
+    <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
+        + Add First Product
+    </button>
+</div>
 {% endif %}
 
-<!-- Add Product Modal -->
+
+<!-- ══ ADD PRODUCT MODAL ══ -->
 <div class="modal-overlay" id="addModal">
-    <div class="modal">
+    <div class="modal" style="max-width:520px;">
         <div class="modal-title">Add Product</div>
+        <div class="modal-subtitle">New item will appear on your menu immediately.</div>
+
         <form method="POST" action="{{ url_for('portal.add_product') }}">
+            <div class="modal-section">Basic Info</div>
+
             <div class="form-group">
-                <label>Name</label>
-                <input type="text" name="name" required placeholder="e.g. Jollof Rice">
+                <label>Product Name</label>
+                <input type="text" name="name" required placeholder="e.g. Jollof Rice" maxlength="80" id="addName" oninput="updateAddPreview()">
             </div>
+
             <div class="form-group">
                 <label>Description</label>
-                <textarea name="description" placeholder="Short description..."></textarea>
+                <textarea name="description" placeholder="Short description of this item…" maxlength="200" id="addDesc" oninput="this.nextElementSibling.textContent = this.value.length + '/200'"></textarea>
+                <div class="char-count">0/200</div>
             </div>
+
+            <div class="modal-section">Pricing & Category</div>
+
             <div class="grid-2">
                 <div class="form-group">
                     <label>Price (₦)</label>
-                    <input type="number" name="price" required placeholder="2500" min="0">
+                    <input type="number" name="price" required placeholder="2500" min="0" id="addPrice" oninput="updateAddPreview()">
+                    <div class="price-preview" id="addPricePreview" style="display:none;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                        </svg>
+                        <span class="price-preview-val" id="addPriceVal">₦0</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Category</label>
                     <select name="category" required>
-                        <option value="">Select...</option>
-                        <option>Rice & Grains</option>
+                        <option value="">Select category…</option>
+                        <option>Rice &amp; Grains</option>
                         <option>Swallows</option>
                         <option>Soups</option>
-                        <option>Small Chops & Snacks</option>
+                        <option>Small Chops &amp; Snacks</option>
                         <option>Proteins</option>
                         <option>Drinks</option>
                     </select>
                 </div>
             </div>
+
             <div class="modal-actions">
                 <button type="button" class="btn btn-ghost"
                         onclick="document.getElementById('addModal').classList.remove('open')">
@@ -146,43 +836,64 @@
     </div>
 </div>
 
-<!-- Edit Product Modal -->
+
+<!-- ══ EDIT PRODUCT MODAL ══ -->
 <div class="modal-overlay" id="editModal">
-    <div class="modal">
+    <div class="modal" style="max-width:520px;">
         <div class="modal-title">Edit Product</div>
+        <div class="modal-subtitle" id="editModalSub">Editing product</div>
+
         <form method="POST" id="editForm" action="">
+            <div class="modal-section">Basic Info</div>
+
             <div class="form-group">
-                <label>Name</label>
-                <input type="text" name="name" id="editName" required>
+                <label>Product Name</label>
+                <input type="text" name="name" id="editName" required maxlength="80">
             </div>
+
             <div class="form-group">
                 <label>Description</label>
-                <textarea name="description" id="editDesc"></textarea>
+                <textarea name="description" id="editDesc" maxlength="200"
+                          oninput="document.getElementById('editCharCount').textContent = this.value.length + '/200'"></textarea>
+                <div class="char-count" id="editCharCount">0/200</div>
             </div>
+
+            <div class="modal-section">Pricing & Category</div>
+
             <div class="grid-2">
                 <div class="form-group">
                     <label>Price (₦)</label>
-                    <input type="number" name="price" id="editPrice" required min="0">
+                    <input type="number" name="price" id="editPrice" required min="0" oninput="updateEditPreview()">
+                    <div class="price-preview" id="editPricePreview">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                        </svg>
+                        <span class="price-preview-val" id="editPriceVal">₦0</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Category</label>
                     <select name="category" id="editCategory" required>
-                        <option>Rice & Grains</option>
+                        <option>Rice &amp; Grains</option>
                         <option>Swallows</option>
                         <option>Soups</option>
-                        <option>Small Chops & Snacks</option>
+                        <option>Small Chops &amp; Snacks</option>
                         <option>Proteins</option>
                         <option>Drinks</option>
                     </select>
                 </div>
             </div>
+
+            <div class="modal-section">Availability</div>
+
             <div class="form-group">
-                <label>Availability</label>
+                <label>Status</label>
                 <select name="is_available" id="editAvailable">
-                    <option value="true">Available</option>
-                    <option value="false">Unavailable</option>
+                    <option value="true">✓  Active — Visible on menu</option>
+                    <option value="false">✗  Inactive — Hidden from menu</option>
                 </select>
             </div>
+
             <div class="modal-actions">
                 <button type="button" class="btn btn-ghost"
                         onclick="document.getElementById('editModal').classList.remove('open')">
@@ -196,8 +907,104 @@
 
 {% endblock %}
 
+
 {% block extra_scripts %}
 <script>
+/* ── Count-up animation ── */
+function animateCount(el) {
+    const target = parseInt(el.dataset.target) || 0;
+    if (target === 0) { el.textContent = '0'; return; }
+    const duration = 700;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current).toLocaleString();
+        if (current >= target) clearInterval(timer);
+    }, 16);
+}
+document.querySelectorAll('[id^="anim-"]').forEach(el => setTimeout(() => animateCount(el), 100));
+
+/* ── View toggle (grid/list) ── */
+let isListMode = false;
+function toggleView() {
+    isListMode = !isListMode;
+    document.body.classList.toggle('list-mode', isListMode);
+    const icon = document.getElementById('viewIcon');
+    if (isListMode) {
+        icon.innerHTML = `<rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="17" width="18" height="4" rx="1"/>`;
+    } else {
+        icon.innerHTML = `<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>`;
+    }
+}
+
+/* ── Filtering ── */
+let activeCat   = 'all';
+let activeAvail = 'all';
+
+function setCat(btn) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    filterProducts();
+}
+
+function setAvail(btn) {
+    document.querySelectorAll('.avail-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    activeAvail = btn.dataset.avail;
+    filterProducts();
+}
+
+function filterProducts() {
+    const query = document.getElementById('productSearch')?.value.toLowerCase() || '';
+    const gridSections  = document.querySelectorAll('#gridViewRoot .category-section');
+    const listSections  = document.querySelectorAll('#listViewRoot .category-section');
+    let anyVisible = false;
+
+    // Grid cards
+    gridSections.forEach(section => {
+        const sectionCat = section.dataset.cat;
+        const catMatch   = activeCat === 'all' || activeCat === sectionCat;
+        if (!catMatch) { section.style.display = 'none'; return; }
+
+        const cards = section.querySelectorAll('.product-card');
+        let sectionHasVisible = false;
+        cards.forEach(card => {
+            const nameMatch  = !query || card.dataset.name.includes(query);
+            const descMatch  = !query || card.dataset.desc.includes(query);
+            const availMatch = activeAvail === 'all' || card.dataset.available === activeAvail;
+            const show = (nameMatch || descMatch) && availMatch;
+            card.style.display = show ? '' : 'none';
+            if (show) { sectionHasVisible = true; anyVisible = true; }
+        });
+        section.style.display = sectionHasVisible ? '' : 'none';
+    });
+
+    // List rows
+    listSections.forEach(section => {
+        const sectionCat = section.dataset.cat;
+        const catMatch   = activeCat === 'all' || activeCat === sectionCat;
+        if (!catMatch) { section.style.display = 'none'; return; }
+
+        const rows = section.querySelectorAll('tbody tr');
+        let sectionHasVisible = false;
+        rows.forEach(row => {
+            const nameMatch  = !query || row.dataset.name.includes(query);
+            const descMatch  = !query || row.dataset.desc.includes(query);
+            const availMatch = activeAvail === 'all' || row.dataset.available === activeAvail;
+            const show = (nameMatch || descMatch) && availMatch;
+            row.style.display = show ? '' : 'none';
+            if (show) { sectionHasVisible = true; anyVisible = true; }
+        });
+        section.style.display = sectionHasVisible ? '' : 'none';
+    });
+
+    const noResults = document.getElementById('noResults');
+    if (noResults) noResults.style.display = anyVisible ? 'none' : 'block';
+}
+
+/* ── Edit modal ── */
 function openEditModal(btn) {
     const id        = btn.dataset.id;
     const name      = btn.dataset.name;
@@ -206,31 +1013,100 @@ function openEditModal(btn) {
     const category  = btn.dataset.category;
     const available = btn.dataset.available;
 
-    document.getElementById('editForm').action = '/portal/products/' + id + '/edit';
+    document.getElementById('editForm').action     = '/portal/products/' + id + '/edit';
     document.getElementById('editName').value      = name;
     document.getElementById('editDesc').value      = desc;
     document.getElementById('editPrice').value     = price;
     document.getElementById('editCategory').value  = category;
     document.getElementById('editAvailable').value = available;
+    document.getElementById('editModalSub').textContent = 'Editing: ' + name;
+    document.getElementById('editCharCount').textContent = desc.length + '/200';
+    updateEditPreview();
     document.getElementById('editModal').classList.add('open');
 }
 
+/* ── Toggle availability ── */
 async function toggleProduct(id, btn) {
-    const res = await fetch('/portal/products/' + id + '/toggle', { method: 'POST' });
-    if (res.ok) {
-        const card = document.getElementById('product-' + id);
-        const wasAvailable = btn.dataset.available === 'true';
-        btn.dataset.available = (!wasAvailable).toString();
-        btn.textContent = wasAvailable ? 'Enable' : 'Disable';
-        card.classList.toggle('unavailable', wasAvailable);
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    try {
+        const res = await fetch('/portal/products/' + id + '/toggle', { method: 'POST' });
+        if (res.ok) {
+            const wasAvailable = btn.dataset.available === 'true';
+            btn.dataset.available = (!wasAvailable).toString();
+            btn.innerHTML = wasAvailable
+                ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Enable`
+                : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Disable`;
+
+            // Update grid card
+            const card = document.getElementById('product-' + id);
+            if (card) {
+                card.classList.toggle('unavailable', wasAvailable);
+                card.dataset.available = (!wasAvailable) ? 'available' : 'unavailable';
+                const dot = card.querySelector('.product-status-dot');
+                const badge = card.querySelector('.product-badge');
+                if (dot) {
+                    dot.className = 'product-status-dot ' + (wasAvailable ? 'unavailable' : 'available');
+                    dot.title = wasAvailable ? 'Unavailable' : 'Available';
+                }
+                if (badge) {
+                    badge.className = 'product-badge ' + (wasAvailable ? 'unavailable' : 'available');
+                    badge.textContent = wasAvailable ? 'Inactive' : 'Active';
+                }
+            }
+
+            // Update list row
+            const row = document.getElementById('list-product-' + id);
+            if (row) {
+                row.dataset.available = wasAvailable ? 'unavailable' : 'available';
+                const dot = row.querySelector('.product-status-dot');
+                const badge = row.querySelector('.product-badge');
+                if (dot) dot.className = 'product-status-dot ' + (wasAvailable ? 'unavailable' : 'available');
+                if (badge) {
+                    badge.className = 'product-badge ' + (wasAvailable ? 'unavailable' : 'available');
+                    badge.textContent = wasAvailable ? 'Inactive' : 'Active';
+                }
+            }
+        }
+    } finally {
+        btn.disabled = false;
+        btn.style.opacity = '';
     }
 }
 
-// Close modals when clicking outside
+/* ── Price preview ── */
+function updateAddPreview() {
+    const val = parseInt(document.getElementById('addPrice')?.value) || 0;
+    const preview = document.getElementById('addPricePreview');
+    const display = document.getElementById('addPriceVal');
+    if (preview && display) {
+        preview.style.display = val > 0 ? 'flex' : 'none';
+        display.textContent = '₦' + val.toLocaleString();
+    }
+}
+
+function updateEditPreview() {
+    const val = parseInt(document.getElementById('editPrice')?.value) || 0;
+    const display = document.getElementById('editPriceVal');
+    if (display) display.textContent = '₦' + val.toLocaleString();
+}
+
+/* ── Close modals on outside click ── */
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', (e) => {
+    overlay.addEventListener('click', e => {
         if (e.target === overlay) overlay.classList.remove('open');
     });
+});
+
+/* ── Keyboard shortcuts ── */
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        document.getElementById('productSearch')?.focus();
+    }
 });
 </script>
 {% endblock %}

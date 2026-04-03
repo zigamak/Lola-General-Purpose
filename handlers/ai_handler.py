@@ -11,7 +11,7 @@ from db_manager import DBManager
 
 logger = logging.getLogger(__name__)
 
-MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg"
+MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
 
 
 class AIHandler(BaseHandler):
@@ -252,6 +252,14 @@ class AIHandler(BaseHandler):
             self.session_manager.update_session_state(session_id, state)
             logger.info(f"Order saved to DB: id={db_order_id}, ref={order_ref}")
 
+            # 2b. Parse and save order items
+            items = self._parse_order_items(raw_response)
+            if items:
+                self.db.save_order_items(db_order_id, items)
+                logger.info(f"Saved {len(items)} order items for order_id={db_order_id}")
+            else:
+                logger.warning(f"No ORDER_ITEMS tag found in response for {session_id}")
+
         # 3. Generate Paystack link
         payment_url = None
         try:
@@ -296,3 +304,42 @@ class AIHandler(BaseHandler):
     def _extract_payment_amount(self, raw_response: str) -> int:
         match = re.search(r'\[PAYMENT_READY:amount=(\d+)\]', raw_response)
         return int(match.group(1)) if match else 0
+
+    def _parse_order_items(self, raw_response: str) -> list:
+        """
+        Parse [ORDER_ITEMS:name=X,qty=Y,price=Z,subtotal=W;name=...] tag.
+        Returns list of dicts ready for db.save_order_items().
+        """
+        match = re.search(r'\[ORDER_ITEMS:([^\]]+)\]', raw_response)
+        if not match:
+            return []
+
+        items = []
+        try:
+            entries = match.group(1).split(';')
+            for entry in entries:
+                entry = entry.strip()
+                if not entry:
+                    continue
+                fields = {}
+                for part in entry.split(','):
+                    if '=' in part:
+                        key, _, val = part.partition('=')
+                        fields[key.strip()] = val.strip()
+
+                name     = fields.get('name', '').strip()
+                qty      = int(fields.get('qty', 1))
+                price    = int(fields.get('price', 0))
+                subtotal = int(fields.get('subtotal', price * qty))
+
+                if name and price > 0:
+                    items.append({
+                        'name':     name,
+                        'price':    price,
+                        'quantity': qty,
+                        'subtotal': subtotal,
+                    })
+        except Exception as e:
+            logger.error(f"_parse_order_items error: {e} | raw: {raw_response[-300:]}")
+
+        return items

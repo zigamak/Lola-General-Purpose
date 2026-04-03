@@ -2,42 +2,447 @@
 {% block title %}Dashboard{% endblock %}
 {% block page_title %}Dashboard{% endblock %}
 
+{% block extra_styles %}
+<style>
+    /* ── Dashboard welcome bar ── */
+    .welcome-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+
+    .welcome-text h1 {
+        font-family: var(--font-head);
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+
+    .welcome-text p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+    }
+
+    .welcome-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* ── Revenue highlight card ── */
+    .revenue-card {
+        background: linear-gradient(135deg, #0f1729 0%, #1e3a8a 100%);
+        border-radius: var(--radius);
+        padding: 26px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        grid-column: span 2;
+        box-shadow: 0 8px 32px rgba(30,58,138,0.3);
+    }
+
+    .revenue-card::before {
+        content: '';
+        position: absolute;
+        top: -60px; right: -60px;
+        width: 200px; height: 200px;
+        border-radius: 50%;
+        background: rgba(99,179,237,0.12);
+    }
+
+    .revenue-card::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: 40%;
+        width: 140px; height: 140px;
+        border-radius: 50%;
+        background: rgba(37,99,235,0.15);
+    }
+
+    .revenue-label {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: rgba(255,255,255,0.5);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .revenue-value {
+        font-family: var(--font-head);
+        font-size: 42px;
+        font-weight: 800;
+        letter-spacing: -2px;
+        line-height: 1;
+        margin-bottom: 12px;
+        position: relative;
+    }
+
+    .revenue-value span {
+        font-size: 20px;
+        opacity: 0.7;
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+
+    .revenue-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(16,185,129,0.2);
+        color: #34d399;
+        border: 1px solid rgba(52,211,153,0.25);
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-family: var(--font-mono);
+    }
+
+    /* ── Mini sparkline bars ── */
+    .sparkline {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 40px;
+        margin-top: 20px;
+    }
+
+    .spark-bar {
+        flex: 1;
+        border-radius: 3px 3px 0 0;
+        background: rgba(255,255,255,0.15);
+        transition: background 0.2s;
+        cursor: pointer;
+        min-height: 4px;
+        position: relative;
+    }
+
+    .spark-bar:hover { background: rgba(99,179,237,0.5); }
+
+    .spark-bar.active { background: rgba(99,179,237,0.8); }
+
+    /* ── Dashboard grid layout ── */
+    .dash-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    /* ── Recent orders table card ── */
+    .orders-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .orders-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .orders-card-title {
+        font-family: var(--font-head);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .order-count-pill {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 11px;
+        font-family: var(--font-mono);
+        padding: 2px 8px;
+        border-radius: 20px;
+    }
+
+    /* ── Status filter tabs ── */
+    .filter-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--surface2);
+        border-radius: 9px;
+        padding: 3px;
+    }
+
+    .filter-tab {
+        padding: 5px 13px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        transition: all 0.15s;
+        font-family: var(--font-body);
+    }
+
+    .filter-tab.active {
+        background: var(--surface);
+        color: var(--text);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .filter-tab:hover:not(.active) { color: var(--text-2); }
+
+    /* ── Table action btn ── */
+    .row-actions { display: flex; gap: 6px; }
+
+    /* ── Quick stats row ── */
+    .quick-info {
+        font-size: 12px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+    }
+
+    /* ── Search input in header ── */
+    .table-search {
+        width: 200px;
+        padding: 7px 12px 7px 34px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        font-size: 12.5px;
+        color: var(--text);
+        outline: none;
+        transition: all 0.15s;
+        font-family: var(--font-body);
+    }
+
+    .table-search:focus {
+        background: var(--surface);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+        width: 240px;
+    }
+
+    .search-wrap {
+        position: relative;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted-light);
+        pointer-events: none;
+    }
+
+    .search-icon svg { width: 13px; height: 13px; }
+
+    /* ── Hover row highlight ── */
+    tbody tr:hover .row-actions .btn-ghost {
+        opacity: 1;
+    }
+
+    .row-actions .btn-ghost { opacity: 0.5; transition: opacity 0.15s; }
+
+    /* ── No orders state ── */
+    .empty-orders {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-orders .empty-icon { font-size: 44px; margin-bottom: 12px; opacity: 0.5; }
+    .empty-orders p { color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
+</style>
+{% endblock %}
+
 {% block content %}
 
 {% if stats.error %}
 <div class="flash flash-error">
-    Database error: {{ stats.error }} — check your DB_URL in .env
+    ⚠ Database error: {{ stats.error }} — check your DB_URL in .env
 </div>
 {% endif %}
 
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-label">Total Customers</div>
-        <div class="stat-value">{{ stats.total_customers or 0 }}</div>
+<!-- Welcome bar -->
+<div class="welcome-bar">
+    <div class="welcome-text">
+        <h1>Welcome back 👋</h1>
+        <p>Here's what's happening with Makinde Kitchen today.</p>
     </div>
-    <div class="stat-card">
-        <div class="stat-label">Total Orders</div>
-        <div class="stat-value">{{ stats.total_orders or 0 }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Paid Orders</div>
-        <div class="stat-value accent">{{ stats.paid_orders or 0 }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Total Messages</div>
-        <div class="stat-value">{{ stats.total_messages or 0 }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Revenue (₦)</div>
-        <div class="stat-value accent">{{ "{:,}".format(stats.total_revenue or 0) }}</div>
+    <div class="welcome-actions">
+        <a href="{{ url_for('portal.orders') }}" class="btn btn-ghost btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                <rect x="9" y="3" width="6" height="4" rx="1"/>
+            </svg>
+            All Orders
+        </a>
+        <a href="{{ url_for('portal.products') }}" class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add Product
+        </a>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-title">Recent Orders</div>
+<!-- Stats Grid -->
+<div class="dash-grid">
+
+    <!-- Revenue Card (spans 2) -->
+    <div class="revenue-card">
+        <div class="revenue-label">Total Revenue</div>
+        <div class="revenue-value">
+            <span>₦</span>{{ "{:,}".format(stats.total_revenue or 0) }}
+        </div>
+        <div class="revenue-tag">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
+            All time
+        </div>
+        <div class="sparkline" id="sparkline">
+            <!-- Filled by JS -->
+        </div>
+    </div>
+
+    <!-- Customers -->
+    <div class="stat-card">
+        <div class="stat-card-glow"></div>
+        <div class="stat-header">
+            <div class="stat-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+            </div>
+        </div>
+        <div class="stat-label">Total Customers</div>
+        <div class="stat-value" id="anim-customers" data-target="{{ stats.total_customers or 0 }}">0</div>
+    </div>
+
+    <!-- Orders -->
+    <div class="stat-card amber">
+        <div class="stat-card-glow"></div>
+        <div class="stat-header">
+            <div class="stat-icon amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                    <rect x="9" y="3" width="6" height="4" rx="1"/>
+                    <path d="M9 12h6M9 16h4"/>
+                </svg>
+            </div>
+        </div>
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value amber" id="anim-orders" data-target="{{ stats.total_orders or 0 }}">0</div>
+    </div>
+
+</div>
+
+<!-- Second row stats -->
+<div class="stats-grid" style="margin-bottom: 24px;">
+    <div class="stat-card green">
+        <div class="stat-card-glow"></div>
+        <div class="stat-header">
+            <div class="stat-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 12 20 22 4 22 4 12"/>
+                    <rect x="2" y="7" width="20" height="5"/>
+                    <line x1="12" y1="22" x2="12" y2="7"/>
+                    <path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/>
+                    <path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/>
+                </svg>
+            </div>
+            <span class="stat-trend up">✓ Paid</span>
+        </div>
+        <div class="stat-label">Paid Orders</div>
+        <div class="stat-value green" id="anim-paid" data-target="{{ stats.paid_orders or 0 }}">0</div>
+    </div>
+
+    <div class="stat-card sky">
+        <div class="stat-card-glow"></div>
+        <div class="stat-header">
+            <div class="stat-icon sky">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="stat-label">Total Messages</div>
+        <div class="stat-value accent" id="anim-messages" data-target="{{ stats.total_messages or 0 }}">0</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-glow"></div>
+        <div class="stat-header">
+            <div class="stat-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                </svg>
+            </div>
+            {% set conversion = ((stats.paid_orders or 0) / (stats.total_orders or 1) * 100)|int %}
+            <span class="stat-trend {{ 'up' if conversion > 50 else 'flat' }}">{{ conversion }}%</span>
+        </div>
+        <div class="stat-label">Conversion Rate</div>
+        <div class="stat-value">{{ conversion }}<span style="font-size:16px;opacity:0.5;font-weight:600;">%</span></div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-glow"></div>
+        <div class="stat-header">
+            <div class="stat-icon amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+        </div>
+        <div class="stat-label">Avg. Order Value</div>
+        {% set avg = ((stats.total_revenue or 0) / (stats.total_orders or 1))|int %}
+        <div class="stat-value" style="font-size:22px; letter-spacing:-0.5px;">₦{{ "{:,}".format(avg) }}</div>
+    </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="orders-card">
+    <div class="orders-card-header">
+        <div>
+            <div class="orders-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent)">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                    <rect x="9" y="3" width="6" height="4" rx="1"/>
+                    <path d="M9 12h6M9 16h4"/>
+                </svg>
+                Recent Orders
+                <span class="order-count-pill">{{ (stats.recent_orders or [])|length }}</span>
+            </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+            {% if stats.recent_orders %}
+            <div class="search-wrap">
+                <span class="search-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </span>
+                <input class="table-search" type="text" placeholder="Search orders..." id="orderSearch">
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="paid">Paid</button>
+                <button class="filter-tab" data-filter="unpaid">Unpaid</button>
+            </div>
+            {% endif %}
+            <a href="{{ url_for('portal.orders') }}" class="btn btn-ghost btn-sm">View all →</a>
+        </div>
+    </div>
+
     {% if stats.recent_orders %}
-    <div class="table-wrap">
-        <table>
+    <div style="overflow-x: auto;">
+        <table id="ordersTable">
             <thead>
                 <tr>
                     <th>Ref</th>
@@ -52,26 +457,89 @@
             </thead>
             <tbody>
                 {% for order in stats.recent_orders %}
-                <tr>
-                    <td class="mono">{{ order.order_ref }}</td>
-                    <td>{{ order.name or '—' }}</td>
-                    <td class="mono muted">{{ order.phone_number or '—' }}</td>
-                    <td class="mono">₦{{ "{:,}".format(order.total) }}</td>
+                <tr data-payment="{{ order.payment_status }}" data-search="{{ (order.order_ref ~ ' ' ~ (order.name or '') ~ ' ' ~ (order.phone_number or ''))|lower }}">
+                    <td><span class="mono" style="font-size:12px; color:var(--accent); font-weight:500;">{{ order.order_ref }}</span></td>
+                    <td style="font-weight:500; color:var(--text);">{{ order.name or '—' }}</td>
+                    <td class="mono muted" style="font-size:12px;">{{ order.phone_number or '—' }}</td>
+                    <td class="mono" style="font-weight:600; color:var(--text);">₦{{ "{:,}".format(order.total) }}</td>
                     <td><span class="badge badge-{{ order.status }}">{{ order.status }}</span></td>
                     <td><span class="badge badge-{{ order.payment_status }}">{{ order.payment_status }}</span></td>
-                    <td class="muted mono">{{ order.created_at.strftime('%d %b, %H:%M') if order.created_at else '—' }}</td>
-                    <td><a href="{{ url_for('portal.order_detail', order_ref=order.order_ref) }}" class="btn btn-ghost btn-sm">View</a></td>
+                    <td class="muted mono" style="font-size:12px;">{{ order.created_at.strftime('%d %b, %H:%M') if order.created_at else '—' }}</td>
+                    <td>
+                        <div class="row-actions">
+                            <a href="{{ url_for('portal.order_detail', order_ref=order.order_ref) }}" class="btn btn-ghost btn-sm">View →</a>
+                        </div>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     {% else %}
-    <div class="empty">
+    <div class="empty-orders">
         <div class="empty-icon">📋</div>
-        No orders yet
+        <p>No orders yet — they'll show up here</p>
     </div>
     {% endif %}
 </div>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// ── Count-up animation ──
+function animateCount(el) {
+    const target = parseInt(el.dataset.target) || 0;
+    if (target === 0) { el.textContent = '0'; return; }
+    const duration = 900;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current).toLocaleString();
+        if (current >= target) clearInterval(timer);
+    }, 16);
+}
+
+document.querySelectorAll('[id^="anim-"]').forEach(el => {
+    setTimeout(() => animateCount(el), 100);
+});
+
+// ── Sparkline bars ──
+(function () {
+    const bar = document.getElementById('sparkline');
+    if (!bar) return;
+    const vals = [40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 100];
+    bar.innerHTML = vals.map((v, i) =>
+        `<div class="spark-bar ${i === vals.length - 1 ? 'active' : ''}" style="height:${v}%" title="Month ${i + 1}"></div>`
+    ).join('');
+})();
+
+// ── Order search ──
+const searchInput = document.getElementById('orderSearch');
+if (searchInput) {
+    searchInput.addEventListener('input', filterOrders);
+}
+
+// ── Filter tabs ──
+document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', function () {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        filterOrders();
+    });
+});
+
+function filterOrders() {
+    const query = (searchInput ? searchInput.value : '').toLowerCase();
+    const activeFilter = document.querySelector('.filter-tab.active')?.dataset.filter || 'all';
+    const rows = document.querySelectorAll('#ordersTable tbody tr');
+
+    rows.forEach(row => {
+        const searchMatch = !query || row.dataset.search.includes(query);
+        const filterMatch = activeFilter === 'all' || row.dataset.payment === activeFilter;
+        row.style.display = (searchMatch && filterMatch) ? '' : 'none';
+    });
+}
+</script>
 {% endblock %}

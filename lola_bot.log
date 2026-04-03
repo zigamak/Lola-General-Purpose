@@ -1074,3 +1074,154 @@ RuntimeError: All Gemini model fallbacks exhausted.
 2026-04-03 20:44:42,798 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:42] "POST /webhook HTTP/1.1" 200 -
 2026-04-03 20:45:51,359 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:45:51] "GET /portal/orders HTTP/1.1" 200 -
 2026-04-03 20:45:56,251 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:45:56] "GET /portal/orders/MK81738 HTTP/1.1" 200 -
+2026-04-03 20:55:44,575 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-03 20:55:52,988 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:55:52,990 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:55:54,477 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:55:54,477 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:55:54,477 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:55:54,572 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:55:54,573 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-03 20:55:54,573 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:55:55,636 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:55:55,636 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:55:55,643 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:55:55,690 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:55:55,690 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-03 20:55:55,690 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:55:56,840 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:55:56,840 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:55:56,840 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-03 20:55:56,840 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:55:56,840 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:55:56,840 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:55:56,840 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:55:57,912 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:55:57,912 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:55:57,948 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:55:57,948 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:56:07,379 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:56:07] "[32mGET / HTTP/1.1[0m" 302 -
+2026-04-03 20:56:10,163 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:56:10] "GET /portal/ HTTP/1.1" 200 -
+2026-04-03 20:56:20,127 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-03 20:56:24,999 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:56:24,999 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:56:26,018 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:56:26,018 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:56:26,037 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-03 20:56:26,088 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:56:26,088 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-03 20:56:26,088 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:56:27,086 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:56:27,086 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:56:27,097 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-03 20:56:27,134 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:56:27,137 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-03 20:56:27,138 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:56:28,120 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:56:28,121 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:56:28,123 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-03 20:56:28,124 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:56:28,125 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:56:28,125 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:56:28,127 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:56:29,128 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:56:29,135 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:56:29,147 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:56:29,148 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 21:00:54,903 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-03 21:01:00,936 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 21:01:00,936 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 21:01:02,296 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 21:01:02,296 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 21:01:02,301 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-03 21:01:02,398 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 21:01:02,398 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-03 21:01:02,398 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 21:01:03,429 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 21:01:03,429 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 21:01:03,432 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-03 21:01:03,434 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 21:01:03,434 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-03 21:01:03,434 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 21:01:04,402 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 21:01:04,402 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 21:01:04,402 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-03 21:01:04,402 - app - INFO - Handlers and message processor initialised.
+2026-04-03 21:01:04,402 - app - INFO - WebhookHandler initialised.
+2026-04-03 21:01:04,402 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 21:01:04,402 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 21:01:05,414 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 21:01:05,414 - app - INFO - Merchant portal registered at /portal
+2026-04-03 21:01:05,453 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 21:01:05,453 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 21:01:07,615 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:07] "[32mGET / HTTP/1.1[0m" 302 -
+2026-04-03 21:01:10,583 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:10] "GET /portal/ HTTP/1.1" 200 -
+2026-04-03 21:01:12,063 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:12] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-04-03 21:01:19,131 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:19] "GET /portal/orders/MK81738 HTTP/1.1" 200 -
+2026-04-03 21:01:24,607 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:24] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-03 21:01:30,952 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:30] "[32mPOST /portal/orders/MK81738/status HTTP/1.1[0m" 302 -
+2026-04-03 21:01:31,923 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:31] "GET /portal/orders/MK81738 HTTP/1.1" 200 -
+2026-04-03 21:01:44,491 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 21:01:44,492 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 21:01:44,492 - message_processor - INFO - Session 2348055614455: New session.
+2026-04-03 21:01:44,492 - message_processor - INFO - Session 2348055614455: Fresh start for 'Ziga'.
+2026-04-03 21:01:46,418 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 21:01:47,611 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjkzQTA4OEI5ODI5ODkwQkFGQQA='}]}
+2026-04-03 21:01:47,611 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjkzQTA4OEI5ODI5ODkwQkFGQQA='}]}
+2026-04-03 21:01:47,627 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 21:01:47,627 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 21:01:48,500 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:48] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:01:48,537 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjU4M0UxNUI5MEU3QjM5OTQxQQA='}]}
+2026-04-03 21:01:48,538 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 21:01:48,539 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:48] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:01:48,903 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:48] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:01:49,201 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:49] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:01:50,827 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:50] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:01:51,365 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:51] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:01:51,386 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:51] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:01:51,488 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:01:51] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:01,697 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'I want to ask on the update of my order'}
+2026-04-03 21:02:01,697 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I want to ask on the update of my order'
+2026-04-03 21:02:05,928 - services.ai_service - INFO - Active model switched to: gemini-2.5-flash
+2026-04-03 21:02:05,944 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 21:02:06,907 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjc5OTNCQTNDMjU4MkJCMEM3QwA='}]}
+2026-04-03 21:02:06,909 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjc5OTNCQTNDMjU4MkJCMEM3QwA='}]}
+2026-04-03 21:02:07,852 - db_manager - INFO - Order created: ref=MK48080, id=2
+2026-04-03 21:02:07,852 - handlers.ai_handler - INFO - Order saved to DB: id=2, ref=MK48080
+2026-04-03 21:02:07,853 - services.payment_service - INFO - Attempting to create payment link for reference: MK48080 with amount: 3000000, email: ziga4455@lola.com
+2026-04-03 21:02:07,967 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:07] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:08,160 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:08] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:08,426 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:08] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:08,730 - services.payment_service - INFO - Payment link created for Ziga Ziga (2348055614455), URL: https://checkout.paystack.com/zedjrhhixbqxjks
+2026-04-03 21:02:08,730 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 21:02:09,654 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjdFRTFBQTRDMTMzMUZGRTNDNwA='}]}
+2026-04-03 21:02:10,568 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:10] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:10,726 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjdFRTFBQTRDMTMzMUZGRTNDNwA='}]}
+2026-04-03 21:02:10,726 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:10] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:10,953 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:10] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:10,988 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:10] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:11,129 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:11] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:02:54,728 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:54] "[32mPOST /portal/orders/MK81738/status HTTP/1.1[0m" 302 -
+2026-04-03 21:02:55,698 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:02:55] "GET /portal/orders/MK81738 HTTP/1.1" 200 -
+2026-04-03 21:03:04,211 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'What of now whats the update of my order?'}
+2026-04-03 21:03:04,211 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'What of now whats the update of my order?'
+2026-04-03 21:03:08,606 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 21:03:09,568 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjZCNzlGOTVCRDcyOTU4NjU2MAA='}]}
+2026-04-03 21:03:09,568 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjZCNzlGOTVCRDcyOTU4NjU2MAA='}]}
+2026-04-03 21:03:09,568 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:03:09] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:03:10,482 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:03:10] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:03:11,190 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:03:11] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:03:11,394 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:03:11] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 21:03:46,494 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:03:46] "GET /portal/orders/MK81738 HTTP/1.1" 200 -
+2026-04-03 21:04:03,535 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:04:03] "GET /portal/ HTTP/1.1" 200 -
+2026-04-03 21:04:12,204 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:04:12] "GET /portal/products HTTP/1.1" 200 -
+2026-04-03 21:04:14,948 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:04:14] "GET /portal/conversations HTTP/1.1" 200 -
+2026-04-03 21:04:18,718 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:04:18] "GET /portal/conversations/2348055614455 HTTP/1.1" 200 -
+2026-04-03 21:04:57,397 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:04:57] "GET /portal/products HTTP/1.1" 200 -
+2026-04-03 21:05:11,022 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:05:11] "GET /portal/ HTTP/1.1" 200 -
+2026-04-03 21:05:20,511 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:05:20] "GET /portal/orders/MK48080 HTTP/1.1" 200 -
+2026-04-03 21:05:33,888 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:05:33] "GET /portal/orders HTTP/1.1" 200 -
+2026-04-03 21:05:38,276 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 21:05:38] "GET /portal/orders/MK81738 HTTP/1.1" 200 -
