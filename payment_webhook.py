@@ -13,14 +13,16 @@ payment_webhook_bp = Blueprint("payment_webhook", __name__)
 _config = None
 _session_manager = None
 _whatsapp_service = None
+_db_manager = None
 
 
-def init_payment_webhook(config, session_manager, whatsapp_service):
+def init_payment_webhook(config, session_manager, whatsapp_service, db_manager=None):
     """Call this once in app.py after initialising services."""
-    global _config, _session_manager, _whatsapp_service
+    global _config, _session_manager, _whatsapp_service, _db_manager
     _config = config
     _session_manager = session_manager
     _whatsapp_service = whatsapp_service
+    _db_manager = db_manager
     logger.info("PaymentWebhook initialised.")
 
 
@@ -79,6 +81,18 @@ def _handle_charge_success(data: dict):
     customer_phone = data.get("metadata", {}).get("customer_phone", "")
 
     logger.info(f"Payment confirmed: ref={reference}, amount=₦{amount_naira}, phone={customer_phone}")
+
+    # ── Update order in DB ────────────────────────────────────────────────────
+    if _db_manager:
+        try:
+            _db_manager.update_order_payment(
+                order_ref=reference,
+                payment_status='paid',
+                payment_ref=reference,
+                status='paid'
+            )
+        except Exception as e:
+            logger.error(f"Could not update order payment in DB for {reference}: {e}")
 
     if not customer_phone:
         logger.warning(f"charge.success for {reference}: no customer_phone in metadata — cannot send WhatsApp.")

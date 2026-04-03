@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block page_title %}Products{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
+    + Add Product
+</button>
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+.product-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    position: relative;
+    transition: border-color 0.15s;
+}
+.product-card:hover { border-color: #bcd; }
+.product-card.unavailable { opacity: 0.5; }
+.product-card.unavailable::after {
+    content: 'UNAVAILABLE';
+    position: absolute;
+    top: 12px; right: 12px;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+    color: var(--danger);
+    background: rgba(220,38,38,0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+.product-name { font-family: var(--font-head); font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.product-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; min-height: 36px; }
+.product-price { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+.product-actions {
+    display: flex; gap: 8px; margin-top: 16px;
+    padding-top: 14px; border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+.category-section { margin-bottom: 36px; }
+.category-label {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if grouped %}
+    {% for category, items in grouped.items() %}
+    <div class="category-section">
+        <div class="category-label">{{ category }} ({{ items | length }})</div>
+        <div class="product-grid">
+            {% for p in items %}
+            <div class="product-card {% if not p.is_available %}unavailable{% endif %}" id="product-{{ p.id }}">
+                <div class="product-name">{{ p.name }}</div>
+                <div class="product-desc">{{ p.description or '—' }}</div>
+                <div class="product-price">₦{{ "{:,}".format(p.price) }}</div>
+                <div class="product-actions">
+                    <button class="btn btn-ghost btn-sm"
+                            data-id="{{ p.id }}"
+                            data-name="{{ p.name | e }}"
+                            data-desc="{{ (p.description or '') | e }}"
+                            data-price="{{ p.price }}"
+                            data-category="{{ p.category | e }}"
+                            data-available="{{ 'true' if p.is_available else 'false' }}"
+                            onclick="openEditModal(this)">Edit</button>
+                    <button class="btn btn-ghost btn-sm"
+                            onclick="toggleProduct({{ p.id }}, this)"
+                            data-available="{{ 'true' if p.is_available else 'false' }}">
+                        {% if p.is_available %}Disable{% else %}Enable{% endif %}
+                    </button>
+                    <form method="POST"
+                          action="{{ url_for('portal.delete_product', product_id=p.id) }}"
+                          onsubmit="return confirm('Delete {{ p.name | e }}?')">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty">
+        <div class="empty-icon">🍛</div>
+        No products yet. Add your first item!
+    </div>
+{% endif %}
+
+<!-- Add Product Modal -->
+<div class="modal-overlay" id="addModal">
+    <div class="modal">
+        <div class="modal-title">Add Product</div>
+        <form method="POST" action="{{ url_for('portal.add_product') }}">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" required placeholder="e.g. Jollof Rice">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" placeholder="Short description..."></textarea>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Price (₦)</label>
+                    <input type="number" name="price" required placeholder="2500" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" required>
+                        <option value="">Select...</option>
+                        <option>Rice & Grains</option>
+                        <option>Swallows</option>
+                        <option>Soups</option>
+                        <option>Small Chops & Snacks</option>
+                        <option>Proteins</option>
+                        <option>Drinks</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost"
+                        onclick="document.getElementById('addModal').classList.remove('open')">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal">
+        <div class="modal-title">Edit Product</div>
+        <form method="POST" id="editForm" action="">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" id="editName" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" id="editDesc"></textarea>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Price (₦)</label>
+                    <input type="number" name="price" id="editPrice" required min="0">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" id="editCategory" required>
+                        <option>Rice & Grains</option>
+                        <option>Swallows</option>
+                        <option>Soups</option>
+                        <option>Small Chops & Snacks</option>
+                        <option>Proteins</option>
+                        <option>Drinks</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Availability</label>
+                <select name="is_available" id="editAvailable">
+                    <option value="true">Available</option>
+                    <option value="false">Unavailable</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost"
+                        onclick="document.getElementById('editModal').classList.remove('open')">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function openEditModal(btn) {
+    const id        = btn.dataset.id;
+    const name      = btn.dataset.name;
+    const desc      = btn.dataset.desc;
+    const price     = btn.dataset.price;
+    const category  = btn.dataset.category;
+    const available = btn.dataset.available;
+
+    document.getElementById('editForm').action = '/portal/products/' + id + '/edit';
+    document.getElementById('editName').value      = name;
+    document.getElementById('editDesc').value      = desc;
+    document.getElementById('editPrice').value     = price;
+    document.getElementById('editCategory').value  = category;
+    document.getElementById('editAvailable').value = available;
+    document.getElementById('editModal').classList.add('open');
+}
+
+async function toggleProduct(id, btn) {
+    const res = await fetch('/portal/products/' + id + '/toggle', { method: 'POST' });
+    if (res.ok) {
+        const card = document.getElementById('product-' + id);
+        const wasAvailable = btn.dataset.available === 'true';
+        btn.dataset.available = (!wasAvailable).toString();
+        btn.textContent = wasAvailable ? 'Enable' : 'Disable';
+        card.classList.toggle('unavailable', wasAvailable);
+    }
+}
+
+// Close modals when clicking outside
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('open');
+    });
+});
+</script>
+{% endblock %}

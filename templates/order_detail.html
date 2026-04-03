@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.order_ref }}{% endblock %}
+{% block page_title %}Order {{ order.order_ref }}{% endblock %}
+
+{% block topbar_actions %}
+<a href="{{ url_for('portal.orders') }}" class="btn btn-ghost btn-sm">← Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="grid-2 mb-6">
+
+    <!-- Order Info -->
+    <div class="card">
+        <div class="card-title">Order Details</div>
+        <table style="width:100%">
+            <tr><td class="muted mono" style="padding:6px 0;font-size:11px;width:40%">REF</td>
+                <td class="mono">{{ order.order_ref }}</td></tr>
+            <tr><td class="muted mono" style="padding:6px 0;font-size:11px">CUSTOMER</td>
+                <td>{{ order.name or '—' }}</td></tr>
+            <tr><td class="muted mono" style="padding:6px 0;font-size:11px">PHONE</td>
+                <td class="mono">{{ order.phone_number or '—' }}</td></tr>
+            <tr><td class="muted mono" style="padding:6px 0;font-size:11px">ADDRESS</td>
+                <td>{{ order.delivery_address or '—' }}</td></tr>
+            <tr><td class="muted mono" style="padding:6px 0;font-size:11px">DATE</td>
+                <td class="mono">{{ order.created_at.strftime('%d %b %Y, %H:%M') if order.created_at else '—' }}</td></tr>
+            <tr><td class="muted mono" style="padding:6px 0;font-size:11px">PAYMENT</td>
+                <td><span class="badge badge-{{ order.payment_status }}">{{ order.payment_status }}</span></td></tr>
+        </table>
+    </div>
+
+    <!-- Status Update -->
+    <div class="card">
+        <div class="card-title">Update Status</div>
+        <div class="mb-4">
+            Current: <span class="badge badge-{{ order.status }}">{{ order.status }}</span>
+        </div>
+        <form method="POST" action="{{ url_for('portal.update_order_status', order_ref=order.order_ref) }}">
+            <div class="form-group">
+                <label>New Status</label>
+                <select name="status">
+                    {% for s in ['pending','payment_sent','paid','preparing','on_the_way','delivered','cancelled'] %}
+                    <option value="{{ s }}" {% if order.status == s %}selected{% endif %}>
+                        {{ s | capitalize }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Status</button>
+        </form>
+    </div>
+</div>
+
+<!-- Order Items -->
+<div class="card">
+    <div class="card-title">Items Ordered</div>
+    <div class="table-wrap" style="border:none;border-radius:0">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Unit Price</th>
+                    <th>Qty</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td class="mono">₦{{ "{:,}".format(item.price) }}</td>
+                    <td class="mono">{{ item.quantity }}</td>
+                    <td class="mono">₦{{ "{:,}".format(item.subtotal) }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="muted" style="text-align:center;padding:20px">No items recorded</td></tr>
+                {% endfor %}
+            </tbody>
+            {% if items %}
+            <tfoot>
+                <tr style="border-top: 2px solid var(--border)">
+                    <td colspan="3" style="padding:12px 16px;font-weight:600;font-family:var(--font-mono);font-size:12px">SUBTOTAL</td>
+                    <td class="mono" style="padding:12px 16px">₦{{ "{:,}".format(order.subtotal) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding:4px 16px;font-family:var(--font-mono);font-size:11px;color:var(--muted)">DELIVERY</td>
+                    <td class="mono" style="padding:4px 16px">
+                        {% if order.delivery_fee == 0 %}Free{% else %}₦{{ "{:,}".format(order.delivery_fee) }}{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding:8px 16px;font-family:var(--font-head);font-size:15px;font-weight:700">TOTAL</td>
+                    <td class="mono" style="padding:8px 16px;font-size:16px;font-weight:700;color:var(--accent)">₦{{ "{:,}".format(order.total) }}</td>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}

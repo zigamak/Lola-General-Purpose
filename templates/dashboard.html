@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+{% if stats.error %}
+<div class="flash flash-error">
+    Database error: {{ stats.error }} — check your DB_URL in .env
+</div>
+{% endif %}
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Customers</div>
+        <div class="stat-value">{{ stats.total_customers or 0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ stats.total_orders or 0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Paid Orders</div>
+        <div class="stat-value accent">{{ stats.paid_orders or 0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Messages</div>
+        <div class="stat-value">{{ stats.total_messages or 0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Revenue (₦)</div>
+        <div class="stat-value accent">{{ "{:,}".format(stats.total_revenue or 0) }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">Recent Orders</div>
+    {% if stats.recent_orders %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ref</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in stats.recent_orders %}
+                <tr>
+                    <td class="mono">{{ order.order_ref }}</td>
+                    <td>{{ order.name or '—' }}</td>
+                    <td class="mono muted">{{ order.phone_number or '—' }}</td>
+                    <td class="mono">₦{{ "{:,}".format(order.total) }}</td>
+                    <td><span class="badge badge-{{ order.status }}">{{ order.status }}</span></td>
+                    <td><span class="badge badge-{{ order.payment_status }}">{{ order.payment_status }}</span></td>
+                    <td class="muted mono">{{ order.created_at.strftime('%d %b, %H:%M') if order.created_at else '—' }}</td>
+                    <td><a href="{{ url_for('portal.order_detail', order_ref=order.order_ref) }}" class="btn btn-ghost btn-sm">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty">
+        <div class="empty-icon">📋</div>
+        No orders yet
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

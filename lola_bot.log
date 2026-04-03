@@ -1,0 +1,1076 @@
+2026-04-03 20:09:54,725 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:10:02,186 - __main__ - ERROR - Import error: No module named 'db_manager'
+2026-04-03 20:10:43,391 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:10:48,689 - __main__ - ERROR - Import error: No module named 'db_manager'
+2026-04-03 20:12:03,020 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:12:07,946 - __main__ - ERROR - Import error: No module named 'db_manager'
+2026-04-03 20:12:16,453 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:12:21,569 - __main__ - ERROR - Import error: No module named 'db_manager'
+2026-04-03 20:12:57,374 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:13:02,676 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:13:02,676 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:13:04,026 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:13:04,026 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:13:04,031 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:13:04,131 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:13:04,137 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 20:13:04,144 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 20:13:04,149 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 20:13:04,149 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 20:13:04,149 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:13:05,096 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:13:05,096 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:13:05,099 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:13:05,106 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:13:05,111 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 20:13:05,117 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 20:13:05,119 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 20:13:05,119 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 20:13:05,119 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:13:06,118 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:13:06,121 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:13:06,121 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 20:13:06,121 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:13:06,121 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:13:06,121 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:13:06,123 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:13:07,058 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:13:07,063 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:13:07,090 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:13:07,090 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:13:27,153 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'I want to inquere about my order'}
+2026-04-03 20:13:27,154 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 20:13:27,155 - message_processor - INFO - Session 2348055614455: New session ï¿½ starting order chat.
+2026-04-03 20:13:27,155 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' ï¿½ msg: 'I want to inquere about my order'.
+2026-04-03 20:13:27,156 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:13:27,924 - services.whatsapp_service - ERROR - HTTP error sending WhatsApp message: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v17.0/204426689424598/messages - Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"ABBRBl_S_zCOxGjA3Isv1V6"}}
+2026-04-03 20:13:27,925 - services.whatsapp_service - ERROR - Payload is None or not a dictionary: None
+2026-04-03 20:13:27,928 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 20:13:27,928 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg'}}
+2026-04-03 20:13:28,525 - services.whatsapp_service - ERROR - HTTP error sending WhatsApp message: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v17.0/204426689424598/messages - Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AWqcl-1TPwAHmkmj19AWyCF"}}
+2026-04-03 20:13:28,580 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 20:13:28,613 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:13:28] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:14:18,786 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:14:23,924 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:14:23,925 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:14:25,340 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:14:25,340 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:14:25,345 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:14:25,370 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:14:25,376 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 20:14:25,382 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 20:14:25,386 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 20:14:25,386 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 20:14:25,386 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:14:26,382 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:14:26,382 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:14:26,391 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:14:26,405 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:14:26,411 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 20:14:26,419 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 20:14:26,425 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 20:14:26,425 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 20:14:26,426 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:14:27,434 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:14:27,434 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:14:27,434 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 20:14:27,437 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:14:27,437 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:14:27,437 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:14:27,438 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:14:28,433 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:14:28,442 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:14:28,472 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:14:28,473 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:14:34,697 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 20:14:34,698 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 20:14:34,698 - message_processor - INFO - Session 2348055614455: Trigger word 'hello' ï¿½ starting order chat.
+2026-04-03 20:14:34,698 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' ï¿½ msg: 'Hello'.
+2026-04-03 20:14:34,698 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:14:35,327 - services.whatsapp_service - ERROR - HTTP error sending WhatsApp message: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v17.0/204426689424598/messages - Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AX5OcLzxgzgjZpsBbnAcPDq"}}
+2026-04-03 20:14:35,328 - services.whatsapp_service - ERROR - Payload is None or not a dictionary: None
+2026-04-03 20:14:35,328 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 20:14:35,328 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg'}}
+2026-04-03 20:14:36,006 - services.whatsapp_service - ERROR - HTTP error sending WhatsApp message: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v17.0/204426689424598/messages - Response: {"error":{"message":"Error validating access token: Session has expired on Friday, 03-Apr-26 12:00:00 PDT. The current time is Friday, 03-Apr-26 12:14:36 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"AG0ZJX1p2klKQsee06xeyeb"}}
+2026-04-03 20:14:36,009 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 20:14:36,009 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:14:36] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:30,136 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:16:37,180 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:16:37,181 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:16:39,367 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:16:39,367 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:16:39,372 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:16:39,477 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:16:39,482 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 20:16:39,487 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 20:16:39,492 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 20:16:39,492 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 20:16:39,492 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:16:40,510 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:16:40,510 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:16:40,515 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:16:40,531 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-03 20:16:40,533 - services.ai_service - INFO - Agent built for: gemini-flash-latest
+2026-04-03 20:16:40,545 - services.ai_service - INFO - Agent built for: gemini-flash-lite-latest
+2026-04-03 20:16:40,551 - services.ai_service - INFO - Agent built for: gemini-2.5-flash-lite
+2026-04-03 20:16:40,553 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+2026-04-03 20:16:40,553 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:16:41,571 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:16:41,571 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:16:41,571 - message_processor - INFO - MessageProcessor initialized for Chowder.ng order bot.
+2026-04-03 20:16:41,571 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:16:41,571 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:16:41,573 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:16:41,573 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:16:42,598 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:16:42,617 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:16:42,645 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:16:42,645 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:16:47,640 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'I want to inquere about my order'}
+2026-04-03 20:16:47,643 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 20:16:47,643 - message_processor - INFO - Session 2348055614455: New session ï¿½ starting order chat.
+2026-04-03 20:16:47,643 - message_processor - INFO - Session 2348055614455: Starting order chat for 'Ziga' ï¿½ msg: 'I want to inquere about my order'.
+2026-04-03 20:16:47,643 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:16:48,851 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjczMUFEOTRDNDI4Rjk4ODk5NAA='}]}
+2026-04-03 20:16:48,851 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjczMUFEOTRDNDI4Rjk4ODk5NAA='}]}
+2026-04-03 20:16:48,851 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 20:16:48,853 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg'}}
+2026-04-03 20:16:49,735 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:49] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:49,784 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkI4RTFGNzVEMUUzNDNEN0ZGOQA='}]}
+2026-04-03 20:16:49,787 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 20:16:49,788 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:49] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:50,192 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:50] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:50,342 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:50] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:51,896 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:51] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:52,104 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:52] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:52,107 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:52] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:16:52,544 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:16:52] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:17:13,731 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Jellof rice'}
+2026-04-03 20:17:13,732 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Jellof rice'
+2026-04-03 20:17:17,537 - services.ai_service - INFO - Active model switched to: gemini-2.5-flash
+2026-04-03 20:17:19,053 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:17:20,518 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkRBMUM3RjFBODI3OTk1NTBCNAA='}]}
+2026-04-03 20:17:20,570 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkRBMUM3RjFBODI3OTk1NTBCNAA='}]}
+2026-04-03 20:17:20,590 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:17:20] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:17:21,662 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:17:21] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:17:22,285 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:17:22] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:17:54,660 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:17:54] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:01,155 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Add 5 platters of potato'}
+2026-04-03 20:18:01,155 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Add 5 platters of potato'
+2026-04-03 20:18:05,246 - services.ai_service - INFO - [gemini-2.5-flash] [2348055614455] payment_triggered=False: I'm sorry, "potato platter" is not on our menu. We have "Small Chops Platter" which includes puff pu
+2026-04-03 20:18:06,249 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:18:06,250 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'I\'m sorry, "potato platter" is not on our menu. We have "Small Chops Platter" which includes puff puff, spring rolls, samosa, and peppered gizzard. Would you like to add that or anything else?'}}
+2026-04-03 20:18:07,222 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkI0MjAyRjQxQkFFMUM2NUQyRgA='}]}
+2026-04-03 20:18:07,222 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkI0MjAyRjQxQkFFMUM2NUQyRgA='}]}
+2026-04-03 20:18:07,224 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:07] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:08,120 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:08] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:08,507 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:08] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:08,758 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:08] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:24,887 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Yes add 5 of the small chops platter'}
+2026-04-03 20:18:24,887 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Yes add 5 of the small chops platter'
+2026-04-03 20:18:28,213 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:18:29,157 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkQxQkI5MkZFQTIxMEM0NERBNwA='}]}
+2026-04-03 20:18:29,157 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkQxQkI5MkZFQTIxMEM0NERBNwA='}]}
+2026-04-03 20:18:29,157 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:29] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:30,035 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:30] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:30,701 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:30] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:30,870 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:30] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:37,063 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'No that;s all'}
+2026-04-03 20:18:37,063 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'No that;s all'
+2026-04-03 20:18:38,764 - services.ai_service - INFO - [gemini-2.5-flash] [2348055614455] payment_triggered=False: What is your delivery address?
+2026-04-03 20:18:39,757 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:18:39,757 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'What is your delivery address?'}}
+2026-04-03 20:18:40,751 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM4NzgxMjNBRkY3QjdCMDMxMAA='}]}
+2026-04-03 20:18:40,752 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM4NzgxMjNBRkY3QjdCMDMxMAA='}]}
+2026-04-03 20:18:40,753 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:40] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:41,686 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:41] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:18:41,998 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:18:41] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:19:44,474 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:19:44] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:29,150 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Ojota Lagos'}
+2026-04-03 20:20:29,150 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Ojota Lagos'
+2026-04-03 20:20:30,489 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash
+Please retry in 29.43934251s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.5-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 20
+}
+, retry_delay {
+  seconds: 29
+}
+].
+2026-04-03 20:20:32,741 - services.ai_service - WARNING - 'gemini-2.5-flash' failed: 429 You exceeded your current quota, please check your plan and billing details.. Trying next...
+2026-04-03 20:20:47,810 - services.ai_service - INFO - Active model switched to: gemini-flash-latest
+2026-04-03 20:20:47,811 - services.ai_service - INFO - [gemini-flash-latest] [2348055614455] payment_triggered=True: Order Summary
+
+Order Ref: MK81738
+Name: Ziga
+Phone: 2348055614455
+Delivery Address: Ojota Lagos
+
+Ite
+2026-04-03 20:20:47,811 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:20:48,737 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjczNDVDMDFENEIxRjI4OTNBRQA='}]}
+2026-04-03 20:20:48,738 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjczNDVDMDFENEIxRjI4OTNBRQA='}]}
+2026-04-03 20:20:49,607 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:49] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:49,757 - db_manager - INFO - Order created: ref=MK81738, id=1
+2026-04-03 20:20:49,758 - handlers.ai_handler - INFO - Order saved to DB: order_id=1, ref=MK81738
+2026-04-03 20:20:49,758 - services.payment_service - INFO - Attempting to create payment link for reference: MK81738 with amount: 3000000, email: ziga4455@lola.com
+2026-04-03 20:20:50,042 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:50] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:50,445 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:50] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:50,639 - services.payment_service - INFO - Payment link created for Ziga Ziga (2348055614455), URL: https://checkout.paystack.com/c6np1opnno7ijpn
+2026-04-03 20:20:50,639 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:20:51,616 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjMzNUMzMDExMDdDNUMxMjJEMgA='}]}
+2026-04-03 20:20:52,583 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjMzNUMzMDExMDdDNUMxMjJEMgA='}]}
+2026-04-03 20:20:52,583 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:52] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:52,596 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:52] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:52,897 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:52] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:53,073 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:53] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:20:53,114 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:20:53] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:21:21,198 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Payment confirmed'}
+2026-04-03 20:21:21,198 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'Payment confirmed'
+2026-04-03 20:21:37,030 - services.ai_service - INFO - [gemini-flash-latest] [2348055614455] payment_triggered=False: Thank you, Ziga! We have received your payment. Our kitchen is getting to work on your order right a
+2026-04-03 20:21:38,021 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:21:38,024 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'Thank you, Ziga! We have received your payment. Our kitchen is getting to work on your order right away. You will receive an update once it is out for delivery to Ojota. No wahala!'}}
+2026-04-03 20:21:38,979 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkU3N0ZFNTRBNEVDRjhERkY1MwA='}]}
+2026-04-03 20:21:38,982 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkU3N0ZFNTRBNEVDRjhERkY1MwA='}]}
+2026-04-03 20:21:38,982 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:21:38] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:21:39,852 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:21:39] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:21:40,555 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:21:40] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:21:40,910 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:21:40] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:27:30,425 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:27:30] "[33mGET / HTTP/1.1[0m" 404 -
+2026-04-03 20:27:30,862 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:27:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-04-03 20:27:42,794 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:27:42] "[32mGET /portal HTTP/1.1[0m" 308 -
+2026-04-03 20:27:45,608 - app - ERROR - Exception on /portal/ [GET]
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 47, in dashboard
+    return render_template("portal/dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/dashboard.html
+2026-04-03 20:27:45,619 - app - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 47, in dashboard
+    return render_template("portal/dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/dashboard.html
+2026-04-03 20:27:45,622 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:27:45] "[35m[1mGET /portal/ HTTP/1.1[0m" 500 -
+2026-04-03 20:30:31,669 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:30:38,579 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:30:38,579 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:30:40,032 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:30:40,032 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:30:40,033 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:30:40,074 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:30:40,086 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:30:40,086 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:30:40,086 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:30:40,086 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:30:41,046 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:30:41,046 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:30:41,046 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:30:41,071 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:30:41,078 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:30:41,090 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:30:41,090 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:30:41,090 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:30:42,001 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:30:42,001 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:30:42,001 - message_processor - INFO - MessageProcessor initialised ï¿½ Makinde Kitchen.
+2026-04-03 20:30:42,001 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:30:42,001 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:30:42,001 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:30:42,001 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:30:42,968 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:30:42,974 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:30:43,000 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:30:43,000 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:30:53,175 - app - ERROR - Exception on /portal/ [GET]
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("portal/dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/dashboard.html
+2026-04-03 20:30:53,181 - app - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("portal/dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/dashboard.html
+2026-04-03 20:30:53,181 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:30:53] "[35m[1mGET /portal/ HTTP/1.1[0m" 500 -
+2026-04-03 20:30:56,801 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:30:56] "[32mGET / HTTP/1.1[0m" 302 -
+2026-04-03 20:30:59,558 - app - ERROR - Exception on /portal/ [GET]
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("portal/dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/dashboard.html
+2026-04-03 20:30:59,559 - app - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("portal/dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/dashboard.html
+2026-04-03 20:30:59,561 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:30:59] "[35m[1mGET /portal/ HTTP/1.1[0m" 500 -
+2026-04-03 20:34:04,070 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:34:09,708 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:34:09,708 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:34:11,026 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:34:11,026 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:34:11,028 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyDs...5N3g
+2026-04-03 20:34:11,074 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:34:11,079 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:34:11,088 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:34:11,088 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:34:11,088 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:34:11,986 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:34:11,986 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:34:11,986 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyDs...5N3g
+2026-04-03 20:34:12,003 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:34:12,018 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:34:12,024 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:34:12,024 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:34:12,026 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:34:12,977 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:34:12,978 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:34:12,978 - message_processor - INFO - MessageProcessor initialised ï¿½ Makinde Kitchen.
+2026-04-03 20:34:12,978 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:34:12,978 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:34:12,978 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:34:12,978 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:34:13,959 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:34:13,959 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:34:13,978 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:34:13,978 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:34:19,777 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 20:34:19,777 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 20:34:19,777 - message_processor - INFO - Session 2348055614455: New session.
+2026-04-03 20:34:19,777 - message_processor - INFO - Session 2348055614455: Fresh start for 'Ziga'.
+2026-04-03 20:34:19,777 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:34:21,228 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkFFQUZFQjI5RERCRDI4NDk0QgA='}]}
+2026-04-03 20:34:21,228 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkFFQUZFQjI5RERCRDI4NDk0QgA='}]}
+2026-04-03 20:34:21,228 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 20:34:21,228 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg'}}
+2026-04-03 20:34:22,592 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:34:22] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:34:22,755 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:34:22] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:34:23,882 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjdCOTBBNTVFODYwRkM5RTY0MAA='}]}
+2026-04-03 20:34:23,882 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 20:34:23,882 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:34:23] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:34:25,643 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:34:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:34:26,349 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:34:26] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:34:26,650 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:34:26] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:34:27,021 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:34:27] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:35:49,156 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:35:55,160 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:35:55,160 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:35:56,467 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:35:56,467 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:35:56,484 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyDs...5N3g
+2026-04-03 20:35:56,519 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:35:56,519 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:35:56,533 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:35:56,533 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:35:56,533 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:35:57,481 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:35:57,481 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:35:57,498 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyDs...5N3g
+2026-04-03 20:35:57,498 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:35:57,516 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:35:57,523 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:35:57,523 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:35:57,523 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:35:58,481 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:35:58,488 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:35:58,488 - message_processor - INFO - MessageProcessor initialised ï¿½ Makinde Kitchen.
+2026-04-03 20:35:58,488 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:35:58,488 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:35:58,488 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:35:58,488 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:35:59,482 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:35:59,482 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:35:59,504 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:35:59,504 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:36:02,348 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:02] "[32mGET / HTTP/1.1[0m" 302 -
+2026-04-03 20:36:05,257 - app - ERROR - Exception on /portal/ [GET]
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\templates\dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/base.html
+2026-04-03 20:36:05,267 - app - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\templates\dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/base.html
+2026-04-03 20:36:05,270 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:05] "[35m[1mGET /portal/ HTTP/1.1[0m" 500 -
+2026-04-03 20:36:13,420 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Hello Lola'}
+2026-04-03 20:36:13,420 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 20:36:13,420 - message_processor - INFO - Session 2348055614455: New session.
+2026-04-03 20:36:13,420 - message_processor - INFO - Session 2348055614455: Fresh start for 'Ziga'.
+2026-04-03 20:36:13,420 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:36:14,409 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjE2Mjc5MkFCOEUyM0M5MzJEQgA='}]}
+2026-04-03 20:36:14,410 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjE2Mjc5MkFCOEUyM0M5MzJEQgA='}]}
+2026-04-03 20:36:14,410 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 20:36:14,415 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 20:36:15,007 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjE3RkJCNUZBNkJFNzYxNUUyMAA='}]}
+2026-04-03 20:36:15,012 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 20:36:15,020 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:15] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:15,683 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:15] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:16,118 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:16] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:17,104 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:17] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:17,572 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:17] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:17,944 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:17] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:18,023 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:18] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:18,283 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:36:18] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:36:59,901 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'I want pounded yam and egusi with one chickennet\nI al
+2026-04-03 20:36:59,902 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I want pounded yam and egusi with one chickennet
+I also want milkly doughnut'
+2026-04-03 20:37:01,956 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised NotFound: 404 This model models/gemini-2.0-flash is no longer available to new users. Please update your code to use a newer model for the latest features and improvements..
+2026-04-03 20:37:04,292 - services.ai_service - WARNING - 'gemini-2.0-flash' failed: 404 This model models/gemini-2.0-flash is no longer available to new users. Plea. Trying next...
+2026-04-03 20:37:05,236 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised NotFound: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods..
+2026-04-03 20:37:07,516 - services.ai_service - WARNING - 'gemini-1.5-flash' failed: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not suppo. Trying next...
+2026-04-03 20:37:08,411 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised NotFound: 404 models/gemini-1.5-flash-8b is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods..
+2026-04-03 20:37:10,770 - services.ai_service - WARNING - 'gemini-1.5-flash-8b' failed: 404 models/gemini-1.5-flash-8b is not found for API version v1beta, or is not su. Trying next...
+2026-04-03 20:37:10,770 - services.ai_service - ERROR - All models failed [2348055614455]: All Gemini model fallbacks exhausted.
+Traceback (most recent call last):
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 441, in generate_order_response
+    raw_response = self._invoke_with_fallback({
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 384, in _invoke_with_fallback
+    raise RuntimeError("All Gemini model fallbacks exhausted.")
+RuntimeError: All Gemini model fallbacks exhausted.
+2026-04-03 20:37:11,735 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:37:11,736 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'Something went wrong on our end. Try again or send menu to browse!'}}
+2026-04-03 20:37:12,851 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjQ3NTNCOTExMkNFRkMxRDEzMAA='}]}
+2026-04-03 20:37:12,851 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjQ3NTNCOTExMkNFRkMxRDEzMAA='}]}
+2026-04-03 20:37:12,851 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:37:12] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:37:13,780 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:37:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:37:14,116 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:37:14] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:37:33,002 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:37:40,492 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:37:40,493 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:37:41,796 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:37:41,797 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:37:41,802 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:37:41,933 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:37:41,959 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:37:41,982 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:37:41,983 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:37:41,984 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:37:42,964 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:37:42,964 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:37:42,964 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:37:43,013 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:37:43,044 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:37:43,075 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:37:43,077 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:37:43,086 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:37:44,098 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:37:44,098 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:37:44,098 - message_processor - INFO - MessageProcessor initialised ï¿½ Makinde Kitchen.
+2026-04-03 20:37:44,098 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:37:44,098 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:37:44,098 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:37:44,098 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:37:45,078 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:37:45,079 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:37:45,102 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:37:45,103 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:39:21,431 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:21] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:22,870 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Hell'}
+2026-04-03 20:39:22,871 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 20:39:22,872 - message_processor - INFO - Session 2348055614455: New session.
+2026-04-03 20:39:22,872 - message_processor - INFO - Session 2348055614455: Fresh start for 'Ziga'.
+2026-04-03 20:39:22,873 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:39:23,989 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjMwMDk1MURFN0Q0ODBGQjRFRQA='}]}
+2026-04-03 20:39:23,989 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjMwMDk1MURFN0Q0ODBGQjRFRQA='}]}
+2026-04-03 20:39:23,990 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 20:39:23,990 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 20:39:24,929 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:24] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:24,945 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEkNFQzE1MzQzOEE3RjQ0N0IwRQA='}]}
+2026-04-03 20:39:24,945 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 20:39:24,945 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:24] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:25,193 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:25,540 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:25] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:26,007 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:26] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:26,379 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:26] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:26,936 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:26] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:30,764 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'I want pounded yam and egusi with one chickennet\nI al
+2026-04-03 20:39:30,765 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I want pounded yam and egusi with one chickennet
+I also want milkly doughnut'
+2026-04-03 20:39:32,536 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash
+Please retry in 27.360727097s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+, retry_delay {
+  seconds: 27
+}
+].
+2026-04-03 20:39:34,804 - services.ai_service - WARNING - 'gemini-2.0-flash' failed: 429 You exceeded your current quota, please check your plan and billing details.. Trying next...
+2026-04-03 20:39:35,434 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised NotFound: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods..
+2026-04-03 20:39:37,643 - services.ai_service - WARNING - 'gemini-1.5-flash' failed: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not suppo. Trying next...
+2026-04-03 20:39:38,257 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised NotFound: 404 models/gemini-1.5-flash-8b is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods..
+2026-04-03 20:39:40,543 - services.ai_service - WARNING - 'gemini-1.5-flash-8b' failed: 404 models/gemini-1.5-flash-8b is not found for API version v1beta, or is not su. Trying next...
+2026-04-03 20:39:40,543 - services.ai_service - ERROR - All models failed [2348055614455]: All Gemini model fallbacks exhausted.
+Traceback (most recent call last):
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 441, in generate_order_response
+    raw_response = self._invoke_with_fallback({
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 384, in _invoke_with_fallback
+    raise RuntimeError("All Gemini model fallbacks exhausted.")
+RuntimeError: All Gemini model fallbacks exhausted.
+2026-04-03 20:39:41,544 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:39:41,544 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'Something went wrong on our end. Try again or send menu to browse!'}}
+2026-04-03 20:39:42,571 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM0NUYzMTM3NjU5RDI4MERDRAA='}]}
+2026-04-03 20:39:42,571 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjM0NUYzMTM3NjU5RDI4MERDRAA='}]}
+2026-04-03 20:39:42,571 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:42] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:43,551 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:43] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:44,061 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:44] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:39:44,236 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:39:44] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:40:20,460 - __main__ - INFO - Starting Lola ï¿½ Makinde Kitchen bot...
+2026-04-03 20:40:24,847 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:40:24,849 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:40:26,243 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:40:26,243 - app - INFO - Core services initialised ï¿½ Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:40:26,247 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:40:26,298 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:40:26,310 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:40:26,317 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:40:26,317 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:40:26,317 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:40:27,291 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:40:27,291 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:40:27,295 - services.ai_service - INFO - Makinde Kitchen AIService ï¿½ Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:40:27,313 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:40:27,324 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:40:27,332 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:40:27,332 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:40:27,332 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:40:28,311 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:40:28,311 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:40:28,313 - message_processor - INFO - MessageProcessor initialised ï¿½ Makinde Kitchen.
+2026-04-03 20:40:28,313 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:40:28,313 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:40:28,313 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:40:28,315 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:40:29,272 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:40:29,279 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:40:29,292 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:40:29,292 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:40:32,888 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:40:32] "[32mGET / HTTP/1.1[0m" 302 -
+2026-04-03 20:40:35,727 - app - ERROR - Exception on /portal/ [GET]
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\templates\dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/base.html
+2026-04-03 20:40:35,733 - app - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\portal\routes.py", line 71, in dashboard
+    return render_template("dashboard.html", stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\templates\dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 64, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\AppData\Local\Programs\Python\Python312\Lib\site-packages\flask\templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: portal/base.html
+2026-04-03 20:40:35,738 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:40:35] "[35m[1mGET /portal/ HTTP/1.1[0m" 500 -
+2026-04-03 20:43:11,004 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-03 20:43:19,561 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-03 20:43:19,561 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-03 20:43:20,868 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:43:20,868 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-03 20:43:20,873 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:43:20,918 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:43:20,933 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:43:20,941 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:43:20,941 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:43:20,942 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:43:21,955 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:43:21,955 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:43:21,955 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyD1...38Lk
+2026-04-03 20:43:21,968 - services.ai_service - INFO - Agent built for: gemini-2.0-flash
+2026-04-03 20:43:21,983 - services.ai_service - INFO - Agent built for: gemini-1.5-flash
+2026-04-03 20:43:21,991 - services.ai_service - INFO - Agent built for: gemini-1.5-flash-8b
+2026-04-03 20:43:21,992 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+2026-04-03 20:43:21,992 - services.payment_service - INFO - PaymentService initialized
+2026-04-03 20:43:23,009 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:43:23,009 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-03 20:43:23,009 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-03 20:43:23,009 - app - INFO - Handlers and message processor initialised.
+2026-04-03 20:43:23,009 - app - INFO - WebhookHandler initialised.
+2026-04-03 20:43:23,009 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-03 20:43:23,009 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-03 20:43:24,010 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-03 20:43:24,011 - app - INFO - Merchant portal registered at /portal
+2026-04-03 20:43:24,035 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-03 20:43:24,035 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-03 20:43:28,098 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:43:28] "GET /portal/ HTTP/1.1" 200 -
+2026-04-03 20:43:32,092 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:43:32] "GET /portal/orders HTTP/1.1" 200 -
+2026-04-03 20:43:38,523 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:43:38] "GET /portal/products HTTP/1.1" 200 -
+2026-04-03 20:43:44,246 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:43:44] "GET /portal/conversations HTTP/1.1" 200 -
+2026-04-03 20:43:47,056 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:43:47] "GET /portal/conversations/2348055614455 HTTP/1.1" 200 -
+2026-04-03 20:44:09,698 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'Hello'}
+2026-04-03 20:44:09,699 - utils.session_manager - INFO - New session 2348055614455 initialized.
+2026-04-03 20:44:09,699 - message_processor - INFO - Session 2348055614455: New session.
+2026-04-03 20:44:09,699 - message_processor - INFO - Session 2348055614455: Fresh start for 'Ziga'.
+2026-04-03 20:44:09,700 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:44:10,712 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjc4QzNERTdCMDU0OUI1QTAzQgA='}]}
+2026-04-03 20:44:10,712 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjc4QzNERTdCMDU0OUI1QTAzQgA='}]}
+2026-04-03 20:44:10,712 - services.whatsapp_service - DEBUG - Created image message payload for 2348055614455
+2026-04-03 20:44:10,712 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'image', 'image': {'link': 'https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg'}}
+2026-04-03 20:44:11,631 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:11] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:11,745 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjczNjUwODAzN0E4NzYxOTBFRgA='}]}
+2026-04-03 20:44:11,746 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type', 'messaging_product'] - Payload: {'status': 'welcome_sent'}
+2026-04-03 20:44:11,747 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:11] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:11,960 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:11] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:12,381 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:12] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:12,953 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:12] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:13,263 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:13,339 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:13,527 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:13] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:15,215 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:15] "GET /portal/conversations/2348055614455 HTTP/1.1" 200 -
+2026-04-03 20:44:24,299 - handlers.webhook_handler - INFO - Message from 2348055614455 (Ziga): {'type': 'text', 'text': 'I want pounded yam and egusi with one chickennet\nI al
+2026-04-03 20:44:24,299 - handlers.ai_handler - INFO - AIHandler: message from 2348055614455: 'I want pounded yam and egusi with one chickennet
+I also want milkly doughnut'
+2026-04-03 20:44:26,132 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash
+Please retry in 33.78330541s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+, retry_delay {
+  seconds: 33
+}
+].
+2026-04-03 20:44:27,541 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:27] "GET /portal/conversations/2348055614455 HTTP/1.1" 200 -
+2026-04-03 20:44:28,308 - services.ai_service - WARNING - 'gemini-2.0-flash' failed: 429 You exceeded your current quota, please check your plan and billing details.. Trying next...
+2026-04-03 20:44:28,894 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised NotFound: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods..
+2026-04-03 20:44:31,071 - services.ai_service - WARNING - 'gemini-1.5-flash' failed: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not suppo. Trying next...
+2026-04-03 20:44:31,644 - langchain_google_genai.chat_models - WARNING - Retrying langchain_google_genai.chat_models._chat_with_retry.<locals>._chat_with_retry in 2.0 seconds as it raised NotFound: 404 models/gemini-1.5-flash-8b is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods..
+2026-04-03 20:44:33,812 - services.ai_service - WARNING - 'gemini-1.5-flash-8b' failed: 404 models/gemini-1.5-flash-8b is not found for API version v1beta, or is not su. Trying next...
+2026-04-03 20:44:33,812 - services.ai_service - ERROR - All models failed [2348055614455]: All Gemini model fallbacks exhausted.
+Traceback (most recent call last):
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 441, in generate_order_response
+    raw_response = self._invoke_with_fallback({
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zigam\Documents\Coding\Pentanative\Lola General Purpose\services\ai_service.py", line 384, in _invoke_with_fallback
+    raise RuntimeError("All Gemini model fallbacks exhausted.")
+RuntimeError: All Gemini model fallbacks exhausted.
+2026-04-03 20:44:34,803 - services.whatsapp_service - DEBUG - Created text message payload for 2348055614455
+2026-04-03 20:44:34,803 - services.whatsapp_service - INFO - Sending WhatsApp payload to 2348055614455: {'messaging_product': 'whatsapp', 'recipient_type': 'individual', 'to': '2348055614455', 'type': 'text', 'text': {'body': 'Something went wrong on our end. Try again or send menu to browse!'}}
+2026-04-03 20:44:35,738 - services.whatsapp_service - INFO - WhatsApp API response: 200 - {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjRFM0M3Nzc3QzNGOEJFNUFBQQA='}]}
+2026-04-03 20:44:35,740 - services.whatsapp_service - ERROR - Missing required fields in payload: ['to', 'type'] - Payload: {'messaging_product': 'whatsapp', 'contacts': [{'input': '2348055614455', 'wa_id': '2348055614455'}], 'messages': [{'id': 'wamid.HBgNMjM0ODA1NTYxNDQ1NRUCABEYEjRFM0M3Nzc3QzNGOEJFNUFBQQA='}]}
+2026-04-03 20:44:35,740 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:35] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:36,712 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:36] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:37,082 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:37] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:44:42,798 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:44:42] "POST /webhook HTTP/1.1" 200 -
+2026-04-03 20:45:51,359 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:45:51] "GET /portal/orders HTTP/1.1" 200 -
+2026-04-03 20:45:56,251 - werkzeug - INFO - 127.0.0.1 - - [03/Apr/2026 20:45:56] "GET /portal/orders/MK81738 HTTP/1.1" 200 -

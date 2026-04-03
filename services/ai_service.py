@@ -56,7 +56,7 @@ DRINKS
 
 DELIVERY
 - Free delivery for orders above ₦5,000
-- ₦500 flat delivery fee for orders below ₦5,000
+- ₦500 flat delivery fee for orders ₦5,000 and below
 
 OPERATING HOURS
 - Monday to Saturday: 10am - 9pm
@@ -64,27 +64,34 @@ OPERATING HOURS
 """
 
 GEMINI_MODELS = [
-    "gemini-2.5-flash",
-    "gemini-flash-latest",
-    "gemini-flash-lite-latest",
-    "gemini-2.5-flash-lite",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
 ]
+
+# Injected at runtime by AIHandler so the order status tool can query the DB
+_db_instance = None
+
+
+def set_db(db):
+    """Called by AIHandler after init to give the AI tools DB access."""
+    global _db_instance
+    _db_instance = db
 
 
 class AIService:
     """
     Conversational AI ordering service for Makinde Kitchen.
-    Uses Google Gemini with lazy runtime fallback — no API calls at startup.
+    Uses Google Gemini with lazy runtime fallback.
 
-    Payment trigger: when the AI is ready to send a payment link it appends
-    [PAYMENT_READY:amount=XXXXX] at the END of its response. The ai_handler
-    intercepts this tag, strips it, generates the Paystack link, and sends
-    the payment message separately.
+    Payment trigger: AI appends [PAYMENT_READY:amount=XXXXX] (in kobo)
+    at the end of its response when ready to collect payment.
+    AIHandler intercepts this tag, strips it, and generates the Paystack link.
     """
 
     def __init__(self, config, data_manager):
         load_dotenv()
-        self.data_manager = data_manager  # available for future order saving
+        self.data_manager = data_manager
         self.active_model = None
         self._executors = {}
         self.ai_enabled = False
@@ -119,8 +126,8 @@ class AIService:
     # ── Agent construction ────────────────────────────────────────────────────
 
     def _build_agents(self):
-        """Build one AgentExecutor per model — pure object construction, zero API calls."""
-        tools = [self._create_menu_tool()]
+        """Build one AgentExecutor per model — no API calls at startup."""
+        tools = [self._create_menu_tool(), self._create_order_status_tool()]
         prompt = ChatPromptTemplate.from_messages([
             ("system", self._get_system_prompt()),
             MessagesPlaceholder(variable_name="chat_history", optional=True),
@@ -142,7 +149,7 @@ class AIService:
                     tools=tools,
                     verbose=False,
                     handle_parsing_errors=True,
-                    max_iterations=3
+                    max_iterations=4
                 )
                 logger.info(f"Agent built for: {model_name}")
             except Exception as e:
@@ -155,10 +162,70 @@ class AIService:
             return MENU_TEXT
         return get_menu
 
+    def _create_order_status_tool(self):
+        @tool
+        def check_order_status(phone_number: str) -> str:
+            """
+            Check the status of the most recent order for a customer.
+            Use this when a customer asks about their order, delivery status,
+            or says something like 'where is my order', 'order update', 'has my food shipped'.
+            Pass the customer's phone number exactly as provided in the system context.
+            """
+            if not _db_instance:
+                return "Order status unavailable right now."
+            try:
+                row = _db_instance._execute(
+                    """SELECT o.order_ref, o.status, o.payment_status, o.total,
+                              o.delivery_address, o.created_at
+                       FROM orders o
+                       JOIN customers c ON o.customer_id = c.id
+                       WHERE c.phone_number = %s
+                       ORDER BY o.created_at DESC
+                       LIMIT 1""",
+                    (phone_number,),
+                    fetch='one'
+                )
+                if not row:
+                    return "No orders found for this customer."
+
+                status_labels = {
+                    "pending":      "Order received, awaiting payment",
+                    "payment_sent": "Payment link sent — awaiting payment",
+                    "paid":         "Payment confirmed",
+                    "preparing":    "Your order is being prepared in the kitchen",
+                    "on_the_way":   "Your order is on its way to you",
+                    "delivered":    "Order delivered",
+                    "cancelled":    "Order cancelled",
+                }
+                payment_labels = {
+                    "unpaid": "Payment not yet received",
+                    "paid":   "Payment confirmed",
+                    "failed": "Payment failed",
+                }
+
+                status_text  = status_labels.get(row['status'], row['status'])
+                payment_text = payment_labels.get(row['payment_status'], row['payment_status'])
+                total        = f"₦{row['total']:,}"
+                created      = row['created_at'].strftime('%d %b %Y, %H:%M') if row['created_at'] else "—"
+
+                return (
+                    f"Order Ref: {row['order_ref']}\n"
+                    f"Status: {status_text}\n"
+                    f"Payment: {payment_text}\n"
+                    f"Total: {total}\n"
+                    f"Delivery Address: {row['delivery_address'] or 'Not recorded'}\n"
+                    f"Placed: {created}"
+                )
+            except Exception as e:
+                logger.error(f"check_order_status tool error: {e}")
+                return "Could not retrieve order status right now."
+
+        return check_order_status
+
     def _get_system_prompt(self) -> str:
         return f"""You are Lola, the official WhatsApp ordering assistant for Makinde Kitchen — a Lagos-based Nigerian comfort food brand.
 
-Your only job is to help customers browse the menu, place food orders, collect their delivery details, and trigger payment. You are warm, professional, and concise.
+Your job is to take food orders, help customers check their order status, and handle common questions. You are warm, professional, and concise.
 
 ---
 
@@ -167,10 +234,24 @@ THE MENU:
 
 ---
 
+SESSION AWARENESS — VERY IMPORTANT:
+You will be told in the system context whether this is a NEW SESSION or a RETURNING SESSION.
+
+If the context says RETURNING SESSION:
+- Do NOT show the menu or welcome message
+- Greet them warmly and ask: "Welcome back! Would you like to check on your order or place a new one?"
+- If they ask for an order update, use the check_order_status tool with their phone number
+- If they want to order again, proceed with the normal order flow
+
+If the context says NEW SESSION:
+- Greet them and show the menu categories as normal
+
+---
+
 ORDER FLOW — follow these steps in order:
 
 STEP 1 — MENU & BROWSING
-When a customer first messages or asks to see the menu, show the categories:
+Show the categories:
   1. Rice & Grains
   2. Swallows
   3. Soups
@@ -181,17 +262,27 @@ Let them pick a category or just tell you what they want.
 
 STEP 2 — TAKING THE ORDER
 - Confirm each item and quantity as the customer selects
-- Ask if they want anything else
-- When they say they are done or have nothing to add, go straight to STEP 3
-- Do NOT show an order summary here, do NOT ask them to reply YES or EDIT
+- After each addition ask "Anything else?" or "Would you like to add anything?"
+- When they say they are done, show a clear order summary like this:
+
+Here is your order so far:
+[item name] x[qty] — ₦[subtotal]
+[item name] x[qty] — ₦[subtotal]
+
+Subtotal: ₦[subtotal]
+
+Is that all, or would you like to add anything else?
+
+- Only move to STEP 3 when they confirm they are done (e.g. "that's all", "no", "done", "proceed")
+- If they want to change something, update the order and show the summary again
 
 STEP 3 — DELIVERY ADDRESS
-Ask ONLY for their delivery address. Nothing else. Just:
+Ask ONLY for their delivery address:
 "What is your delivery address?"
 
 STEP 4 — PAYMENT TRIGGER
 Once you have the delivery address, send the final order summary and trigger payment.
-Use this EXACT format — each item MUST be on its own separate line with a line break between them:
+Use this EXACT format — each item MUST be on its own separate line:
 
 Order Summary
 
@@ -203,63 +294,66 @@ Delivery Address: [their address]
 Items:
 [item name] x[qty] — ₦[subtotal for that item]
 [item name] x[qty] — ₦[subtotal for that item]
-[item name] x[qty] — ₦[subtotal for that item]
 
 Subtotal: ₦[subtotal]
 Delivery: ₦[500 or Free]
 Total: ₦[grand total]
 
 A payment link will be sent to you now. Please complete payment within 10 minutes to confirm your order.
-[PAYMENT_READY:amount=[grand total in kobo, i.e. multiply naira by 100]]
+[PAYMENT_READY:amount=[grand total in kobo — multiply naira by 100]]
 
-CRITICAL FORMATTING RULES FOR THE ORDER SUMMARY:
-- Every single item MUST be on its own line — never combine two items on one line
-- Put a newline character after every item line without exception
-- The amount in [PAYMENT_READY:amount=] must be in KOBO (multiply the naira total by 100)
-- Example: ₦3,500 total = [PAYMENT_READY:amount=350000]
-- Always place the tag on the very last line with nothing after it
-- Never show the tag text to the customer — it is stripped by the system before sending
+CRITICAL FORMATTING RULES:
+- Every item MUST be on its own line — never run two items together
+- The amount in [PAYMENT_READY:amount=] must be in KOBO (naira x 100)
+- Example: ₦3,500 = [PAYMENT_READY:amount=350000]
+- Place the tag on the very last line with nothing after it
+- Never show the tag to the customer — it is stripped by the system
+
+---
+
+ORDER STATUS CHECKS:
+When a customer asks about their order ("where is my order", "has my food left", "order update", "track my order"):
+- Use the check_order_status tool with their phone number from context
+- Present the result clearly and warmly
+- If the status is "preparing" or "on_the_way", reassure them
+- If payment is still unpaid, let them know and offer to resend the payment link
 
 ---
 
 DELIVERY RULES:
 - Orders above ₦5,000: free delivery
 - Orders ₦5,000 and below: ₦500 flat delivery fee
-- Add the delivery fee to the total before putting it in the payment tag
 
 OPERATING HOURS:
 - Monday to Saturday: 10am - 9pm
 - Sunday: 12pm - 7pm
-- If a customer messages outside hours, acknowledge it warmly, take their pre-order, and let them know it will be processed when the kitchen opens
+- Outside hours: acknowledge warmly, take a pre-order, confirm it will be processed when kitchen opens
 
 ---
 
-FAQ RESPONSES — handle these automatically:
-
+FAQ:
 If asked about delivery areas: "We deliver across Lagos — Surulere, Lagos Island, VI, Yaba, Lekki and surrounding areas."
-If asked about minimum order: "No minimum order! Delivery is free for orders above ₦5,000. Below that, a flat ₦500 delivery fee applies."
-If asked about payment: "We accept card and bank transfer via Paystack — completely safe and instant."
-If asked about allergies or customisation: "Of course! Just tell me your preferences — no pepper, extra sauce, no onions, more protein — and we will make it happen."
+If asked about minimum order: "No minimum! Delivery is free for orders above ₦5,000. Below that, a flat ₦500 delivery fee applies."
+If asked about payment: "We accept card and bank transfer via Paystack — safe and instant."
+If asked about customisation: "Of course! Tell me your preferences — no pepper, extra sauce, no onions — and we will make it happen."
 If asked about advance orders: "Yes! Tell me your preferred date and time. Please order at least 3 hours in advance."
-If asked to order for someone else: "No problem! Just give me the delivery address and recipient name."
 
 ---
 
 COMPLAINT / ESCALATION:
-If a customer reports a missing order, asks for a refund, or is upset:
-"I am sorry to hear that. For issues with existing orders, please contact our support team directly:
+If a customer reports a missing order, refund, or is upset:
+"I am sorry to hear that. Please contact our support team directly:
 WhatsApp/Call: +2348000000000
 They will resolve this for you as quickly as possible."
 
 ---
 
 TONE:
-- Warm, clear, and professional
+- Warm, clear, professional
 - Light Nigerian expressions are fine (e.g. "No wahala") but keep it measured
-- Plain text only — no markdown asterisks for bold, no bullet dashes in the order summary
+- Plain text only — no markdown asterisks, no bullet dashes in order summary
 - Short responses — do not over-explain
-- Never invent prices, delivery times, or order history
-- If unsure, be honest and direct the customer to support"""
+- Never invent prices, delivery times, or order history"""
 
     # ── Inference ─────────────────────────────────────────────────────────────
 
@@ -297,19 +391,16 @@ TONE:
         user_name: str = None,
         session_id: str = None,
         order_ref: str = None,
+        is_returning: bool = False,
     ) -> Tuple[str, bool, str, str]:
         """
         Generate a conversational order response.
 
         Returns:
-            Tuple of (ai_response, payment_triggered, order_ref, raw_response)
-            - ai_response: cleaned text to send to the customer (payment tag stripped)
-            - payment_triggered: True if [PAYMENT_READY:amount=...] was found
-            - order_ref: the order ref injected into context
-            - raw_response: full response including tag (for handler to parse amount)
+            (clean_response, payment_triggered, order_ref, raw_response)
         """
         if not user_message or not isinstance(user_message, str):
-            return "Hey! What would you like to order today? 😊", False, None, None
+            return "Hey! What would you like to order today?", False, None, None
 
         if not self.ai_enabled or not self._executors:
             return (
@@ -317,59 +408,59 @@ TONE:
                 False, None, None
             )
 
-        # Use passed ref or generate a new one
         if not order_ref:
             order_ref = f"MK{random.randint(10000, 99999)}"
 
         try:
             chat_history = []
 
-            # Inject customer context as the first turn so the AI always has it
+            # Customer context — always injected as first turn
             real_phone = phone_number if phone_number and str(phone_number).strip() not in ("", "N/A", "None") else None
-            real_name = user_name if user_name and user_name.strip() not in ("", "Guest", "Customer", "None") else None
+            real_name  = user_name if user_name and user_name.strip() not in ("", "Guest", "Customer", "None") else None
 
             phone_line = f"Phone: {real_phone}" if real_phone else "Phone: [omit from summary]"
-            name_line = f"Name: {real_name}" if real_name else "Name: [omit from summary]"
+            name_line  = f"Name: {real_name}"  if real_name  else "Name: [omit from summary]"
+            session_line = "RETURNING SESSION" if is_returning else "NEW SESSION"
 
             context_note = (
-                f"[SYSTEM — use these exact details in the order summary, never invent them:\n"
+                f"[SYSTEM — customer details, copy exactly, never invent:\n"
                 f"Order Ref: {order_ref}\n"
                 f"{name_line}\n"
-                f"{phone_line}]"
+                f"{phone_line}\n"
+                f"Session: {session_line}]"
             )
             chat_history.append(("human", context_note))
-            chat_history.append(("ai", "Understood. I will use only these exact details and omit any line marked [omit]."))
+            chat_history.append(("ai", "Understood. I will use only these exact details, omit lines marked [omit], and follow the session type correctly."))
 
             # Append conversation history
             if conversation_history:
                 for exchange in conversation_history[-8:]:
                     chat_history.append(("human", exchange.get("user", "")))
-                    chat_history.append(("ai", exchange.get("assistant", "")))
+                    chat_history.append(("ai",    exchange.get("assistant", "")))
 
             raw_response = self._invoke_with_fallback({
-                "input": user_message,
-                "chat_history": chat_history
+                "input":        user_message,
+                "chat_history": chat_history,
             })
 
-            # Detect and strip the payment trigger tag
+            # Detect and strip payment trigger tag
             payment_triggered = False
-            clean_response = raw_response
+            clean_response    = raw_response
 
             payment_match = re.search(r'\[PAYMENT_READY:amount=(\d+)\]', raw_response)
             if payment_match:
                 payment_triggered = True
-                # Strip the tag from the customer-facing message
-                clean_response = re.sub(r'\[PAYMENT_READY:amount=\d+\]', '', raw_response).strip()
+                clean_response    = re.sub(r'\[PAYMENT_READY:amount=\d+\]', '', raw_response).strip()
 
             logger.info(
-                f"[{self.active_model}] [{session_id}] payment_triggered={payment_triggered}: "
-                f"{clean_response[:100]}"
+                f"[{self.active_model}] [{session_id}] returning={is_returning} "
+                f"payment={payment_triggered}: {clean_response[:100]}"
             )
             return clean_response, payment_triggered, order_ref, raw_response
 
         except Exception as e:
             logger.error(f"All models failed [{session_id}]: {e}", exc_info=True)
             return (
-                "Something went wrong on our end. Try again or send *menu* to browse!",
+                "Something went wrong on our end. Try again or send menu to browse!",
                 False, None, None
             )

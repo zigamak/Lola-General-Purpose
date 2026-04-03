@@ -1,123 +1,119 @@
 import json
 import logging
-from utils.session_manager import SessionManager
-from utils.data_manager import DataManager
-from services.whatsapp_service import WhatsAppService
-from services.payment_service import PaymentService
-from services.location_service import LocationService
 from message_processor import MessageProcessor
 
 logger = logging.getLogger(__name__)
 
+
 class WebhookHandler:
-    """Handles WhatsApp webhook requests."""
-    
-    def __init__(self, config, message_processor=None):
+    """Handles incoming WhatsApp webhook requests."""
+
+    def __init__(self, config, message_processor: MessageProcessor):
         self.config = config
-        self.session_manager = SessionManager(config.SESSION_TIMEOUT)
-        self.data_manager = DataManager(config)
-        self.whatsapp_service = WhatsAppService(config)
-        self.payment_service = PaymentService(config)
-        self.location_service = LocationService(config)
-        
-        # Use passed message_processor or create new one
-        if message_processor:
-            self.message_processor = message_processor
-        else:
-            self.message_processor = MessageProcessor(
-                config, 
-                self.session_manager, 
-                self.data_manager, 
-                self.whatsapp_service
-            )
-        
-        # Removed PaymentHandler initialization
-    
+        self.message_processor = message_processor
+
+    # ── Verification ──────────────────────────────────────────────────────────
+
     def verify_webhook(self, request):
-        """Handle WhatsApp webhook verification."""
-        mode = request.args.get("hub.mode")
-        token = request.args.get("hub.verify_token")
+        """Handle WhatsApp webhook verification (GET)."""
+        mode      = request.args.get("hub.mode")
+        token     = request.args.get("hub.verify_token")
         challenge = request.args.get("hub.challenge")
 
         if mode == "subscribe" and token == self.config.VERIFY_TOKEN:
-            logger.info("WhatsApp webhook verified successfully!")
+            logger.info("WhatsApp webhook verified successfully.")
             return challenge, 200
-        
-        logger.error("WhatsApp webhook verification failed. Mismatched tokens or mode.")
+
+        logger.error("Webhook verification failed — token mismatch or wrong mode.")
         return "Verification failed", 403
-    
+
+    # ── Incoming messages ─────────────────────────────────────────────────────
+
     def handle_webhook(self, request):
-        """Handle incoming webhook messages (WhatsApp only)."""
+        """Handle incoming WhatsApp messages (POST)."""
         try:
-            # Handle WhatsApp webhook
             data = request.get_json()
             if not data:
-                logger.error("No JSON data received in webhook POST request.")
+                logger.error("Webhook POST received with no JSON body.")
                 return {"status": "error", "message": "No data received"}, 400
 
-            logger.debug(f"Received WhatsApp webhook data: {json.dumps(data, indent=2)}")
+            logger.debug(f"Webhook payload: {json.dumps(data, indent=2)}")
 
             for entry in data.get("entry", []):
                 for change in entry.get("changes", []):
-                    value = change.get("value", {})
+                    value    = change.get("value", {})
                     messages = value.get("messages", [])
 
                     if not messages:
                         continue
 
-                    message = messages[0]
+                    message      = messages[0]
                     phone_number = message.get("from")
 
                     if not phone_number:
-                        logger.error("No 'from' phone number found in the message.")
+                        logger.error("Message has no 'from' field — skipping.")
                         continue
 
-                    # Extract user name from contacts
+                    # Extract sender name from contacts block
                     user_name = None
-                    contacts = value.get("contacts", [])
+                    contacts  = value.get("contacts", [])
                     if contacts:
                         user_name = contacts[0].get("profile", {}).get("name")
 
-                    # Extract message text and location based on message type
                     message_data = self._extract_message_data(message)
 
                     if message_data:
-                        logger.info(f"Processing message from {phone_number} (User: {user_name or 'Unknown'}): {message_data}")
-                        response_payload = self.message_processor.process_message(message_data, phone_number, user_name)
+                        logger.info(
+                            f"Message from {phone_number} ({user_name or 'Unknown'}): "
+                            f"{str(message_data)[:80]}"
+                        )
+                        response_payload = self.message_processor.process_message(
+                            message_data, phone_number, user_name
+                        )
                         if response_payload:
-                            self.whatsapp_service.send_message(response_payload)
+                            from services.whatsapp_service import WhatsAppService
+                            # whatsapp_service is injected via message_processor
+                            self.message_processor.whatsapp_service.send_message(response_payload)
                     else:
-                        logger.warning(f"No valid message data extracted for {phone_number}. Message type: {message.get('type')}")
+                        logger.warning(
+                            f"Could not extract message data for {phone_number} "
+                            f"(type: {message.get('type')}) — skipping."
+                        )
 
             return {"status": "success"}, 200
+
         except Exception as e:
             logger.error(f"Error processing webhook: {e}", exc_info=True)
             return {"status": "error", "message": str(e)}, 500
-    
+
+    # ── Message extraction ────────────────────────────────────────────────────
+
     def _extract_message_data(self, message):
-        """Extract text and location from different message types."""
+        """Extract structured data from different WhatsApp message types."""
         message_type = message.get("type")
-        
+
         if message_type == "text":
             return {"type": "text", "text": message["text"]["body"]}
+
         elif message_type == "button":
             return {"type": "text", "text": message["button"]["payload"]}
+
         elif message_type == "interactive":
             interactive = message.get("interactive", {})
-            if interactive.get("type") == "button_reply":
+            itype       = interactive.get("type")
+            if itype == "button_reply":
                 return {"type": "text", "text": interactive["button_reply"]["id"]}
-            elif interactive.get("type") == "list_reply":
-                message_text = interactive["list_reply"]["id"]
-                logger.info(f"List reply received: id='{message_text}', title='{interactive['list_reply']['title']}'")
-                return {"type": "text", "text": message_text}
+            elif itype == "list_reply":
+                return {"type": "text", "text": interactive["list_reply"]["id"]}
+
         elif message_type == "location":
-            location = message.get("location", {})
+            loc = message.get("location", {})
             return {
-                "type": "location",
-                "latitude": location.get("latitude"),
-                "longitude": location.get("longitude"),
-                "name": location.get("name"),
-                "address": location.get("address")
+                "type":      "location",
+                "latitude":  loc.get("latitude"),
+                "longitude": loc.get("longitude"),
+                "name":      loc.get("name"),
+                "address":   loc.get("address"),
             }
-        
+
         return None

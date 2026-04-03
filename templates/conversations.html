@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Conversations{% endblock %}
+{% block page_title %}Conversations{% endblock %}
+
+{% block content %}
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Messages</th>
+                <th>Last Active</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in customers %}
+            <tr>
+                <td>{{ c.name or '—' }}</td>
+                <td class="mono">{{ c.phone_number }}</td>
+                <td class="mono">{{ c.message_count }}</td>
+                <td class="muted mono">
+                    {{ c.last_message.strftime('%d %b %Y, %H:%M') if c.last_message else '—' }}
+                </td>
+                <td>
+                    <a href="{{ url_for('portal.conversation_detail', phone=c.phone_number) }}"
+                       class="btn btn-ghost btn-sm">View Chat</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5">
+                <div class="empty"><div class="empty-icon">💬</div>No conversations yet</div>
+            </td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

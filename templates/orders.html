@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Orders{% endblock %}
+{% block page_title %}Orders{% endblock %}
+
+{% block content %}
+
+<div class="flex items-center gap-2 mb-4">
+    <a href="{{ url_for('portal.orders') }}"
+       class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-ghost{% endif %}">All</a>
+    {% for s in ['pending','payment_sent','paid','preparing','on_the_way','delivered','cancelled'] %}
+    <a href="{{ url_for('portal.orders', status=s) }}"
+       class="btn btn-sm {% if status_filter == s %}btn-primary{% else %}btn-ghost{% endif %}">
+        {{ s | capitalize }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Ref</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for o in orders %}
+            <tr>
+                <td class="mono">{{ o.order_ref }}</td>
+                <td>{{ o.name or '—' }}</td>
+                <td class="mono muted">{{ o.phone_number or '—' }}</td>
+                <td class="mono">₦{{ "{:,}".format(o.total) }}</td>
+                <td><span class="badge badge-{{ o.status }}">{{ o.status }}</span></td>
+                <td><span class="badge badge-{{ o.payment_status }}">{{ o.payment_status }}</span></td>
+                <td class="muted mono">{{ o.created_at.strftime('%d %b, %H:%M') if o.created_at else '—' }}</td>
+                <td><a href="{{ url_for('portal.order_detail', order_ref=o.order_ref) }}" class="btn btn-ghost btn-sm">View</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="8">
+                <div class="empty"><div class="empty-icon">📋</div>No orders found</div>
+            </td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
