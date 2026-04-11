@@ -13,6 +13,11 @@ _session_manager = None
 _whatsapp_service = None
 _db_manager = None
 
+# ── Callback URL (Paystack redirects customers here after payment) ────────────
+# This is set on the Paystack payment initialisation in ai_handler.
+# Customers land on this page after completing payment.
+PAYMENT_CALLBACK_URL = "https://afyabot-7w4j.onrender.com/portal/payment/success"
+
 
 def init_payment_webhook(config, session_manager, whatsapp_service, db_manager=None):
     global _config, _session_manager, _whatsapp_service, _db_manager
@@ -29,14 +34,13 @@ def init_payment_webhook(config, session_manager, whatsapp_service, db_manager=N
 def paystack_webhook():
     raw_body = request.data
 
-    # Verify Paystack signature using PAYSTACK_SECRET_KEY (same key as the API)
+    # Verify Paystack signature using PAYSTACK_SECRET_KEY
     paystack_secret = getattr(_config, 'PAYSTACK_SECRET_KEY', '') or ''
     signature = request.headers.get("x-paystack-signature", "")
 
     if paystack_secret:
-        # FIX: was `hmac.new(...)` which doesn't exist — correct call is `hmac.new`
-        # from the stdlib which is exposed as the module-level `hmac.new` function.
-        # The correct API is: hmac.new(key_bytes, msg_bytes, digestmod)
+        # FIX: hmac.new() does not exist — correct call is hmac.new from stdlib
+        # which is exposed as hmac.new(key_bytes, msg_bytes, digestmod)
         expected = hmac.new(
             paystack_secret.encode("utf-8"),
             raw_body,
@@ -76,9 +80,6 @@ def _handle_charge_success(data: dict):
     amount_naira = amount_kobo // 100
     metadata     = data.get("metadata", {})
 
-    # FIX: Paystack returns metadata exactly as submitted.  ai_handler now passes
-    # customer_phone inside the metadata dict, so this lookup will succeed without
-    # a DB roundtrip.  The DB fallback below is kept as a safety net.
     customer_phone = metadata.get("customer_phone", "")
 
     logger.info(f"Confirmed payment: ref={reference}, NGN{amount_naira}, phone={customer_phone}")
@@ -146,12 +147,10 @@ def _send_confirmation(phone: str, reference: str, amount_naira: int):
     """
     Send a WhatsApp payment confirmation.
 
-    FIX: build the payload dict manually and pass it to send_message() once.
-    Do NOT call create_text_message() here — that method sends internally AND
-    returns the API response dict.  If you then pass that response dict to
-    send_message() it will fail with "Missing required fields: ['to', 'type']"
-    because the response has no 'to'/'type' keys (it's the WhatsApp API reply,
-    not a sendable payload).
+    Builds the payload dict manually and passes it to send_message() once.
+    Does NOT call create_text_message() — that method sends internally AND
+    returns the API response dict. Passing that response dict to send_message()
+    would fail with "Missing required fields: ['to', 'type']".
     """
     if not _whatsapp_service:
         logger.error("_whatsapp_service not initialised.")

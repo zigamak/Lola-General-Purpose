@@ -27,9 +27,9 @@ config = Config()
 
 # ── Core services ─────────────────────────────────────────────────────────────
 try:
-    session_manager = SessionManager(config.SESSION_TIMEOUT)
+    session_manager  = SessionManager(config.SESSION_TIMEOUT)
     whatsapp_service = WhatsAppService(config)
-    db_manager = DBManager(config)
+    db_manager       = DBManager(config)
     logger.info("Core services initialised — Makinde Kitchen (Lola Demo Bot)")
 except Exception as e:
     logger.error(f"Failed to initialise core services: {e}", exc_info=True)
@@ -37,8 +37,8 @@ except Exception as e:
 
 # ── Handlers ──────────────────────────────────────────────────────────────────
 try:
-    greeting_handler = GreetingHandler(config, session_manager, None, whatsapp_service)
-    ai_handler = AIHandler(config, session_manager, None, whatsapp_service)
+    greeting_handler  = GreetingHandler(config, session_manager, None, whatsapp_service)
+    ai_handler        = AIHandler(config, session_manager, None, whatsapp_service)
     message_processor = MessageProcessor(config, session_manager, None, whatsapp_service)
     logger.info("Handlers and message processor initialised.")
 except Exception as e:
@@ -58,21 +58,30 @@ init_payment_webhook(config, session_manager, whatsapp_service, db_manager)
 app.register_blueprint(payment_webhook_bp)
 logger.info("Paystack payment webhook registered at /paystack/webhook")
 
-# ── Merchant portal ───────────────────────────────────────────────────────────
-init_portal(config)
-app.register_blueprint(portal_bp)
-logger.info("Merchant portal registered at /portal")
-
-# ── Telegram bot ──────────────────────────────────────────────────────────────
+# ── Telegram bot (initialised before portal so we can pass telegram_service) ──
+telegram_service = None
 try:
-    telegram_service = TelegramService(config)
-    telegram_message_processor = MessageProcessor(config, session_manager, None, telegram_service)
+    telegram_service              = TelegramService(config)
+    telegram_message_processor    = MessageProcessor(config, session_manager, None, telegram_service)
     init_telegram_webhook(config, session_manager, telegram_service, telegram_message_processor)
     app.register_blueprint(telegram_bp)
     telegram_service.register_webhook(f"{config.CALLBACK_BASE_URL}/telegram/webhook")
     logger.info("Telegram bot registered at /telegram/webhook")
 except Exception as e:
     logger.error(f"Failed to initialise Telegram bot: {e}", exc_info=True)
+
+# ── Merchant portal ───────────────────────────────────────────────────────────
+# Payment success callback URL is built dynamically from CALLBACK_BASE_URL so it
+# works on any environment (local dev, staging, production) without code changes.
+# Set CALLBACK_BASE_URL=https://afyabot-7w4j.onrender.com in your .env / Render env vars.
+init_portal(
+    config,
+    whatsapp_service=whatsapp_service,
+    telegram_service=telegram_service,   # None-safe — portal handles missing service gracefully
+)
+app.register_blueprint(portal_bp)
+logger.info("Merchant portal registered at /portal")
+logger.info(f"Payment callback URL: {config.CALLBACK_BASE_URL}/portal/payment/success")
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
@@ -92,11 +101,12 @@ def webhook():
 def health_check():
     try:
         return jsonify({
-            "status": "healthy",
-            "service": "Lola — Makinde Kitchen Demo Bot",
-            "ai_service": "enabled" if ai_handler.ai_enabled else "disabled",
+            "status":         "healthy",
+            "service":        "Lola — Makinde Kitchen Demo Bot",
+            "ai_service":     "enabled" if ai_handler.ai_enabled else "disabled",
             "active_sessions": len(session_manager._sessions) if hasattr(session_manager, '_sessions') else 0,
-            "telegram": "enabled" if config.TELEGRAM_BOT_TOKEN else "disabled",
+            "telegram":       "enabled" if config.TELEGRAM_BOT_TOKEN else "disabled",
+            "payment_callback": f"{config.CALLBACK_BASE_URL}/portal/payment/success",
         }), 200
     except Exception as e:
         logger.error(f"Health check failed: {e}", exc_info=True)
@@ -128,6 +138,7 @@ if __name__ == "__main__":
     logger.info("Starting Lola — Makinde Kitchen Demo Bot")
     logger.info(f"Webhook:          {config.CALLBACK_BASE_URL}/webhook")
     logger.info(f"Payment webhook:  {config.CALLBACK_BASE_URL}/paystack/webhook")
+    logger.info(f"Payment callback: {config.CALLBACK_BASE_URL}/portal/payment/success")
     logger.info(f"Telegram webhook: {config.CALLBACK_BASE_URL}/telegram/webhook")
     logger.info(f"Portal:           {config.CALLBACK_BASE_URL}/portal")
     logger.info(f"Health:           {config.CALLBACK_BASE_URL}/health")

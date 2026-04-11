@@ -4,10 +4,11 @@ Flask blueprint for the Lola merchant portal.
 
 Register in app.py:
     from portal.routes import portal_bp, init_portal
-    init_portal(config)
+    init_portal(config, whatsapp_service=whatsapp_service, telegram_service=telegram_service)
     app.register_blueprint(portal_bp)
 """
 import logging
+import requests as _requests   # aliased to avoid shadowing Flask's `request`
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from db_manager import DBManager
 
@@ -17,12 +18,16 @@ portal_bp = Blueprint("portal", __name__, url_prefix="/portal")
 
 _config = None
 _db = None
+_whatsapp_service = None
+_telegram_service = None
 
 
-def init_portal(config):
-    global _config, _db
+def init_portal(config, whatsapp_service=None, telegram_service=None):
+    global _config, _db, _whatsapp_service, _telegram_service
     _config = config
     _db = DBManager(config)
+    _whatsapp_service = whatsapp_service
+    _telegram_service = telegram_service
 
 
 # ── Dashboard ──────────────────────────────────────────────────────────────────
@@ -169,6 +174,17 @@ def update_order_status(order_ref):
     flash(f"Order status updated to {new_status}", "success")
     return redirect(url_for('portal.order_detail', order_ref=order_ref))
 
+@portal_bp.route("/payment/test")
+def payment_test():
+    return render_template("payment_success.html",
+        success=False,
+        reference="TEST123",
+        amount_naira=0,
+        customer_name=None,
+        phone_display=None,
+        channel="whatsapp",
+        error_message="This is a test render"
+    )
 
 # ── Products ───────────────────────────────────────────────────────────────────
 
@@ -179,7 +195,6 @@ def products():
     )
     products_list = [dict(r) for r in rows] if rows else []
 
-    # Group by category for the template
     from collections import defaultdict
     grouped = defaultdict(list)
     for p in products_list:
@@ -215,10 +230,10 @@ def add_product():
 
 @portal_bp.route("/products/<int:product_id>/edit", methods=["POST"])
 def edit_product(product_id):
-    name        = request.form.get("name", "").strip()
-    description = request.form.get("description", "").strip()
-    price       = request.form.get("price", 0)
-    category    = request.form.get("category", "").strip()
+    name         = request.form.get("name", "").strip()
+    description  = request.form.get("description", "").strip()
+    price        = request.form.get("price", 0)
+    category     = request.form.get("category", "").strip()
     is_available = request.form.get("is_available") == "true"
 
     try:
@@ -253,3 +268,166 @@ def toggle_product(product_id):
         (product_id,)
     )
     return jsonify({"ok": True})
+
+
+# ── Payment success callback ───────────────────────────────────────────────────
+# Paystack redirects customers here after payment.
+# URL: https://afyabot-7w4j.onrender.com/portal/payment/success?reference=<ref>
+#
+# Set this as the callback_url when initialising Paystack payment:
+#   callback_url = "https://afyabot-7w4j.onrender.com/portal/payment/success"
+
+@portal_bp.route("/payment/success")
+def payment_success():
+    reference = request.args.get("reference", "").strip()
+
+    ctx = {
+        "success": False,
+        "reference": reference,
+        "amount_naira": 0,
+        "customer_name": None,
+        "phone_display": None,
+        "channel": "whatsapp",
+        "error_message": None,
+    }
+
+    if not reference:
+        ctx["error_message"] = "No payment reference provided."
+        return render_template("payment_success.html", **ctx)
+
+    # ── 1. Verify with Paystack ────────────────────────────────────────────────
+    try:
+        paystack_secret = getattr(_config, "PAYSTACK_SECRET_KEY", "") or ""
+        resp = _requests.get(
+            f"https://api.paystack.co/transaction/verify/{reference}",
+            headers={"Authorization": f"Bearer {paystack_secret}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        pdata = resp.json().get("data", {})
+    except Exception as e:
+        logger.error(f"payment_success: Paystack verify failed: {e}")
+        ctx["error_message"] = (
+            "Could not reach payment provider. "
+            "If you completed payment, please message us on WhatsApp with your reference."
+        )
+        return render_template("payment_success.html", **ctx)
+
+    paystack_status = pdata.get("status", "")
+    if paystack_status != "success":
+        ctx["error_message"] = (
+            f"Payment status is '{paystack_status}'. "
+            "If you completed the payment, please send us your reference on WhatsApp."
+        )
+        return render_template("payment_success.html", **ctx)
+
+    # ── 2. Extract payment data ────────────────────────────────────────────────
+    amount_kobo    = pdata.get("amount", 0)
+    amount_naira   = amount_kobo // 100
+    metadata       = pdata.get("metadata") or {}
+    customer_phone = metadata.get("customer_phone", "")
+
+    ctx["amount_naira"] = amount_naira
+    ctx["success"]      = True
+
+    # ── 3. Update DB ───────────────────────────────────────────────────────────
+    if _db:
+        try:
+            _db.update_order_payment(
+                order_ref=reference,
+                payment_status="paid",
+                payment_ref=reference,
+                status="preparing",
+            )
+            logger.info(f"payment_success: DB updated for ref={reference}")
+        except Exception as e:
+            logger.error(f"payment_success: DB update failed: {e}")
+
+    # ── 4. Resolve customer info ───────────────────────────────────────────────
+    customer_name = None
+    if not customer_phone and _db:
+        try:
+            order = _db.get_order_by_ref(reference)
+            if order:
+                row = _db._execute(
+                    "SELECT phone_number, name FROM customers WHERE id = %s",
+                    (order["customer_id"],),
+                    fetch="one",
+                )
+                if row:
+                    customer_phone = row["phone_number"]
+                    customer_name  = row["name"]
+        except Exception as e:
+            logger.error(f"payment_success: customer lookup failed: {e}")
+
+    if not customer_name and customer_phone and _db:
+        try:
+            row = _db._execute(
+                "SELECT name FROM customers WHERE phone_number = %s",
+                (customer_phone,),
+                fetch="one",
+            )
+            if row:
+                customer_name = row["name"]
+        except Exception:
+            pass
+
+    ctx["customer_name"] = customer_name
+
+    # Mask phone for display: e.g. +234 *** *** 4567
+    if customer_phone:
+        p = str(customer_phone)
+        ctx["phone_display"] = p[:4] + " *** *** " + p[-4:] if len(p) >= 8 else p
+
+    # ── 5. Build confirmation message ─────────────────────────────────────────
+    name_greeting = f"Hi {customer_name}! " if customer_name else ""
+    confirm_msg = (
+        f"{name_greeting}Payment confirmed! Thank you 🎉\n\n"
+        f"Order Ref: {reference}\n"
+        f"Amount Paid: NGN{amount_naira:,}\n\n"
+        f"Your order is now being prepared in our kitchen 🍛\n"
+        f"We will notify you once it is on its way.\n\n"
+        f"Thank you for choosing Makinde Kitchen!"
+    )
+
+    # ── 6. Send confirmation via WhatsApp or Telegram ─────────────────────────
+    sent = False
+
+    if customer_phone and _whatsapp_service:
+        try:
+            payload = {
+                "messaging_product": "whatsapp",
+                "recipient_type": "individual",
+                "to": str(customer_phone),
+                "type": "text",
+                "text": {"body": confirm_msg},
+            }
+            result = _whatsapp_service.send_message(payload)
+            if result:
+                sent = True
+                ctx["channel"] = "whatsapp"
+                logger.info(f"payment_success: WhatsApp confirmation sent to {customer_phone}")
+        except Exception as e:
+            logger.error(f"payment_success: WhatsApp send failed: {e}")
+
+    # Fallback to Telegram if WhatsApp didn't fire (or Telegram chat_id in metadata)
+    if not sent and _telegram_service:
+        try:
+            telegram_chat_id = metadata.get("telegram_chat_id", customer_phone)
+            if telegram_chat_id:
+                result = _telegram_service.create_text_message(str(telegram_chat_id), confirm_msg)
+                if result:
+                    sent = True
+                    ctx["channel"] = "telegram"
+                    logger.info(f"payment_success: Telegram confirmation sent to {telegram_chat_id}")
+        except Exception as e:
+            logger.error(f"payment_success: Telegram send failed: {e}")
+
+    if not sent:
+        logger.warning(
+            f"payment_success: could not send confirmation for ref={reference} "
+            f"— phone={customer_phone}, whatsapp={'yes' if _whatsapp_service else 'no'}, "
+            f"telegram={'yes' if _telegram_service else 'no'}"
+        )
+
+    return render_template("payment_success.html", **ctx)
