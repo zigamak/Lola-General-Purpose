@@ -1854,3 +1854,57 @@ Jollo
 2026-04-11 17:07:47,064 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:07:47] "POST /telegram/webhook HTTP/1.1" 200 -
 2026-04-11 17:07:59,963 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:07:59] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
 2026-04-11 17:09:45,637 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:09:45] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-11 17:14:22,893 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-11 17:14:27,560 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-11 17:14:27,560 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-11 17:14:28,549 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-11 17:14:28,551 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-11 17:14:28,559 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-11 17:14:28,636 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-11 17:14:28,636 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-11 17:14:28,636 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-11 17:14:29,474 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-11 17:14:29,474 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-11 17:14:29,485 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-11 17:14:29,499 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-11 17:14:29,499 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-11 17:14:29,500 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-11 17:14:30,357 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-11 17:14:30,357 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-11 17:14:30,357 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-11 17:14:30,357 - app - INFO - Handlers and message processor initialised.
+2026-04-11 17:14:30,357 - app - INFO - WebhookHandler initialised.
+2026-04-11 17:14:30,357 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-11 17:14:30,357 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-11 17:14:30,357 - services.telegram_service - DEBUG - TelegramService initialised.
+2026-04-11 17:14:30,357 - services.ai_service - INFO - Makinde Kitchen AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-11 17:14:30,383 - services.ai_service - INFO - Agent built for: gemini-2.5-flash
+2026-04-11 17:14:30,383 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-11 17:14:30,383 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-11 17:14:31,308 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-11 17:14:31,308 - handlers.ai_handler - INFO - AIHandler: Makinde Kitchen order bot ready.
+2026-04-11 17:14:31,308 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-11 17:14:31,308 - telegram_webhook - INFO - Telegram webhook initialised.
+2026-04-11 17:14:31,812 - services.telegram_service - DEBUG - Telegram setWebhook -> {'ok': True, 'result': True, 'description': 'Webhook is already set'}
+2026-04-11 17:14:31,814 - services.telegram_service - INFO - Telegram webhook registered: https://great-enjoyed-piglet.ngrok-free.app/telegram/webhook
+2026-04-11 17:14:31,814 - app - INFO - Telegram bot registered at /telegram/webhook
+2026-04-11 17:14:32,679 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-11 17:14:32,700 - app - INFO - Merchant portal registered at /portal
+2026-04-11 17:14:32,702 - app - INFO - Payment callback URL: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-11 17:14:32,732 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-11 17:14:32,732 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-11 17:14:36,381 - db_manager - INFO - Order MK59624 updated: payment_status=paid
+2026-04-11 17:14:36,381 - portal.routes - INFO - payment_success: DB updated for ref=MK59624
+2026-04-11 17:14:37,504 - services.whatsapp_service - ERROR - HTTP error sending WhatsApp message: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v17.0/204426689424598/messages - Response: {"error":{"message":"Error validating access token: Session has expired on Friday, 03-Apr-26 14:00:00 PDT. The current time is Saturday, 11-Apr-26 09:14:37 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"AbAqElkunHuKVBpdBub9hmS"}}
+2026-04-11 17:14:38,080 - portal.routes - INFO - payment_success: Telegram confirmation sent to 1764691432
+2026-04-11 17:14:38,108 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:14:38] "GET /portal/payment/success?reference=MK59624 HTTP/1.1" 200 -
+2026-04-11 17:14:39,235 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:14:39] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-04-11 17:15:39,827 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:15:39] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-11 17:16:26,563 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:16:26] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-11 17:18:59,141 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:18:59] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-11 17:19:46,900 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:19:46] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-11 17:19:47,889 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:19:47] "[32mGET /?trxref=MK59624&reference=MK59624 HTTP/1.1[0m" 302 -
+2026-04-11 17:19:50,962 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:19:50] "GET /portal/ HTTP/1.1" 200 -
+2026-04-11 17:22:42,888 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:22:42] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-11 17:26:02,807 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:26:02] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -

@@ -11,6 +11,7 @@ class WebhookHandler:
     def __init__(self, config, message_processor: MessageProcessor):
         self.config = config
         self.message_processor = message_processor
+        self._processed_ids = set()  # Deduplication cache
 
     # ── Verification ──────────────────────────────────────────────────────────
 
@@ -54,12 +55,25 @@ class WebhookHandler:
                         logger.error("Message has no 'from' field — skipping.")
                         continue
 
-                    # Extract sender name from contacts block
+                    # ── Deduplication ─────────────────────────────────────────
+                    message_id = message.get("id", "")
+                    if message_id and message_id in self._processed_ids:
+                        logger.info(f"Duplicate webhook ignored: {message_id}")
+                        continue
+
+                    if message_id:
+                        self._processed_ids.add(message_id)
+                        # Keep set bounded — trim to last 500 when it hits 1000
+                        if len(self._processed_ids) > 1000:
+                            self._processed_ids = set(list(self._processed_ids)[-500:])
+
+                    # ── Extract sender name ───────────────────────────────────
                     user_name = None
                     contacts  = value.get("contacts", [])
                     if contacts:
                         user_name = contacts[0].get("profile", {}).get("name")
 
+                    # ── Extract message data ──────────────────────────────────
                     message_data = self._extract_message_data(message)
 
                     if message_data:
@@ -67,24 +81,24 @@ class WebhookHandler:
                             f"Message from {phone_number} ({user_name or 'Unknown'}): "
                             f"{str(message_data)[:80]}"
                         )
-                        response_payload = self.message_processor.process_message(
+                        # process_message handles sending internally —
+                        # do NOT use the return value to send again
+                        self.message_processor.process_message(
                             message_data, phone_number, user_name
                         )
-                        if response_payload:
-                            from services.whatsapp_service import WhatsAppService
-                            # whatsapp_service is injected via message_processor
-                            self.message_processor.whatsapp_service.send_message(response_payload)
                     else:
                         logger.warning(
                             f"Could not extract message data for {phone_number} "
                             f"(type: {message.get('type')}) — skipping."
                         )
 
+            # Always return 200 immediately so WhatsApp doesn't retry
             return {"status": "success"}, 200
 
         except Exception as e:
             logger.error(f"Error processing webhook: {e}", exc_info=True)
-            return {"status": "error", "message": str(e)}, 500
+            # Still return 200 to prevent WhatsApp retries causing duplicate messages
+            return {"status": "ok"}, 200
 
     # ── Message extraction ────────────────────────────────────────────────────
 
