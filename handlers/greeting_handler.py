@@ -14,8 +14,9 @@ logger.setLevel(logging.INFO)
 
 class GreetingHandler(BaseHandler):
     """
-    Greeting handler for Makinde Kitchen WhatsApp order bot (Lola).
-    Sends the menu image on first contact, then hands off to the AI order handler.
+    Greeting handler for Makinde Kitchen order bot (Lola).
+    Platform-agnostic — uses self.messaging_service so it works
+    on both WhatsApp and Telegram.
     """
 
     MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
@@ -45,8 +46,8 @@ class GreetingHandler(BaseHandler):
         user_name = state.get("user_name", "there")
 
         # Transition state to ai_chat
-        state["current_state"] = "ai_chat"
-        state["current_handler"] = "ai_handler"
+        state["current_state"]        = "ai_chat"
+        state["current_handler"]      = "ai_handler"
         state["conversation_history"] = []
 
         if not state.get("user_name"):
@@ -57,11 +58,11 @@ class GreetingHandler(BaseHandler):
         self.session_manager.update_session_state(session_id, state)
 
         try:
-            self.whatsapp_service.send_image_message(
+            self.messaging_service.send_image_message(
                 session_id,
                 self.MENU_IMAGE_URL,
                 caption=(
-                    f"Hi {user_name}! Welcome to *Makinde Kitchen* 🍛\n\n"
+                    f"Hi {user_name}! Welcome to Makinde Kitchen 🍛\n\n"
                     "Nigerian comfort food — soups, rice, swallows, small chops and more.\n"
                     "Just tell me what you'd like and I'll sort you out! 😋"
                 )
@@ -70,7 +71,7 @@ class GreetingHandler(BaseHandler):
             self.logger.error(f"Session {session_id}: Could not send menu image: {e}.")
 
         return {
-            "redirect": "ai_handler",
-            "redirect_message": "initial_greeting",
-            "additional_message": additional_message if additional_message else None
+            "redirect":           "ai_handler",
+            "redirect_message":   "initial_greeting",
+            "additional_message": additional_message if additional_message else None,
         }

@@ -4,7 +4,6 @@ import sys
 import io
 from typing import Dict, Optional, List
 
-# Configure logging with UTF-8 encoding
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
@@ -12,6 +11,7 @@ if sys.platform.startswith('win'):
     handler.stream = io.TextIOWrapper(handler.stream.buffer, encoding='utf-8', errors='replace')
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
+
 
 class WhatsAppService:
     """Service for sending and handling WhatsApp messages."""
@@ -25,15 +25,24 @@ class WhatsAppService:
         }
         logger.debug("WhatsAppService initialized with phone_number_id: %s", config.WHATSAPP_PHONE_NUMBER_ID)
 
+    # ── Shared interface method ───────────────────────────────────────────────
+
+    def send_text(self, to: str, text: str) -> Optional[Dict]:
+        """
+        Unified send method used by platform-agnostic handlers.
+        Delegates to create_text_message internally.
+        """
+        return self.create_text_message(to, text)
+
+    # ── Core send ─────────────────────────────────────────────────────────────
+
     def send_message(self, payload: Dict) -> Optional[Dict]:
         """Send a message to the WhatsApp Business API."""
         try:
-            # Validate payload before sending
             if not payload or not isinstance(payload, dict):
                 logger.error("Payload is None or not a dictionary: %s", payload)
                 return None
 
-            # Ensure payload is for sending (not a response)
             required_fields = ["to", "type", "messaging_product"]
             missing_fields = [field for field in required_fields if field not in payload]
             if missing_fields:
@@ -51,7 +60,6 @@ class WhatsAppService:
             response_data = response.json()
             logger.info("WhatsApp API response: %s - %s", response.status_code, response_data)
 
-            # Validate response format
             if not response_data.get("messaging_product") == "whatsapp":
                 logger.error("Invalid response format: %s", response_data)
                 return None
@@ -68,16 +76,12 @@ class WhatsAppService:
             return None
 
     def process_incoming_payload(self, payload: Dict) -> Optional[Dict]:
-        """
-        Process an incoming WhatsApp webhook payload and extract relevant data.
-        This is for handling received messages or API responses, not for sending.
-        """
+        """Process an incoming WhatsApp webhook payload and extract relevant data."""
         try:
             if not payload or not isinstance(payload, dict):
                 logger.error("Invalid incoming payload: %s", payload)
                 return None
 
-            # Check if this is an API response (e.g., from send_message)
             if payload.get("messaging_product") == "whatsapp" and "contacts" in payload and "messages" in payload:
                 contacts = payload.get("contacts", [])
                 messages = payload.get("messages", [])
@@ -85,38 +89,34 @@ class WhatsAppService:
                 message_id = messages[0].get("id") if messages else None
                 logger.info("Processed API response - wa_id: %s, message_id: %s", wa_id, message_id)
                 return {"wa_id": wa_id, "message_id": message_id}
-            
-            # Handle webhook payload for incoming messages
+
             if "object" in payload and payload["object"] == "whatsapp_business_account":
                 entries = payload.get("entry", [])
                 if not entries:
-                    logger.error("No entries in webhook payload: %s", payload)
                     return None
-                
+
                 changes = entries[0].get("changes", [])
                 if not changes:
-                    logger.error("No changes in webhook payload: %s", payload)
                     return None
-                
-                value = changes[0].get("value", {})
+
+                value    = changes[0].get("value", {})
                 messages = value.get("messages", [])
                 contacts = value.get("contacts", [])
-                
+
                 if not messages or not contacts:
-                    logger.error("No messages or contacts in webhook payload: %s", payload)
                     return None
-                
-                wa_id = contacts[0].get("wa_id") or value.get("metadata", {}).get("phone_number_id")
-                message_text = messages[0].get("text", {}).get("body") if messages[0].get("type") == "text" else None
-                message_id = messages[0].get("id")
-                
+
+                wa_id         = contacts[0].get("wa_id") or value.get("metadata", {}).get("phone_number_id")
+                message_text  = messages[0].get("text", {}).get("body") if messages[0].get("type") == "text" else None
+                message_id    = messages[0].get("id")
+
                 logger.info("Processed incoming message - wa_id: %s, message_id: %s, text: %s", wa_id, message_id, message_text)
                 return {"wa_id": wa_id, "message_id": message_id, "text": message_text}
-            
+
             logger.error("Unrecognized payload format: %s", payload)
             return None
         except Exception as e:
-            logger.error("Error processing incoming payload: %s, original payload: %s", e, payload, exc_info=True)
+            logger.error("Error processing incoming payload: %s", e, exc_info=True)
             return None
 
     def create_text_message(self, to: str, text: str) -> Optional[Dict]:
@@ -133,7 +133,6 @@ class WhatsAppService:
                 "type": "text",
                 "text": {"body": str(text)}
             }
-            logger.debug("Created text message payload for %s", to)
             return self.send_message(payload)
         except Exception as e:
             logger.error("Error creating text message for %s: %s", to, e, exc_info=True)
@@ -143,7 +142,6 @@ class WhatsAppService:
         """Creates a button message payload without sending."""
         try:
             if not to or not text or not buttons:
-                logger.error("Invalid parameters: to='%s', text='%s', buttons='%s'", to, text, buttons)
                 return None
 
             if not isinstance(buttons, list) or len(buttons) > 3:
@@ -161,10 +159,9 @@ class WhatsAppService:
                     "action": {"buttons": buttons}
                 }
             }
-            logger.debug("Created button message payload for %s", to)
             return payload
         except Exception as e:
-            logger.error("Error creating button message payload for %s: %s", to, e, exc_info=True)
+            logger.error("Error creating button payload for %s: %s", to, e, exc_info=True)
             return None
 
     def send_button_message(self, to: str, text: str, buttons: List[Dict]) -> Optional[Dict]:
@@ -175,15 +172,13 @@ class WhatsAppService:
         return self.send_message(payload)
 
     def create_button_message(self, to: str, text: str, buttons: List[Dict]) -> Optional[Dict]:
-        """Creates and sends a button message (alias for send_button_message for compatibility)."""
-        logger.debug("Creating button message for %s with text: %s, buttons: %s", to, text, buttons)
+        """Alias for send_button_message for compatibility."""
         return self.send_button_message(to, text, buttons)
 
     def create_list_message(self, to: str, text: str, button_text: str, sections: List[Dict]) -> Optional[Dict]:
         """Create and send a list message."""
         try:
             if not to or not text or not button_text or not sections:
-                logger.error("Invalid parameters: to='%s', text='%s', button_text='%s', sections='%s'", to, text, button_text, sections)
                 return None
 
             payload = {
@@ -197,7 +192,6 @@ class WhatsAppService:
                     "action": {"button": str(button_text), "sections": sections}
                 }
             }
-            logger.debug("Created list message payload for %s", to)
             return self.send_message(payload)
         except Exception as e:
             logger.error("Error creating list message for %s: %s", to, e, exc_info=True)
@@ -207,7 +201,6 @@ class WhatsAppService:
         """Creates an image message payload without sending."""
         try:
             if not to or not image_url:
-                logger.error("Invalid parameters for image message: to='%s', image_url='%s'", to, image_url)
                 return None
 
             payload = {
@@ -215,14 +208,11 @@ class WhatsAppService:
                 "recipient_type": "individual",
                 "to": str(to),
                 "type": "image",
-                "image": {
-                    "link": image_url
-                }
+                "image": {"link": image_url}
             }
             if caption:
                 payload["image"]["caption"] = str(caption)
 
-            logger.debug("Created image message payload for %s", to)
             return payload
         except Exception as e:
             logger.error("Error creating image message payload for %s: %s", to, e, exc_info=True)
@@ -240,19 +230,11 @@ class WhatsAppService:
             return None
 
     def send_image_with_buttons(self, to: str, image_url: str, text: str, buttons: List[Dict], button_prompt: str = "") -> Optional[Dict]:
-        """
-        Sends an image message followed by a button message.
-        The image message uses the provided text as the caption.
-        The button message uses button_prompt if provided, otherwise falls back to text.
-        """
+        """Sends an image message followed by a button message."""
         try:
-            # Send the image message
             image_response = self.send_image_message(to, image_url, caption=text)
             if not image_response:
-                logger.error(f"Failed to send image to {to}. Aborting button message.")
                 return None
-
-            # Send the button message with button_prompt or fallback to text
             button_text = button_prompt if button_prompt else text
             return self.send_button_message(to, button_text, buttons)
         except Exception as e:
@@ -263,17 +245,11 @@ class WhatsAppService:
         """Send timeout message to user."""
         try:
             if not session_id:
-                logger.error("Invalid session_id for timeout message: %s", session_id)
                 return None
-            payload = {
-                "messaging_product": "whatsapp",
-                "recipient_type": "individual",
-                "to": str(session_id),
-                "type": "text",
-                "text": {"body": "Your session has timed out due to inactivity. Please send a message to start a new interaction."}
-            }
-            logger.debug("Created timeout message payload for %s", session_id)
-            return self.send_message(payload)
+            return self.create_text_message(
+                session_id,
+                "Your session has timed out due to inactivity. Please send a message to start a new interaction."
+            )
         except Exception as e:
             logger.error("Error sending timeout message for %s: %s", session_id, e, exc_info=True)
             return None
@@ -282,7 +258,6 @@ class WhatsAppService:
         """Sends a WhatsApp template message."""
         try:
             if not to or not template_name or not language_code or not components:
-                logger.error("Invalid parameters: to='%s', template_name='%s', language_code='%s', components='%s'", to, template_name, language_code, components)
                 return None
 
             payload = {
@@ -296,7 +271,6 @@ class WhatsAppService:
                     "components": components
                 }
             }
-            logger.debug("Created template message payload for %s", to)
             return self.send_message(payload)
         except Exception as e:
             logger.error("Error creating template message for %s: %s", to, e, exc_info=True)
@@ -306,25 +280,15 @@ class WhatsAppService:
         """Validate a phone number using the WhatsApp Business API."""
         try:
             if not phone_number:
-                logger.error("Invalid phone_number for contact validation: %s", phone_number)
                 return None
             payload = {
                 "messaging_product": "whatsapp",
                 "contacts": [{"phone_number": str(phone_number)}]
             }
             url = f"https://graph.facebook.com/v17.0/{self.config.WHATSAPP_PHONE_NUMBER_ID}/contacts"
-            logger.debug("Validating contact with payload: %s", payload)
             response = requests.post(url, json=payload, headers=self.headers)
             response.raise_for_status()
-            response_data = response.json()
-            logger.info("Contact validation response: %s", response_data)
-            return response_data
-        except requests.exceptions.HTTPError as http_err:
-            logger.error("HTTP error validating contact %s: %s - Response: %s", phone_number, http_err, response.text if 'response' in locals() else "No response")
-            return None
-        except requests.RequestException as e:
-            logger.error("Request error validating contact %s: %s", phone_number, e)
-            return None
+            return response.json()
         except Exception as e:
-            logger.error("Unexpected error validating contact %s: %s", phone_number, e, exc_info=True)
+            logger.error("Error validating contact %s: %s", phone_number, e, exc_info=True)
             return None

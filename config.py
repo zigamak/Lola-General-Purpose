@@ -21,6 +21,9 @@ class Config:
         self.VERIFY_TOKEN = os.getenv('VERIFY_TOKEN')
         self.APP_SECRET = os.getenv('APP_SECRET')
 
+        # Telegram configuration
+        self.TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
         # Payment configuration
         self.PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY')
         self.PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY')

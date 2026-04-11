@@ -9,10 +9,12 @@ from handlers.greeting_handler import GreetingHandler
 from handlers.ai_handler import AIHandler
 from utils.session_manager import SessionManager
 from services.whatsapp_service import WhatsAppService
+from services.telegram_service import TelegramService
 from message_processor import MessageProcessor
 from payment_webhook import payment_webhook_bp, init_payment_webhook
 from db_manager import DBManager
 from portal.routes import portal_bp, init_portal
+from telegram_webhook import telegram_bp, init_telegram_webhook
 
 load_dotenv()
 configure_logging()
@@ -61,6 +63,17 @@ init_portal(config)
 app.register_blueprint(portal_bp)
 logger.info("Merchant portal registered at /portal")
 
+# ── Telegram bot ──────────────────────────────────────────────────────────────
+try:
+    telegram_service = TelegramService(config)
+    telegram_message_processor = MessageProcessor(config, session_manager, None, telegram_service)
+    init_telegram_webhook(config, session_manager, telegram_service, telegram_message_processor)
+    app.register_blueprint(telegram_bp)
+    telegram_service.register_webhook(f"{config.CALLBACK_BASE_URL}/telegram/webhook")
+    logger.info("Telegram bot registered at /telegram/webhook")
+except Exception as e:
+    logger.error(f"Failed to initialise Telegram bot: {e}", exc_info=True)
+
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.route("/")
@@ -83,6 +96,7 @@ def health_check():
             "service": "Lola — Makinde Kitchen Demo Bot",
             "ai_service": "enabled" if ai_handler.ai_enabled else "disabled",
             "active_sessions": len(session_manager._sessions) if hasattr(session_manager, '_sessions') else 0,
+            "telegram": "enabled" if config.TELEGRAM_BOT_TOKEN else "disabled",
         }), 200
     except Exception as e:
         logger.error(f"Health check failed: {e}", exc_info=True)
@@ -112,9 +126,10 @@ def internal_error(error):
 
 if __name__ == "__main__":
     logger.info("Starting Lola — Makinde Kitchen Demo Bot")
-    logger.info(f"Webhook:         {config.CALLBACK_BASE_URL}/webhook")
-    logger.info(f"Payment webhook: {config.CALLBACK_BASE_URL}/paystack/webhook")
-    logger.info(f"Portal:          {config.CALLBACK_BASE_URL}/portal")
-    logger.info(f"Health:          {config.CALLBACK_BASE_URL}/health")
+    logger.info(f"Webhook:          {config.CALLBACK_BASE_URL}/webhook")
+    logger.info(f"Payment webhook:  {config.CALLBACK_BASE_URL}/paystack/webhook")
+    logger.info(f"Telegram webhook: {config.CALLBACK_BASE_URL}/telegram/webhook")
+    logger.info(f"Portal:           {config.CALLBACK_BASE_URL}/portal")
+    logger.info(f"Health:           {config.CALLBACK_BASE_URL}/health")
     logger.info(f"AI: {'enabled' if ai_handler.ai_enabled else 'DISABLED — check GEMINI_API_KEY'}")
     app.run(debug=config.FLASK_DEBUG, host="0.0.0.0", port=config.APP_PORT)

@@ -6,21 +6,26 @@ logger = logging.getLogger(__name__)
 
 
 class MessageProcessor:
-    """Message processor for Makinde Kitchen / Lola WhatsApp order bot."""
+    """
+    Platform-agnostic message processor for Makinde Kitchen / Lola bot.
+    Works with any messaging service (WhatsApp, Telegram, etc.)
+    as long as it implements the shared service interface.
+    """
 
-    def __init__(self, config, session_manager, data_manager, whatsapp_service):
-        self.config          = config
-        self.session_manager = session_manager
-        self.data_manager    = data_manager
-        self.whatsapp_service = whatsapp_service
+    def __init__(self, config, session_manager, data_manager, messaging_service):
+        self.config           = config
+        self.session_manager  = session_manager
+        self.data_manager     = data_manager
+        self.messaging_service = messaging_service
 
-        self.greeting_handler = GreetingHandler(config, session_manager, data_manager, whatsapp_service)
-        self.ai_handler       = AIHandler(config, session_manager, data_manager, whatsapp_service)
+        # Pass the correct messaging service down to every handler
+        self.greeting_handler = GreetingHandler(config, session_manager, data_manager, messaging_service)
+        self.ai_handler       = AIHandler(config, session_manager, data_manager, messaging_service)
 
         logger.info("MessageProcessor initialised — Makinde Kitchen.")
 
     def process_message(self, message_data, session_id, user_name):
-        """Main entry point for all incoming WhatsApp messages."""
+        """Main entry point for all incoming messages."""
         try:
             state = self.session_manager.get_session_state(session_id)
             self.session_manager.update_session_activity(session_id)
@@ -40,7 +45,7 @@ class MessageProcessor:
             state["current_state"]   = "ai_chat"
             state["current_handler"] = "ai_handler"
             self.session_manager.update_session_state(session_id, state)
-            return self.whatsapp_service.create_text_message(
+            return self.messaging_service.send_text(
                 session_id,
                 "Something went wrong on our end. Send 'menu' to start over or just tell us what you'd like to order!"
             )
@@ -73,7 +78,6 @@ class MessageProcessor:
 
                 # Returning session with welcome already sent —
                 # pass to AI with is_returning=True so it greets appropriately
-                # instead of showing the menu again
                 if welcome_sent and message in ("hi", "hello", "hey", "order update", "track my order", "where is my order"):
                     logger.info(f"Session {session_id}: Returning greeting — handing to AI as returning.")
                     return self.ai_handler._handle_returning(state, session_id, original_message)
@@ -89,7 +93,7 @@ class MessageProcessor:
             return self._start_fresh(state, session_id, user_name, original_message)
 
     def _start_fresh(self, state, session_id, user_name, original_message=None):
-        """Start a completely new session — show welcome + menu image."""
+        """Start a completely new session."""
         state["current_state"]        = "ai_chat"
         state["current_handler"]      = "ai_handler"
         state["user_name"]            = user_name or "Guest"
