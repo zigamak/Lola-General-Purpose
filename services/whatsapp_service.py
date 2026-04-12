@@ -34,6 +34,51 @@ class WhatsAppService:
         """
         return self.create_text_message(to, text)
 
+    # ── Typing indicator ──────────────────────────────────────────────────────
+
+    def send_typing_indicator(self, message_id: str) -> Optional[Dict]:
+        """
+        Mark an incoming message as read and show the three-dot typing indicator
+        to the user. Call this immediately after receiving a message and before
+        processing the response.
+
+        The indicator is dismissed automatically when you send a reply or after
+        25 seconds — whichever comes first.
+        """
+        try:
+            if not message_id:
+                logger.error("Cannot send typing indicator: message_id is required")
+                return None
+
+            payload = {
+                "messaging_product": "whatsapp",
+                "status": "read",
+                "message_id": str(message_id),
+                "typing_indicator": {
+                    "type": "text"
+                }
+            }
+
+            response = requests.post(self.base_url, json=payload, headers=self.headers)
+            response.raise_for_status()
+            result = response.json()
+            logger.debug("Typing indicator sent for message_id: %s", message_id)
+            return result
+
+        except requests.exceptions.HTTPError as http_err:
+            logger.error(
+                "HTTP error sending typing indicator for %s: %s - Response: %s",
+                message_id, http_err,
+                response.text if 'response' in locals() else "No response"
+            )
+            return None
+        except requests.RequestException as e:
+            logger.error("Request error sending typing indicator for %s: %s", message_id, e)
+            return None
+        except Exception as e:
+            logger.error("Unexpected error sending typing indicator for %s: %s", message_id, e, exc_info=True)
+            return None
+
     # ── Core send ─────────────────────────────────────────────────────────────
 
     def send_message(self, payload: Dict) -> Optional[Dict]:

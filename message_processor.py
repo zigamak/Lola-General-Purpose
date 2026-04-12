@@ -27,6 +27,13 @@ class MessageProcessor:
     def process_message(self, message_data, session_id, user_name):
         """Main entry point for all incoming messages."""
         try:
+            # Fire typing indicator immediately — before any processing so the
+            # user sees the three dots as soon as we receive their message.
+            # The hasattr guard keeps this safe for non-WhatsApp services (e.g. Telegram).
+            msg_id = message_data.get("message_id") if isinstance(message_data, dict) else None
+            if msg_id and hasattr(self.messaging_service, "send_typing_indicator"):
+                self.messaging_service.send_typing_indicator(msg_id)
+
             state = self.session_manager.get_session_state(session_id)
             self.session_manager.update_session_activity(session_id)
 

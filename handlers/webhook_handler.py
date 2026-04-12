@@ -77,6 +77,10 @@ class WebhookHandler:
                     message_data = self._extract_message_data(message)
 
                     if message_data:
+                        # Attach the raw message_id so downstream services
+                        # (e.g. WhatsApp typing indicator) can reference it
+                        if message_id:
+                            message_data["message_id"] = message_id
                         logger.info(
                             f"Message from {phone_number} ({user_name or 'Unknown'}): "
                             f"{str(message_data)[:80]}"
