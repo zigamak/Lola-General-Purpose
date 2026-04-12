@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 from message_processor import MessageProcessor
 
 logger = logging.getLogger(__name__)
@@ -11,7 +12,9 @@ class WebhookHandler:
     def __init__(self, config, message_processor: MessageProcessor):
         self.config = config
         self.message_processor = message_processor
-        self._processed_ids = set()  # Deduplication cache
+        self._processed_ids: dict[str, float] = {}  # message_id → processed_at timestamp
+        self._DEDUP_TTL = 60          # seconds to remember a message_id
+        self._STALE_THRESHOLD = 15    # reject messages older than this many seconds
 
     # ── Verification ──────────────────────────────────────────────────────────
 
@@ -57,15 +60,30 @@ class WebhookHandler:
 
                     # ── Deduplication ─────────────────────────────────────────
                     message_id = message.get("id", "")
+                    now = time.time()
+
+                    # Reject if we've already processed this message_id recently
                     if message_id and message_id in self._processed_ids:
                         logger.info(f"Duplicate webhook ignored: {message_id}")
                         continue
 
+                    # Reject stale retries — WhatsApp timestamps are Unix seconds
+                    msg_timestamp = int(message.get("timestamp", 0))
+                    if msg_timestamp and (now - msg_timestamp) > self._STALE_THRESHOLD:
+                        logger.info(
+                            f"Stale webhook ignored: {message_id} "
+                            f"(age: {int(now - msg_timestamp)}s)"
+                        )
+                        continue
+
                     if message_id:
-                        self._processed_ids.add(message_id)
-                        # Keep set bounded — trim to last 500 when it hits 1000
-                        if len(self._processed_ids) > 1000:
-                            self._processed_ids = set(list(self._processed_ids)[-500:])
+                        self._processed_ids[message_id] = now
+                        # Evict entries older than TTL to keep dict bounded
+                        self._processed_ids = {
+                            mid: ts
+                            for mid, ts in self._processed_ids.items()
+                            if now - ts < self._DEDUP_TTL
+                        }
 
                     # ── Extract sender name ───────────────────────────────────
                     user_name = None
