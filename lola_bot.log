@@ -1908,3 +1908,372 @@ Jollo
 2026-04-11 17:19:50,962 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:19:50] "GET /portal/ HTTP/1.1" 200 -
 2026-04-11 17:22:42,888 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:22:42] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
 2026-04-11 17:26:02,807 - werkzeug - INFO - 127.0.0.1 - - [11/Apr/2026 17:26:02] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-17 15:33:11,888 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-17 15:33:45,435 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-17 15:33:45,435 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-17 15:33:47,380 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:33:47,380 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-17 15:33:48,903 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:33:48,914 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:33:49,018 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:33:49,018 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:33:49,018 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:33:50,780 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:33:50,780 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:33:52,157 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:33:52,162 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:33:52,168 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:33:52,168 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:33:52,168 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:33:54,331 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:33:54,331 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:33:54,331 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-17 15:33:54,333 - app - INFO - Handlers and message processor initialised.
+2026-04-17 15:33:54,333 - app - INFO - WebhookHandler initialised.
+2026-04-17 15:33:54,333 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-17 15:33:54,335 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-17 15:33:54,336 - services.telegram_service - DEBUG - TelegramService initialised.
+2026-04-17 15:33:55,392 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:33:55,400 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:33:55,406 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:33:55,406 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:33:55,406 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:33:57,403 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:33:57,403 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:33:57,403 - message_processor - INFO - MessageProcessor initialised — Makinde Kitchen.
+2026-04-17 15:33:57,405 - telegram_webhook - INFO - Telegram webhook initialised.
+2026-04-17 15:34:00,826 - services.telegram_service - DEBUG - Telegram setWebhook -> {'ok': True, 'result': True, 'description': 'Webhook was set'}
+2026-04-17 15:34:00,828 - services.telegram_service - INFO - Telegram webhook registered: https://great-enjoyed-piglet.ngrok-free.app/telegram/webhook
+2026-04-17 15:34:00,828 - app - INFO - Telegram bot registered at /telegram/webhook
+2026-04-17 15:34:01,907 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:34:01,923 - app - INFO - Merchant portal registered at /portal
+2026-04-17 15:34:01,925 - app - INFO - Payment callback URL: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:34:02,045 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-17 15:34:02,047 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-17 15:34:05,032 - services.telegram_service - INFO - Incoming message from 1764691432 (id=95): Hi
+2026-04-17 15:34:05,033 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Hi
+2026-04-17 15:34:05,034 - utils.session_manager - INFO - New session 1764691432 initialized.
+2026-04-17 15:34:05,035 - message_processor - INFO - Session 1764691432: New session.
+2026-04-17 15:34:05,035 - message_processor - INFO - Session 1764691432: Fresh start for 'Ziga'.
+2026-04-17 15:34:09,753 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:34:09] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:35:38,394 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-17 15:35:50,875 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-17 15:35:50,875 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-17 15:35:52,088 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:35:52,089 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-17 15:35:53,148 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:35:53,159 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:35:53,228 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:35:53,228 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:35:53,229 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:35:54,753 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:35:54,753 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:35:56,286 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:35:57,648 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:35:57,657 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:35:57,660 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:35:57,662 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:35:57,662 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:35:58,510 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:35:58,510 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:35:58,510 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 15:35:58,518 - app - INFO - Handlers and message processor initialised.
+2026-04-17 15:35:58,518 - app - INFO - WebhookHandler initialised.
+2026-04-17 15:35:58,519 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-17 15:35:58,519 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-17 15:35:58,519 - services.telegram_service - DEBUG - TelegramService initialised.
+2026-04-17 15:35:59,446 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:36:00,701 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:36:00,709 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:36:00,711 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:36:00,711 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:36:00,711 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:36:01,690 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:36:01,690 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:36:01,690 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 15:36:01,690 - telegram_webhook - INFO - Telegram webhook initialised.
+2026-04-17 15:36:02,396 - services.telegram_service - DEBUG - Telegram setWebhook -> {'ok': True, 'result': True, 'description': 'Webhook is already set'}
+2026-04-17 15:36:02,396 - services.telegram_service - INFO - Telegram webhook registered: https://great-enjoyed-piglet.ngrok-free.app/telegram/webhook
+2026-04-17 15:36:02,400 - app - INFO - Telegram bot registered at /telegram/webhook
+2026-04-17 15:36:03,334 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:36:03,352 - app - INFO - Merchant portal registered at /portal
+2026-04-17 15:36:03,352 - app - INFO - Payment callback URL: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:36:03,430 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-17 15:36:03,430 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-17 15:36:16,691 - services.telegram_service - INFO - Incoming message from 1764691432 (id=97): Hello
+2026-04-17 15:36:16,692 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Hello
+2026-04-17 15:36:16,692 - utils.session_manager - INFO - New session 1764691432 initialized.
+2026-04-17 15:36:16,698 - message_processor - INFO - Session 1764691432: New session.
+2026-04-17 15:36:16,700 - message_processor - INFO - Session 1764691432: Fresh start for 'Ziga'.
+2026-04-17 15:36:16,702 - handlers.base_handler - INFO - GreetingHandler: initial greeting for 1764691432, user 'Ziga'.
+2026-04-17 15:36:19,776 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 100, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436578, 'text': 'We are setting things up — no vendors are available just yet. Please try again shortly!'}}
+2026-04-17 15:36:19,832 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:36:19] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:36:20,355 - services.telegram_service - INFO - Incoming message from 1764691432 (id=98): Hi
+2026-04-17 15:36:20,356 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Hi
+2026-04-17 15:36:20,356 - handlers.base_handler - INFO - VendorHandler: non-button message 'Hi' during vendor_selection for 1764691432 — re-showing vendor list.
+2026-04-17 15:36:21,761 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 101, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436580, 'text': "Sorry, something went wrong. Send 'menu' to start over."}}
+2026-04-17 15:36:21,762 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:36:21] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:36:56,371 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-17 15:37:03,399 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-17 15:37:03,399 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-17 15:37:04,694 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:04,694 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-17 15:37:05,877 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:05,884 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:37:05,922 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:37:05,923 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:37:05,923 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:37:07,052 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:07,052 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:37:08,644 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:10,689 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:10,704 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:37:10,704 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:37:10,704 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:37:10,704 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:37:12,338 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:12,338 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:37:12,338 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 15:37:12,338 - app - INFO - Handlers and message processor initialised.
+2026-04-17 15:37:12,338 - app - INFO - WebhookHandler initialised.
+2026-04-17 15:37:12,338 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-17 15:37:12,338 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-17 15:37:12,338 - services.telegram_service - DEBUG - TelegramService initialised.
+2026-04-17 15:37:14,146 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:15,438 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:15,439 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:37:15,453 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:37:15,455 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:37:15,455 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:37:17,046 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:17,046 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:37:17,046 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 15:37:17,046 - telegram_webhook - INFO - Telegram webhook initialised.
+2026-04-17 15:37:17,987 - services.telegram_service - DEBUG - Telegram setWebhook -> {'ok': True, 'result': True, 'description': 'Webhook is already set'}
+2026-04-17 15:37:17,988 - services.telegram_service - INFO - Telegram webhook registered: https://great-enjoyed-piglet.ngrok-free.app/telegram/webhook
+2026-04-17 15:37:17,990 - app - INFO - Telegram bot registered at /telegram/webhook
+2026-04-17 15:37:19,302 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:37:19,318 - app - INFO - Merchant portal registered at /portal
+2026-04-17 15:37:19,318 - app - INFO - Payment callback URL: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:37:19,345 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-17 15:37:19,345 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-17 15:37:22,233 - services.telegram_service - INFO - Incoming message from 1764691432 (id=102): Hi
+2026-04-17 15:37:22,233 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Hi
+2026-04-17 15:37:22,233 - utils.session_manager - INFO - New session 1764691432 initialized.
+2026-04-17 15:37:22,233 - message_processor - INFO - Session 1764691432: New session.
+2026-04-17 15:37:22,233 - message_processor - INFO - Session 1764691432: Fresh start for 'Ziga'.
+2026-04-17 15:37:22,233 - handlers.base_handler - INFO - GreetingHandler: initial greeting for 1764691432, user 'Ziga'.
+2026-04-17 15:37:25,400 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 104, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436644, 'text': 'Please choose a vendor to order from:', 'reply_markup': {'inline_keyboard': [[{'text': 'Campus Canteen', 'callback_data': 'vendor_2'}], [{'text': 'Campus Canteen', 'callback_data': 'vendor_5'}], [{'text': 'Makinde Kitchen', 'callback_data': 'vendor_1'}], [{'text': 'Makinde Kitchen', 'callback_data': 'vendor_4'}], [{'text': 'Mama T Buka', 'callback_data': 'vendor_3'}], [{'text': 'Mama T Buka', 'callback_data': 'vendor_6'}]]}}}
+2026-04-17 15:37:25,402 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:37:25] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:37:34,278 - services.telegram_service - DEBUG - Telegram answerCallbackQuery -> {'ok': True, 'result': True}
+2026-04-17 15:37:34,279 - services.telegram_service - INFO - Callback query from 1764691432: vendor_2
+2026-04-17 15:37:34,281 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): vendor_2
+2026-04-17 15:37:36,593 - handlers.base_handler - INFO - VendorHandler: 1764691432 selected vendor 'Campus Canteen' (id=2). Handing off to AIHandler.
+2026-04-17 15:37:42,101 - services.telegram_service - DEBUG - Telegram sendPhoto -> {'ok': True, 'result': {'message_id': 106, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436661, 'photo': [{'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAANzAAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ4', 'file_size': 1588, 'width': 90, 'height': 50}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAANtAAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJy', 'file_size': 24022, 'width': 320, 'height': 178}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAAN4AAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ9', 'file_size': 108208, 'width': 800, 'height': 446}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAAN5AAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ-', 'file_size': 231686, 'width': 1280, 'height': 714}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAAN3AAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ8', 'file_size': 460160, 'width': 1926, 'height': 1075}]}}
+2026-04-17 15:37:42,105 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:37:42] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:37:44,225 - services.telegram_service - DEBUG - Telegram answerCallbackQuery -> {'ok': True, 'result': True}
+2026-04-17 15:37:44,228 - services.telegram_service - INFO - Callback query from 1764691432: vendor_2
+2026-04-17 15:37:44,229 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): vendor_2
+2026-04-17 15:37:44,229 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'vendor_2'
+2026-04-17 15:37:47,822 - services.ai_service - INFO - Active model switched to: gemini-2.5-flash
+2026-04-17 15:37:47,826 - services.ai_service - INFO - [gemini-2.5-flash] [1764691432] vendor=Campus Canteen returning=False payment=False: Welcome to Campus Canteen!
+
+Here's our menu:
+
+DRINKS
+MEALS
+PROTEINS
+SNACKS
+
+What are you in the mood
+2026-04-17 15:37:49,510 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 107, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436668, 'text': "Welcome to Campus Canteen!\n\nHere's our menu:\n\nDRINKS\nMEALS\nPROTEINS\nSNACKS\n\nWhat are you in the mood for today?"}}
+2026-04-17 15:37:49,514 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:37:49] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:38:17,769 - services.telegram_service - INFO - Incoming message from 1764691432 (id=108): Drinks
+2026-04-17 15:38:17,770 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Drinks
+2026-04-17 15:38:17,771 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'Drinks'
+2026-04-17 15:38:24,184 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:38:24] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:38:35,025 - services.telegram_service - INFO - Incoming message from 1764691432 (id=110): 2 bottled watter
+2026-04-17 15:38:35,026 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): 2 bottled watter
+2026-04-17 15:38:35,027 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: '2 bottled watter'
+2026-04-17 15:38:38,428 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:38:38] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:38:54,148 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-17 15:39:00,154 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-17 15:39:00,154 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-17 15:39:01,389 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:01,389 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-17 15:39:02,689 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:02,740 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:39:02,818 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:39:02,818 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:39:02,818 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:39:04,094 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:04,106 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:39:04,957 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:06,835 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:06,846 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:39:06,851 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:39:06,853 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:39:06,856 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:39:08,102 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:08,102 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:39:08,103 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 15:39:08,103 - app - INFO - Handlers and message processor initialised.
+2026-04-17 15:39:08,103 - app - INFO - WebhookHandler initialised.
+2026-04-17 15:39:08,104 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-17 15:39:08,105 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-17 15:39:08,106 - services.telegram_service - DEBUG - TelegramService initialised.
+2026-04-17 15:39:09,310 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:10,445 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:10,454 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 15:39:10,462 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 15:39:10,463 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 15:39:10,463 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:39:11,456 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:11,456 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 15:39:11,456 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 15:39:11,457 - telegram_webhook - INFO - Telegram webhook initialised.
+2026-04-17 15:39:11,911 - services.telegram_service - DEBUG - Telegram setWebhook -> {'ok': True, 'result': True, 'description': 'Webhook is already set'}
+2026-04-17 15:39:11,912 - services.telegram_service - INFO - Telegram webhook registered: https://great-enjoyed-piglet.ngrok-free.app/telegram/webhook
+2026-04-17 15:39:11,913 - app - INFO - Telegram bot registered at /telegram/webhook
+2026-04-17 15:39:13,507 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 15:39:13,515 - app - INFO - Merchant portal registered at /portal
+2026-04-17 15:39:13,516 - app - INFO - Payment callback URL: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 15:39:13,537 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-17 15:39:13,537 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-17 15:39:21,763 - services.telegram_service - INFO - Incoming message from 1764691432 (id=112): Hello
+2026-04-17 15:39:21,764 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Hello
+2026-04-17 15:39:21,764 - utils.session_manager - INFO - New session 1764691432 initialized.
+2026-04-17 15:39:21,765 - message_processor - INFO - Session 1764691432: New session.
+2026-04-17 15:39:21,765 - message_processor - INFO - Session 1764691432: Fresh start for 'Ziga'.
+2026-04-17 15:39:21,766 - handlers.base_handler - INFO - GreetingHandler: initial greeting for 1764691432, user 'Ziga'.
+2026-04-17 15:39:23,654 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 114, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436762, 'text': 'Please choose a vendor to order from:', 'reply_markup': {'inline_keyboard': [[{'text': 'Campus Canteen', 'callback_data': 'vendor_2'}], [{'text': 'Makinde Kitchen', 'callback_data': 'vendor_1'}], [{'text': 'Mama T Buka', 'callback_data': 'vendor_3'}]]}}}
+2026-04-17 15:39:23,657 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:39:23] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:39:26,756 - services.telegram_service - DEBUG - Telegram answerCallbackQuery -> {'ok': True, 'result': True}
+2026-04-17 15:39:26,758 - services.telegram_service - INFO - Callback query from 1764691432: vendor_1
+2026-04-17 15:39:26,758 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): vendor_1
+2026-04-17 15:39:28,484 - handlers.base_handler - INFO - VendorHandler: 1764691432 selected vendor 'Makinde Kitchen' (id=1). Handing off to AIHandler.
+2026-04-17 15:39:30,869 - services.telegram_service - DEBUG - Telegram sendPhoto -> {'ok': True, 'result': {'message_id': 116, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436769, 'photo': [{'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAANzAAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ4', 'file_size': 1588, 'width': 90, 'height': 50}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAANtAAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJy', 'file_size': 24022, 'width': 320, 'height': 178}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAAN4AAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ9', 'file_size': 108208, 'width': 800, 'height': 446}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAAN5AAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ-', 'file_size': 231686, 'width': 1280, 'height': 714}, {'file_id': 'AgACAgQAAxkDAAMLadprjGiZM55bua6w5y4vnLPr5uYAAg0NaxtSKtRShcatAXjb9NMBAAMCAAN3AAM7BA', 'file_unique_id': 'AQADDQ1rG1Iq1FJ8', 'file_size': 460160, 'width': 1926, 'height': 1075}]}}
+2026-04-17 15:39:30,872 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:39:30] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:39:32,291 - services.telegram_service - DEBUG - Telegram answerCallbackQuery -> {'ok': True, 'result': True}
+2026-04-17 15:39:32,292 - services.telegram_service - INFO - Callback query from 1764691432: vendor_1
+2026-04-17 15:39:32,293 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): vendor_1
+2026-04-17 15:39:32,294 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'vendor_1'
+2026-04-17 15:39:34,544 - services.ai_service - INFO - Active model switched to: gemini-2.5-flash
+2026-04-17 15:39:34,545 - services.ai_service - INFO - [gemini-2.5-flash] [1764691432] vendor=Makinde Kitchen returning=False payment=False: Welcome to Makinde Kitchen!
+
+Here are our menu categories:
+
+DRINKS
+PROTEINS
+RICE & GRAINS
+SMALL CHOP
+2026-04-17 15:39:36,236 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 117, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776436775, 'text': 'Welcome to Makinde Kitchen!\n\nHere are our menu categories:\n\nDRINKS\nPROTEINS\nRICE & GRAINS\nSMALL CHOPS & SNACKS\nSOUPS\nSWALLOWS\n\nWhat would you like to order today, Ziga?'}}
+2026-04-17 15:39:36,237 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:39:36] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 15:39:59,728 - services.telegram_service - INFO - Incoming message from 1764691432 (id=118): Jollof rice
+2026-04-17 15:39:59,728 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Jollof rice
+2026-04-17 15:39:59,729 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'Jollof rice'
+2026-04-17 15:40:03,246 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 15:40:03] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:06:48,181 - __main__ - INFO - Starting Lola — Makinde Kitchen bot...
+2026-04-17 16:06:58,346 - utils.session_manager - INFO - SessionManager initialized. Default timeouts: Unpaid=3000s, Paid=12000s
+2026-04-17 16:06:58,346 - services.whatsapp_service - DEBUG - WhatsAppService initialized with phone_number_id: 204426689424598
+2026-04-17 16:06:59,547 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:06:59,547 - app - INFO - Core services initialised — Makinde Kitchen (Lola Demo Bot)
+2026-04-17 16:07:00,578 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:00,590 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 16:07:00,680 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 16:07:00,681 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 16:07:00,681 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 16:07:01,598 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:01,598 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 16:07:02,849 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:04,396 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:04,402 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 16:07:04,410 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 16:07:04,410 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 16:07:04,411 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 16:07:05,295 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:05,295 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 16:07:05,295 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 16:07:05,296 - app - INFO - Handlers and message processor initialised.
+2026-04-17 16:07:05,296 - app - INFO - WebhookHandler initialised.
+2026-04-17 16:07:05,296 - payment_webhook - INFO - PaymentWebhook initialised.
+2026-04-17 16:07:05,298 - app - INFO - Paystack payment webhook registered at /paystack/webhook
+2026-04-17 16:07:05,298 - services.telegram_service - DEBUG - TelegramService initialised.
+2026-04-17 16:07:06,182 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:07,587 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:07,593 - services.ai_service - INFO - Lola AIService — Gemini key: AIzaSyDs...5N3g
+2026-04-17 16:07:07,598 - services.ai_service - INFO - LLM built for: gemini-2.5-flash
+2026-04-17 16:07:07,598 - services.ai_service - INFO - AIService ready. Models: ['gemini-2.5-flash']
+2026-04-17 16:07:07,598 - services.payment_service - INFO - PaymentService initialised — callback: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 16:07:08,488 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:08,488 - handlers.ai_handler - INFO - AIHandler: Lola multi-vendor order bot ready.
+2026-04-17 16:07:08,488 - message_processor - INFO - MessageProcessor initialised — Lola multi-vendor bot.
+2026-04-17 16:07:08,488 - telegram_webhook - INFO - Telegram webhook initialised.
+2026-04-17 16:07:09,128 - services.telegram_service - DEBUG - Telegram setWebhook -> {'ok': True, 'result': True, 'description': 'Webhook is already set'}
+2026-04-17 16:07:09,128 - services.telegram_service - INFO - Telegram webhook registered: https://great-enjoyed-piglet.ngrok-free.app/telegram/webhook
+2026-04-17 16:07:09,128 - app - INFO - Telegram bot registered at /telegram/webhook
+2026-04-17 16:07:10,660 - db_manager - INFO - DBManager: Database connection successful.
+2026-04-17 16:07:10,661 - app - INFO - Merchant portal registered at /portal
+2026-04-17 16:07:10,667 - app - INFO - Payment callback URL: https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 16:07:10,699 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8000
+2026-04-17 16:07:10,701 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-04-17 16:08:08,663 - services.telegram_service - INFO - Incoming message from 1764691432 (id=120): Hello
+2026-04-17 16:08:08,664 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Hello
+2026-04-17 16:08:08,664 - utils.session_manager - INFO - New session 1764691432 initialized.
+2026-04-17 16:08:08,664 - message_processor - INFO - Session 1764691432: New session.
+2026-04-17 16:08:08,665 - message_processor - INFO - Session 1764691432: Fresh start for 'Ziga'.
+2026-04-17 16:08:08,665 - handlers.base_handler - INFO - GreetingHandler: initial greeting for 1764691432, user 'Ziga'.
+2026-04-17 16:08:10,172 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 122, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776438489, 'text': 'Please choose a vendor to order from:', 'reply_markup': {'inline_keyboard': [[{'text': 'Campus Canteen', 'callback_data': 'vendor_2'}], [{'text': 'Makinde Kitchen', 'callback_data': 'vendor_1'}], [{'text': 'Mama T Buka', 'callback_data': 'vendor_3'}]]}}}
+2026-04-17 16:08:10,174 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:08:10] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:08:13,236 - services.telegram_service - DEBUG - Telegram answerCallbackQuery -> {'ok': True, 'result': True}
+2026-04-17 16:08:13,236 - services.telegram_service - INFO - Callback query from 1764691432: vendor_2
+2026-04-17 16:08:13,236 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): vendor_2
+2026-04-17 16:08:14,043 - handlers.base_handler - INFO - VendorHandler: 1764691432 selected vendor 'Campus Canteen' (id=2).
+2026-04-17 16:08:14,917 - services.telegram_service - DEBUG - Telegram sendPhoto -> {'ok': True, 'result': {'message_id': 123, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776438494, 'photo': [{'file_id': 'AgACAgQAAxkDAAN7aeJM3nCT6nInETgU_t16aUeuCHYAApQMaxta7RxT3no82m7Vl88BAAMCAANzAAM7BA', 'file_unique_id': 'AQADlAxrG1rtHFN4', 'file_size': 1643, 'width': 66, 'height': 90}, {'file_id': 'AgACAgQAAxkDAAN7aeJM3nCT6nInETgU_t16aUeuCHYAApQMaxta7RxT3no82m7Vl88BAAMCAANtAAM7BA', 'file_unique_id': 'AQADlAxrG1rtHFNy', 'file_size': 25488, 'width': 234, 'height': 320}, {'file_id': 'AgACAgQAAxkDAAN7aeJM3nCT6nInETgU_t16aUeuCHYAApQMaxta7RxT3no82m7Vl88BAAMCAAN4AAM7BA', 'file_unique_id': 'AQADlAxrG1rtHFN9', 'file_size': 113805, 'width': 585, 'height': 800}, {'file_id': 'AgACAgQAAxkDAAN7aeJM3nCT6nInETgU_t16aUeuCHYAApQMaxta7RxT3no82m7Vl88BAAMCAAN5AAM7BA', 'file_unique_id': 'AQADlAxrG1rtHFN-', 'file_size': 154555, 'width': 785, 'height': 1074}]}}
+2026-04-17 16:08:15,603 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:08:15] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:08:31,450 - services.telegram_service - INFO - Incoming message from 1764691432 (id=125): Indomje and chicken piece
+2026-04-17 16:08:31,451 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Indomje and chicken piece
+2026-04-17 16:08:31,451 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'Indomje and chicken piece'
+2026-04-17 16:08:34,497 - services.ai_service - INFO - Active model switched to: gemini-2.5-flash
+2026-04-17 16:08:36,016 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:08:36] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:08:49,422 - services.telegram_service - INFO - Incoming message from 1764691432 (id=127): The large indomie
+2026-04-17 16:08:49,422 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): The large indomie
+2026-04-17 16:08:49,422 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'The large indomie'
+2026-04-17 16:08:53,205 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:08:53] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:08:59,033 - services.telegram_service - INFO - Incoming message from 1764691432 (id=129): 3
+2026-04-17 16:08:59,034 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): 3
+2026-04-17 16:08:59,034 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: '3'
+2026-04-17 16:09:04,585 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:09:04] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:09:09,297 - services.telegram_service - INFO - Incoming message from 1764691432 (id=131): No thank you
+2026-04-17 16:09:09,297 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): No thank you
+2026-04-17 16:09:09,298 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'No thank you'
+2026-04-17 16:09:11,029 - services.ai_service - INFO - [gemini-2.5-flash] [1764691432] vendor=Campus Canteen returning=True payment=False: What is your delivery address?
+2026-04-17 16:09:12,688 - services.telegram_service - DEBUG - Telegram sendMessage -> {'ok': True, 'result': {'message_id': 132, 'from': {'id': 8682013231, 'is_bot': True, 'first_name': 'Lola', 'username': 'MakindeKitchenBot'}, 'chat': {'id': 1764691432, 'first_name': 'Ziga', 'type': 'private'}, 'date': 1776438551, 'text': 'What is your delivery address?'}}
+2026-04-17 16:09:12,689 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:09:12] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:09:18,446 - services.telegram_service - INFO - Incoming message from 1764691432 (id=133): Ikeja Lagos
+2026-04-17 16:09:18,447 - telegram_webhook - INFO - Telegram message from 1764691432 (Ziga): Ikeja Lagos
+2026-04-17 16:09:18,447 - handlers.ai_handler - INFO - AIHandler: message from 1764691432: 'Ikeja Lagos'
+2026-04-17 16:09:22,391 - services.ai_service - INFO - [gemini-2.5-flash] [1764691432] vendor=Campus Canteen returning=True payment=True: Order Summary
+
+Order Ref: CC28546
+Name: Ziga
+Phone: 1764691432
+Vendor: Campus Canteen
+Delivery Addre
+2026-04-17 16:09:25,961 - db_manager - INFO - Order created: ref=CC28546, id=17, vendor_id=2
+2026-04-17 16:09:25,961 - handlers.ai_handler - INFO - Order saved: id=17, ref=CC28546, vendor_id=2
+2026-04-17 16:09:26,511 - db_manager - INFO - Saved 2 order items for order_id=17
+2026-04-17 16:09:26,912 - services.payment_service - INFO - Creating payment link — ref=CC28546, amount=270000, email=ziga1432@lola.com, callback=https://great-enjoyed-piglet.ngrok-free.app/portal/payment/success
+2026-04-17 16:09:29,171 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:09:29] "POST /telegram/webhook HTTP/1.1" 200 -
+2026-04-17 16:09:38,554 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:09:38] "[33mPOST /api/paystack/webhook HTTP/1.1[0m" 404 -
+2026-04-17 16:09:51,249 - db_manager - INFO - Order CC28546 updated: payment_status=paid
+2026-04-17 16:09:51,249 - portal.routes - INFO - payment_success: DB updated for ref=CC28546
+2026-04-17 16:09:52,706 - services.whatsapp_service - ERROR - HTTP error sending WhatsApp message: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v17.0/204426689424598/messages - Response: {"error":{"message":"Error validating access token: Session has expired on Friday, 03-Apr-26 14:00:00 PDT. The current time is Friday, 17-Apr-26 08:09:51 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"AzCFQEW3TX61w089DPXF194"}}
+2026-04-17 16:09:53,190 - portal.routes - INFO - payment_success: Telegram confirmation sent to 1764691432
+2026-04-17 16:09:53,212 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:09:53] "GET /portal/payment/success?trxref=CC28546&reference=CC28546 HTTP/1.1" 200 -
+2026-04-17 16:09:54,409 - werkzeug - INFO - 127.0.0.1 - - [17/Apr/2026 16:09:54] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -

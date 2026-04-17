@@ -1,8 +1,9 @@
 import logging
 import sys
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 from .base_handler import BaseHandler
+from db_manager import DBManager
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(stream=sys.stdout)
@@ -14,40 +15,62 @@ logger.setLevel(logging.INFO)
 
 class GreetingHandler(BaseHandler):
     """
-    Greeting handler for Makinde Kitchen order bot (Lola).
-    Platform-agnostic — uses self.messaging_service so it works
-    on both WhatsApp and Telegram.
+    Greeting handler for the Lola multi-vendor bot.
+    Platform-agnostic — works on both WhatsApp and Telegram.
+
+    On first contact (or reset), fetches all active vendors from the DB
+    and presents them as interactive buttons for the customer to choose from.
+    State is set to 'vendor_selection'; VendorHandler picks up from there.
     """
 
-    MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/03/chowder.ng_.jpg"
+    def __init__(self, config, session_manager, data_manager, messaging_service):
+        super().__init__(config, session_manager, data_manager, messaging_service)
+        self.db = DBManager(config)
 
-    def handle_greeting_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict[str, Any]:
-        """Handle greeting state — send menu image and redirect to AI handler."""
-        self.logger.info(f"GreetingHandler: session {session_id} — sending Makinde Kitchen welcome.")
-        return self._send_welcome_and_redirect(state, session_id)
+    # ── Public entry points ────────────────────────────────────────────────────
 
-    def generate_initial_greeting(self, state: Dict, session_id: str, user_name: Optional[str] = None) -> Dict[str, Any]:
-        """Generate initial greeting with menu image, then hand off to AI handler."""
+    def handle_greeting_state(
+        self, state: Dict, message: str, original_message: str, session_id: str
+    ) -> Dict[str, Any]:
+        """Handle greeting state — show vendor list."""
+        self.logger.info(f"GreetingHandler: session {session_id} — showing vendor list.")
+        return self._send_vendor_selection(state, session_id)
+
+    def generate_initial_greeting(
+        self, state: Dict, session_id: str, user_name: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Initial greeting for a new session — show vendor list."""
         self.logger.info(f"GreetingHandler: initial greeting for {session_id}, user '{user_name}'.")
-        return self._send_welcome_and_redirect(state, session_id)
+        return self._send_vendor_selection(state, session_id)
 
-    def handle_back_to_main(self, state: Dict, session_id: str, message: str = "") -> Dict[str, Any]:
-        """Back to main — resend welcome and redirect."""
+    def handle_back_to_main(
+        self, state: Dict, session_id: str, message: str = ""
+    ) -> Dict[str, Any]:
+        """Back to main — re-show vendor list."""
         self.logger.info(f"GreetingHandler: back to main for {session_id}.")
-        return self._send_welcome_and_redirect(state, session_id, additional_message=message)
+        return self._send_vendor_selection(state, session_id, additional_message=message)
 
-    def _send_welcome_and_redirect(
-        self, state: Dict, session_id: str, additional_message: str = ""
+    # ── Core ───────────────────────────────────────────────────────────────────
+
+    def _send_vendor_selection(
+        self,
+        state: Dict,
+        session_id: str,
+        additional_message: str = ""
     ) -> Dict[str, Any]:
         """
-        Send the Makinde Kitchen menu image with a welcome caption,
-        then redirect to the AI order handler.
+        Fetch active vendors from DB and send as interactive buttons.
+        Sets state to 'vendor_selection' so VendorHandler can process the tap.
         """
         user_name = state.get("user_name", "there")
 
-        # Transition state to ai_chat
-        state["current_state"]        = "ai_chat"
-        state["current_handler"]      = "ai_handler"
+        # Detect platform and store in state
+        platform = self.get_platform(session_id)
+        state["platform"] = platform
+
+        # Transition to vendor selection state
+        state["current_state"]        = "vendor_selection"
+        state["current_handler"]      = "greeting_handler"
         state["conversation_history"] = []
 
         if not state.get("user_name"):
@@ -57,21 +80,35 @@ class GreetingHandler(BaseHandler):
 
         self.session_manager.update_session_state(session_id, state)
 
+        # Fetch vendors
+        vendors: List[Dict] = []
         try:
-            self.messaging_service.send_image_message(
-                session_id,
-                self.MENU_IMAGE_URL,
-                caption=(
-                    f"Hi {user_name}! Welcome to Makinde Kitchen 🍛\n\n"
-                    "Nigerian comfort food — soups, rice, swallows, small chops and more.\n"
-                    "Just tell me what you'd like and I'll sort you out! 😋"
-                )
-            )
+            vendors = self.db.get_all_vendors()
         except Exception as e:
-            self.logger.error(f"Session {session_id}: Could not send menu image: {e}.")
+            self.logger.error(f"GreetingHandler: could not fetch vendors for {session_id}: {e}")
+
+        # Welcome message
+        greeting_name = f", {user_name}" if user_name and user_name not in ("Guest", "there", "") else ""
+        welcome_text = (
+            f"Hi{greeting_name}! 👋 Welcome to Lola.\n\n"
+            "Who would you like to order from today?"
+        )
+
+        if additional_message:
+            welcome_text = f"{additional_message}\n\n{welcome_text}"
+
+        self.messaging_service.send_text(session_id, welcome_text)
+
+        if vendors:
+            self.send_vendor_list(session_id, vendors, platform)
+        else:
+            self.messaging_service.send_text(
+                session_id,
+                "We are setting things up — no vendors are available just yet. "
+                "Please try again shortly!"
+            )
 
         return {
-            "redirect":           "ai_handler",
-            "redirect_message":   "initial_greeting",
-            "additional_message": additional_message if additional_message else None,
+            "status":  "vendor_list_sent",
+            "vendors": len(vendors),
         }

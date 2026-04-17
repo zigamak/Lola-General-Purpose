@@ -12,19 +12,17 @@ from payment_webhook import is_payment_claim, handle_manual_payment_check
 
 logger = logging.getLogger(__name__)
 
-MENU_IMAGE_URL = "https://eventio.africa/wp-content/uploads/2026/04/lola-general-purpose.jpg"
-
 
 class AIHandler(BaseHandler):
     """
-    Conversational order handler for Makinde Kitchen.
-    Platform-agnostic — replies via self.messaging_service.send_text()
-    so the same handler works for WhatsApp and Telegram.
+    Conversational order handler — multi-vendor, platform-agnostic.
+    Vendor name, menu image, and menu text all come from session state
+    (populated by VendorHandler before this handler is invoked).
 
     Flow:
-      1. _handle_start()        — welcome + menu image (new session only)
+      1. _handle_start()        — welcome + vendor menu image (new session only)
       2. _handle_returning()    — "welcome back" message (returning session)
-      3. handle_ai_chat_state() — all messages go to the AI agent
+      3. handle_ai_chat_state() — all messages routed to the AI agent
       4. Payment tag detected   — strips tag, generates Paystack link, sends payment message
     """
 
@@ -42,28 +40,35 @@ class AIHandler(BaseHandler):
         if not self.ai_enabled:
             logger.warning("AIHandler: AI disabled — AIService could not be initialised.")
         else:
-            logger.info("AIHandler: Makinde Kitchen order bot ready.")
+            logger.info("AIHandler: Lola multi-vendor order bot ready.")
 
     # ── Public entry points ───────────────────────────────────────────────────
 
-    def handle_ai_chat_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict:
+    def handle_ai_chat_state(
+        self, state: Dict, message: str, original_message: str, session_id: str
+    ) -> Dict:
         """Handle all incoming messages through the AI agent."""
         logger.info(f"AIHandler: message from {session_id}: '{original_message[:80]}'")
 
-        # ── Manual payment fallback ───────────────────────────────────────────
-        # Intercept "I've paid" messages and verify with Paystack directly,
-        # BEFORE spending a Gemini call on it.
+        # If vendor not selected yet, redirect back to vendor selection
+        if not state.get("selected_vendor_id"):
+            logger.warning(f"AIHandler: no vendor selected for {session_id} — redirecting.")
+            return self.handle_back_to_main(state, session_id)
+
+        # Manual payment claim — check Paystack directly before spending an AI call
         if is_payment_claim(original_message):
             order_ref = state.get("payment_ref") or state.get("order_ref")
             if order_ref:
-                logger.info(f"Payment claim detected from {session_id}, checking ref={order_ref}")
+                logger.info(f"Payment claim from {session_id}, checking ref={order_ref}")
                 reply = handle_manual_payment_check(session_id, order_ref)
                 self.messaging_service.send_text(session_id, reply)
                 return {"status": "payment_check_sent"}
 
         return self._process_message(state, session_id, original_message)
 
-    def handle_ai_menu_state(self, state: Dict, message: str, original_message: str, session_id: str) -> Dict:
+    def handle_ai_menu_state(
+        self, state: Dict, message: str, original_message: str, session_id: str
+    ) -> Dict:
         if message in ("ai_chat", "start_ai_chat", "initial_greeting"):
             return self._handle_start(state, session_id)
         if message in ("back_to_main", "menu"):
@@ -72,61 +77,40 @@ class AIHandler(BaseHandler):
 
     # ── Welcome ───────────────────────────────────────────────────────────────
 
-    def _handle_start(self, state: Dict, session_id: str, user_message: str = None) -> Dict:
+    def _handle_start(
+        self, state: Dict, session_id: str, user_message: str = None
+    ) -> Dict:
         """
-        New session entry point — send welcome text + menu image.
-        Resets conversation history.
+        Sets up session state after VendorHandler has already sent the welcome + menu image.
+        Does NOT send any messages to avoid double-sending.
         """
+        ref_prefix = state.get("vendor_ref_prefix", "ORD")
+
         state["current_state"]        = "ai_chat"
         state["current_handler"]      = "ai_handler"
         state["conversation_history"] = []
-        state["order_ref"]            = f"MK{random.randint(10000, 99999)}"
+        state["order_ref"]            = f"{ref_prefix}{random.randint(10000, 99999)}"
         state["welcome_sent"]         = True
         state["is_returning"]         = False
         self.session_manager.update_session_state(session_id, state)
 
-        phone_number  = state.get("phone_number", session_id)
-        user_name     = state.get("user_name", "")
-        greeting_name = f", {user_name}" if user_name and user_name not in ("Guest", "") else ""
-
-        welcome_text = (
-            f"Hi{greeting_name}! Welcome to Makinde Kitchen. 🍛\n\n"
-            "Here's our menu — what would you like to order today?"
-        )
-
-        # Save the trigger message from the user (hi/hello/menu etc.)
+        # Save user trigger message if provided
         if user_message:
+            phone_number = state.get("phone_number", session_id)
+            user_name    = state.get("user_name", "")
             self.db.save_message(
                 phone_number=phone_number,
                 role='user',
                 message=user_message,
                 customer_name=user_name if user_name not in ("Guest", "") else None,
+                platform=state.get("platform", "whatsapp"),
             )
 
-        # Save the welcome response from the bot
-        self.db.save_message(
-            phone_number=phone_number,
-            role='assistant',
-            message=welcome_text,
-            customer_name=user_name if user_name not in ("Guest", "") else None,
-        )
-
-        # Send welcome text — works on both WhatsApp and Telegram
-        self.messaging_service.send_text(session_id, welcome_text)
-
-        # Send menu image — gracefully skip if platform doesn't support it
-        try:
-            self.messaging_service.send_image_message(session_id, MENU_IMAGE_URL, caption="")
-        except Exception as e:
-            logger.warning(f"Could not send menu image for {session_id}: {e}")
-
-        return {"status": "welcome_sent"}
-
-    def _handle_returning(self, state: Dict, session_id: str, original_message: str) -> Dict:
-        """
-        Returning session — don't show menu, pass message straight to AI
-        with is_returning=True so it greets appropriately.
-        """
+        return {"status": "vendor_selected"}
+    def _handle_returning(
+        self, state: Dict, session_id: str, original_message: str
+    ) -> Dict:
+        """Returning session — pass straight to AI with is_returning=True."""
         state["is_returning"] = True
         self.session_manager.update_session_state(session_id, state)
         return self._process_message(state, session_id, original_message, is_returning=True)
@@ -143,9 +127,15 @@ class AIHandler(BaseHandler):
         """Send message to AI agent. Handle payment trigger if returned."""
         phone_number         = state.get("phone_number", session_id)
         user_name            = state.get("user_name", "Customer")
+        platform             = state.get("platform", "whatsapp")
         conversation_history = state.get("conversation_history", [])
-        order_ref            = state.get("order_ref") or f"MK{random.randint(10000, 99999)}"
+        order_ref            = state.get("order_ref") or \
+                               f"{state.get('vendor_ref_prefix', 'ORD')}{random.randint(10000, 99999)}"
         is_returning         = is_returning or state.get("is_returning", False)
+
+        # Vendor context for AI
+        vendor_name  = state.get("selected_vendor_name", "our kitchen")
+        vendor_menu  = state.get("vendor_menu", "")
 
         if not self.ai_enabled:
             self.messaging_service.send_text(
@@ -155,13 +145,13 @@ class AIHandler(BaseHandler):
             return {"status": "ai_disabled"}
 
         try:
-            # Save user message to DB
             self.db.save_message(
                 phone_number=phone_number,
                 role='user',
                 message=user_message,
                 customer_name=user_name,
-                order_id=state.get('db_order_id')
+                order_id=state.get('db_order_id'),
+                platform=platform,
             )
 
             clean_response, payment_triggered, order_ref, raw_response = \
@@ -173,12 +163,18 @@ class AIHandler(BaseHandler):
                     session_id=session_id,
                     order_ref=order_ref,
                     is_returning=is_returning,
+                    vendor_name=vendor_name,
+                    vendor_menu=vendor_menu,
+                    vendor_delivery_fee=state.get("vendor_delivery_fee", 500),
+                    vendor_free_min=state.get("vendor_free_min", 5000),
+                    vendor_hours=state.get("vendor_hours", ""),
+                    vendor_areas=state.get("vendor_areas", ""),
+                    vendor_support=state.get("vendor_support", ""),
                 )
 
             state["order_ref"]    = order_ref
-            state["is_returning"] = True  # all subsequent messages are returning
+            state["is_returning"] = True
 
-            # Update conversation history
             conversation_history.append({
                 "user":      user_message,
                 "assistant": clean_response,
@@ -193,13 +189,14 @@ class AIHandler(BaseHandler):
             if payment_triggered and raw_response:
                 result = self._handle_payment_trigger(
                     state, session_id, clean_response, raw_response,
-                    phone_number, user_name, order_ref
+                    phone_number, user_name, order_ref, platform
                 )
                 self.db.save_message(
                     phone_number=phone_number,
                     role='assistant',
                     message=clean_response,
-                    order_id=state.get('db_order_id')
+                    order_id=state.get('db_order_id'),
+                    platform=platform,
                 )
                 return result
 
@@ -208,7 +205,8 @@ class AIHandler(BaseHandler):
                 phone_number=phone_number,
                 role='assistant',
                 message=clean_response,
-                order_id=state.get('db_order_id')
+                order_id=state.get('db_order_id'),
+                platform=platform,
             )
 
             self.messaging_service.send_text(session_id, clean_response)
@@ -233,50 +231,61 @@ class AIHandler(BaseHandler):
         phone_number: str,
         user_name: str,
         order_ref: str,
+        platform: str = 'whatsapp',
     ) -> Dict:
         """
         Intercepts [PAYMENT_READY:amount=XXXX].
         1. Sends order summary
-        2. Saves order to DB
+        2. Saves order + payment log to DB
         3. Generates Paystack link
         4. Sends payment message
         """
-        amount_kobo = self._extract_payment_amount(raw_response)
+        amount_kobo  = self._extract_payment_amount(raw_response)
+        vendor_id    = state.get("selected_vendor_id")
+        delivery_fee = state.get("vendor_delivery_fee", 500)
+        free_min     = state.get("vendor_free_min", 5000)
 
         if not amount_kobo:
             logger.error(f"Payment tag found but could not parse amount for {session_id}.")
             self.messaging_service.send_text(session_id, clean_response)
             return {"status": "payment_amount_missing"}
 
-        # 1. Send the order summary
+        # 1. Send order summary
         self.messaging_service.send_text(session_id, clean_response)
 
         # 2. Save order to DB
-        amount_naira = amount_kobo // 100
-        delivery_fee = 0 if amount_naira > 5000 else 500
-        subtotal     = amount_naira - delivery_fee
+        amount_naira  = amount_kobo // 100
+        actual_fee    = 0 if amount_naira > free_min else delivery_fee
+        subtotal      = amount_naira - actual_fee
 
         db_order_id = self.db.create_order(
             order_ref=order_ref,
             phone_number=phone_number,
             delivery_address=state.get('delivery_address', ''),
             subtotal=subtotal,
-            delivery_fee=delivery_fee,
+            delivery_fee=actual_fee,
             total=amount_naira,
-            customer_name=user_name
+            customer_name=user_name,
+            vendor_id=vendor_id,
+            platform=platform,
         )
         if db_order_id:
             state['db_order_id'] = db_order_id
             self.session_manager.update_session_state(session_id, state)
-            logger.info(f"Order saved to DB: id={db_order_id}, ref={order_ref}")
+            logger.info(f"Order saved: id={db_order_id}, ref={order_ref}, vendor_id={vendor_id}")
 
-            # 2b. Parse and save order items
+            # Save order items
             items = self._parse_order_items(raw_response)
             if items:
                 self.db.save_order_items(db_order_id, items)
-                logger.info(f"Saved {len(items)} order items for order_id={db_order_id}")
-            else:
-                logger.warning(f"No ORDER_ITEMS tag found in response for {session_id}")
+
+            # Log payment record
+            self.db.log_payment(
+                order_id=db_order_id,
+                order_ref=order_ref,
+                amount=amount_kobo,
+                status='pending',
+            )
 
         # 3. Generate Paystack link
         payment_url = None
@@ -290,7 +299,8 @@ class AIHandler(BaseHandler):
                 customer_phone=phone_number,
                 metadata={
                     "order_ref":      order_ref,
-                    "channel":        "telegram" if not str(phone_number).startswith("234") else "whatsapp",
+                    "vendor_id":      vendor_id,
+                    "channel":        platform,
                     "customer_phone": phone_number,
                 },
             )
@@ -329,18 +339,14 @@ class AIHandler(BaseHandler):
         return int(match.group(1)) if match else 0
 
     def _parse_order_items(self, raw_response: str) -> list:
-        """
-        Parse [ORDER_ITEMS:name=X,qty=Y,price=Z,subtotal=W;name=...] tag.
-        Returns list of dicts ready for db.save_order_items().
-        """
+        """Parse [ORDER_ITEMS:name=X,qty=Y,price=Z,subtotal=W;...] tag."""
         match = re.search(r'\[ORDER_ITEMS:([^\]]+)\]', raw_response)
         if not match:
             return []
 
         items = []
         try:
-            entries = match.group(1).split(';')
-            for entry in entries:
+            for entry in match.group(1).split(';'):
                 entry = entry.strip()
                 if not entry:
                     continue

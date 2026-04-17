@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 class DBManager:
     """
-    Handles all PostgreSQL database operations for the Makinde Kitchen bot.
-    Saves every customer message and bot response, orders, and order items.
+    Handles all PostgreSQL database operations for the Lola multi-vendor bot.
+    Supports vendors, products, orders, payments, deliveries, and notifications.
     """
 
     def __init__(self, config):
@@ -65,38 +65,79 @@ class DBManager:
             logger.error(f"DBManager query error: {e} | Query: {query[:100]}")
             return None
 
+    # ── Vendors ────────────────────────────────────────────────────────────────
+
+    def get_all_vendors(self) -> List[Dict]:
+        """Get all active vendors ordered by name."""
+        rows = self._execute(
+            """
+            SELECT id, name, description, type, logo_url, menu_image_url,
+                   zone, delivery_fee, free_delivery_min, opening_hours,
+                   delivery_areas, support_contact, order_ref_prefix
+            FROM vendors
+            WHERE is_active = TRUE
+            ORDER BY name
+            """,
+            fetch='all'
+        )
+        return [dict(r) for r in rows] if rows else []
+
+    def get_vendor_by_id(self, vendor_id: int) -> Optional[Dict]:
+        """Get a single vendor by id."""
+        row = self._execute(
+            """
+            SELECT id, name, description, type, logo_url, menu_image_url,
+                   telegram_chat_id, whatsapp_number, zone, delivery_fee,
+                   free_delivery_min, opening_hours, delivery_areas,
+                   support_contact, order_ref_prefix
+            FROM vendors
+            WHERE id = %s AND is_active = TRUE
+            """,
+            (vendor_id,),
+            fetch='one'
+        )
+        return dict(row) if row else None
+
     # ── Customers ──────────────────────────────────────────────────────────────
 
-    def upsert_customer(self, phone_number: str, name: str = None) -> Optional[int]:
+    def upsert_customer(
+        self,
+        phone_number: str,
+        name: str = None,
+        platform: str = 'whatsapp'
+    ) -> Optional[int]:
         """
-        Insert customer if not exists, update name if provided.
+        Insert customer if not exists, update name/platform if provided.
         Returns customer id.
         """
         try:
             if name:
                 row = self._execute(
                     """
-                    INSERT INTO customers (phone_number, name, updated_at)
-                    VALUES (%s, %s, NOW())
+                    INSERT INTO customers (phone_number, name, platform, updated_at)
+                    VALUES (%s, %s, %s, NOW())
                     ON CONFLICT (phone_number)
                     DO UPDATE SET
-                        name = COALESCE(EXCLUDED.name, customers.name),
+                        name     = COALESCE(EXCLUDED.name, customers.name),
+                        platform = COALESCE(EXCLUDED.platform, customers.platform),
                         updated_at = NOW()
                     RETURNING id
                     """,
-                    (phone_number, name),
+                    (phone_number, name, platform),
                     fetch='one'
                 )
             else:
                 row = self._execute(
                     """
-                    INSERT INTO customers (phone_number, updated_at)
-                    VALUES (%s, NOW())
+                    INSERT INTO customers (phone_number, platform, updated_at)
+                    VALUES (%s, %s, NOW())
                     ON CONFLICT (phone_number)
-                    DO UPDATE SET updated_at = NOW()
+                    DO UPDATE SET
+                        platform = COALESCE(EXCLUDED.platform, customers.platform),
+                        updated_at = NOW()
                     RETURNING id
                     """,
-                    (phone_number,),
+                    (phone_number, platform),
                     fetch='one'
                 )
             if row:
@@ -122,7 +163,8 @@ class DBManager:
         role: str,
         message: str,
         customer_name: str = None,
-        order_id: int = None
+        order_id: int = None,
+        platform: str = 'whatsapp'
     ):
         """
         Save a single message (user or assistant) to conversations table.
@@ -134,7 +176,7 @@ class DBManager:
         if not phone_number or not message:
             return
         try:
-            customer_id = self.upsert_customer(phone_number, customer_name)
+            customer_id = self.upsert_customer(phone_number, customer_name, platform)
             if not customer_id:
                 logger.warning(f"save_message: could not upsert customer {phone_number}")
                 return
@@ -172,6 +214,71 @@ class DBManager:
             logger.error(f"DBManager.get_conversation_history error: {e}")
             return []
 
+    # ── Products ───────────────────────────────────────────────────────────────
+
+    def get_all_products(self, vendor_id: int = None) -> List[Dict]:
+        """Get all available products, optionally filtered by vendor."""
+        if vendor_id:
+            rows = self._execute(
+                """
+                SELECT * FROM products
+                WHERE is_available = TRUE AND vendor_id = %s
+                ORDER BY category, name
+                """,
+                (vendor_id,),
+                fetch='all'
+            )
+        else:
+            rows = self._execute(
+                "SELECT * FROM products WHERE is_available = TRUE ORDER BY category, name",
+                fetch='all'
+            )
+        return [dict(r) for r in rows] if rows else []
+
+    def get_products_by_category(self, category: str, vendor_id: int = None) -> List[Dict]:
+        """Get available products by category, optionally filtered by vendor."""
+        if vendor_id:
+            rows = self._execute(
+                """
+                SELECT * FROM products
+                WHERE category = %s AND is_available = TRUE AND vendor_id = %s
+                ORDER BY name
+                """,
+                (category, vendor_id),
+                fetch='all'
+            )
+        else:
+            rows = self._execute(
+                "SELECT * FROM products WHERE category = %s AND is_available = TRUE ORDER BY name",
+                (category,),
+                fetch='all'
+            )
+        return [dict(r) for r in rows] if rows else []
+
+    def format_menu_text(self, vendor_id: int) -> str:
+        """
+        Build a formatted menu string from DB products for a given vendor.
+        Used to inject into the AI system prompt.
+        """
+        products = self.get_all_products(vendor_id)
+        if not products:
+            return "Menu not available."
+
+        # Group by category
+        categories: Dict[str, List[Dict]] = {}
+        for p in products:
+            cat = p.get('category') or 'Other'
+            categories.setdefault(cat, []).append(p)
+
+        lines = []
+        for cat, items in categories.items():
+            lines.append(f"\n{cat.upper()}")
+            for item in items:
+                desc = f" ({item['description']})" if item.get('description') else ""
+                lines.append(f"- {item['name']}{desc} — ₦{item['price']:,}")
+
+        return "\n".join(lines)
+
     # ── Orders ─────────────────────────────────────────────────────────────────
 
     def create_order(
@@ -182,14 +289,16 @@ class DBManager:
         subtotal: int,
         delivery_fee: int,
         total: int,
-        customer_name: str = None
+        customer_name: str = None,
+        vendor_id: int = None,
+        platform: str = 'whatsapp'
     ) -> Optional[int]:
         """
         Create a new order record.
         Returns the new order id.
         """
         try:
-            customer_id = self.upsert_customer(phone_number, customer_name)
+            customer_id = self.upsert_customer(phone_number, customer_name, platform)
             if not customer_id:
                 logger.warning(f"create_order: could not upsert customer {phone_number}")
                 return None
@@ -197,16 +306,18 @@ class DBManager:
             row = self._execute(
                 """
                 INSERT INTO orders
-                    (order_ref, customer_id, delivery_address, subtotal, delivery_fee, total,
-                     status, payment_status, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, %s, 'payment_sent', 'unpaid', NOW(), NOW())
+                    (order_ref, customer_id, vendor_id, delivery_address,
+                     subtotal, delivery_fee, total, status, payment_status,
+                     platform, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, 'payment_sent', 'unpaid', %s, NOW(), NOW())
                 RETURNING id
                 """,
-                (order_ref, customer_id, delivery_address, subtotal, delivery_fee, total),
+                (order_ref, customer_id, vendor_id, delivery_address,
+                 subtotal, delivery_fee, total, platform),
                 fetch='one'
             )
             if row:
-                logger.info(f"Order created: ref={order_ref}, id={row['id']}")
+                logger.info(f"Order created: ref={order_ref}, id={row['id']}, vendor_id={vendor_id}")
                 return row['id']
         except Exception as e:
             logger.error(f"DBManager.create_order error: {e}")
@@ -215,10 +326,8 @@ class DBManager:
     def save_order_items(self, order_id: int, items: List[Dict]) -> bool:
         """
         Save order line items.
-
-        Each item dict should have:
-            name, price (naira), quantity, subtotal (naira)
-            product_id is optional
+        Each item dict should have: name, price (naira), quantity, subtotal (naira).
+        product_id is optional.
         """
         try:
             conn = self._get_conn()
@@ -258,10 +367,7 @@ class DBManager:
         payment_ref: str = None,
         status: str = None
     ) -> bool:
-        """
-        Update payment status on an order.
-        Called from payment_webhook when Paystack confirms payment.
-        """
+        """Update payment status on an order."""
         try:
             self._execute(
                 """
@@ -289,24 +395,132 @@ class DBManager:
         )
         return dict(row) if row else None
 
-    # ── Products ───────────────────────────────────────────────────────────────
+    # ── Payments ───────────────────────────────────────────────────────────────
 
-    def get_all_products(self) -> List[Dict]:
-        """Get all available products."""
-        rows = self._execute(
-            "SELECT * FROM products WHERE is_available = TRUE ORDER BY category, name",
-            fetch='all'
-        )
-        return [dict(r) for r in rows] if rows else []
+    def log_payment(
+        self,
+        order_id: int,
+        order_ref: str,
+        amount: int,
+        payment_ref: str = None,
+        gateway: str = 'paystack',
+        status: str = 'pending',
+        webhook_payload: dict = None
+    ) -> Optional[int]:
+        """Log a payment record. Returns payment id."""
+        try:
+            import json
+            payload_json = json.dumps(webhook_payload) if webhook_payload else None
+            row = self._execute(
+                """
+                INSERT INTO payments
+                    (order_id, order_ref, amount, payment_ref, gateway, status, webhook_payload, created_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s::jsonb, NOW())
+                RETURNING id
+                """,
+                (order_id, order_ref, amount, payment_ref, gateway, status, payload_json),
+                fetch='one'
+            )
+            return row['id'] if row else None
+        except Exception as e:
+            logger.error(f"DBManager.log_payment error: {e}")
+            return None
 
-    def get_products_by_category(self, category: str) -> List[Dict]:
-        """Get available products by category."""
-        rows = self._execute(
-            "SELECT * FROM products WHERE category = %s AND is_available = TRUE ORDER BY name",
-            (category,),
-            fetch='all'
-        )
-        return [dict(r) for r in rows] if rows else []
+    # ── Deliveries ─────────────────────────────────────────────────────────────
+
+    def create_delivery(
+        self,
+        order_id: int,
+        pin: str,
+        timeout_at: datetime = None
+    ) -> Optional[int]:
+        """Create a delivery record for an order. Returns delivery id."""
+        try:
+            row = self._execute(
+                """
+                INSERT INTO deliveries (order_id, pin, timeout_at, status, created_at)
+                VALUES (%s, %s, %s, 'pending', NOW())
+                RETURNING id
+                """,
+                (order_id, pin, timeout_at),
+                fetch='one'
+            )
+            return row['id'] if row else None
+        except Exception as e:
+            logger.error(f"DBManager.create_delivery error: {e}")
+            return None
+
+    def update_delivery_status(
+        self,
+        order_id: int,
+        status: str,
+        rider_name: str = None,
+        rider_phone: str = None
+    ) -> bool:
+        """Update delivery status. Status: pending | accepted | picked_up | delivered."""
+        try:
+            timestamp_col = {
+                'accepted':  'accepted_at',
+                'picked_up': 'picked_up_at',
+                'delivered': 'delivered_at',
+            }.get(status)
+
+            if timestamp_col:
+                self._execute(
+                    f"""
+                    UPDATE deliveries
+                    SET status = %s,
+                        rider_name  = COALESCE(%s, rider_name),
+                        rider_phone = COALESCE(%s, rider_phone),
+                        {timestamp_col} = NOW()
+                    WHERE order_id = %s
+                    """,
+                    (status, rider_name, rider_phone, order_id)
+                )
+            else:
+                self._execute(
+                    """
+                    UPDATE deliveries
+                    SET status = %s,
+                        rider_name  = COALESCE(%s, rider_name),
+                        rider_phone = COALESCE(%s, rider_phone)
+                    WHERE order_id = %s
+                    """,
+                    (status, rider_name, rider_phone, order_id)
+                )
+            logger.info(f"Delivery for order_id={order_id} updated to status={status}")
+            return True
+        except Exception as e:
+            logger.error(f"DBManager.update_delivery_status error: {e}")
+            return False
+
+    # ── Notifications ──────────────────────────────────────────────────────────
+
+    def log_notification(
+        self,
+        order_id: int,
+        recipient_type: str,
+        platform: str,
+        chat_id: str,
+        message: str,
+        status: str = 'sent'
+    ) -> Optional[int]:
+        """Log an outgoing notification. Returns notification id."""
+        try:
+            row = self._execute(
+                """
+                INSERT INTO notifications
+                    (order_id, recipient_type, platform, chat_id, message, status, created_at)
+                VALUES (%s, %s, %s, %s, %s, %s, NOW())
+                RETURNING id
+                """,
+                (order_id, recipient_type, platform, chat_id, message, status),
+                fetch='one'
+            )
+            return row['id'] if row else None
+        except Exception as e:
+            logger.error(f"DBManager.log_notification error: {e}")
+            return None
 
     # ── Cleanup ────────────────────────────────────────────────────────────────
 
