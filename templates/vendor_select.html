@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Vendor — Lola Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:           #f4f6fb;
+            --surface:      #ffffff;
+            --surface2:     #f0f3fa;
+            --border:       #e4e9f2;
+            --border-light: #edf0f9;
+            --accent:       #2563eb;
+            --accent-soft:  rgba(37,99,235,0.08);
+            --accent-mid:   rgba(37,99,235,0.15);
+            --green:        #10b981;
+            --text:         #0f172a;
+            --text-2:       #334155;
+            --muted:        #64748b;
+            --muted-light:  #94a3b8;
+            --shadow-sm:    0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+            --shadow:       0 4px 16px rgba(15,23,42,0.08), 0 1px 4px rgba(15,23,42,0.04);
+            --shadow-lg:    0 12px 40px rgba(15,23,42,0.12), 0 4px 12px rgba(15,23,42,0.06);
+            --radius:       14px;
+            --radius-sm:    8px;
+            --font-head:    'Syne', sans-serif;
+            --font-body:    'Outfit', sans-serif;
+            --font-mono:    'DM Mono', monospace;
+        }
+
+        html, body {
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: var(--font-body);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -120px; left: -120px;
+            width: 480px; height: 480px;
+            background: radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .page-wrap {
+            width: 100%;
+            max-width: 540px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Logo / header ── */
+        .logo-area {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #0f1729 0%, #1e3a8a 100%);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(30,58,138,0.25);
+        }
+
+        .logo-title {
+            font-family: var(--font-head);
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-sub {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: var(--font-mono);
+            margin-top: 5px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-label {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-heading {
+            font-family: var(--font-head);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.4px;
+            margin-bottom: 24px;
+        }
+
+        /* ── Vendor grid ── */
+        .vendor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .vendor-option {
+            position: relative;
+        }
+
+        .vendor-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .vendor-card {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface2);
+            cursor: pointer;
+            transition: all 0.18s ease;
+            user-select: none;
+            height: 100%;
+            position: relative;
+        }
+
+        .vendor-card:hover {
+            border-color: rgba(37,99,235,0.35);
+            background: rgba(37,99,235,0.03);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .vendor-option input:checked + .vendor-card {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        /* Check mark indicator */
+        .check-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.18s ease;
+        }
+
+        .check-indicator svg {
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            color: white;
+            transition: opacity 0.15s;
+        }
+
+        .vendor-option input:checked + .vendor-card .check-indicator {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .vendor-option input:checked + .vendor-card .check-indicator svg {
+            opacity: 1;
+        }
+
+        .vendor-card-emoji { font-size: 24px; line-height: 1; margin-bottom: 2px; }
+
+        .vendor-card-name {
+            font-family: var(--font-head);
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.2;
+            padding-right: 18px;
+        }
+
+        .vendor-card-meta {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: var(--font-mono);
+        }
+
+        .vendor-card-type {
+            display: inline-block;
+            background: var(--border);
+            color: var(--muted);
+            font-size: 10px;
+            font-family: var(--font-mono);
+            padding: 2px 7px;
+            border-radius: 20px;
+            margin-top: 2px;
+            text-transform: capitalize;
+        }
+
+        .vendor-option input:checked + .vendor-card .vendor-card-type {
+            background: var(--accent-mid);
+            color: var(--accent);
+        }
+
+        /* ── No vendors ── */
+        .no-vendors {
+            text-align: center;
+            padding: 32px 0;
+            color: var(--muted);
+        }
+
+        .no-vendors .icon { font-size: 36px; margin-bottom: 10px; }
+        .no-vendors p { font-size: 13px; font-family: var(--font-mono); }
+
+        /* ── Submit button ── */
+        .btn-enter {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-head);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+            letter-spacing: -0.2px;
+        }
+
+        .btn-enter:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1e40af, #1d4ed8);
+            box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-enter:active:not(:disabled) { transform: translateY(0); }
+        .btn-enter:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-enter svg { width: 17px; height: 17px; }
+
+        /* ── Flash messages ── */
+        .flash {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .flash-success {
+            background: rgba(16,185,129,0.07);
+            border: 1px solid rgba(16,185,129,0.2);
+            color: #047857;
+        }
+
+        .flash-error {
+            background: rgba(239,68,68,0.07);
+            border: 1px solid rgba(239,68,68,0.2);
+            color: #b91c1c;
+        }
+
+        /* ── Session notice (shown if already logged in) ── */
+        .session-notice {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(16,185,129,0.06);
+            border: 1px solid rgba(16,185,129,0.18);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 12.5px;
+            color: #047857;
+            font-family: var(--font-mono);
+        }
+
+        .session-notice strong { font-weight: 600; }
+
+        .session-notice a {
+            margin-left: auto;
+            color: var(--accent);
+            font-size: 11px;
+            text-decoration: none;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: var(--accent-soft);
+            white-space: nowrap;
+        }
+
+        /* ── Footer ── */
+        .footer-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11.5px;
+            color: var(--muted-light);
+            font-family: var(--font-mono);
+        }
+
+        @media (max-width: 400px) {
+            .vendor-grid { grid-template-columns: 1fr; }
+            .card { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+    <!-- Logo -->
+    <div class="logo-area">
+        <div class="logo-icon">🍽️</div>
+        <div class="logo-title">LOLA</div>
+        <div class="logo-sub">Merchant Portal · Select your store</div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+                <span>{{ '✓' if category == 'success' else '⚠' }}</span>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Session notice if vendor already selected -->
+    {% if session.get('vendor_id') and vendor %}
+    <div class="session-notice">
+        <span>🟢</span>
+        <span>Currently viewing <strong>{{ vendor.name }}</strong></span>
+        <a href="{{ url_for('portal.dashboard') }}">Go to dashboard →</a>
+    </div>
+    {% endif %}
+
+    <!-- Card -->
+    <div class="card">
+        <div class="card-label">Step 1 of 1</div>
+        <div class="card-heading">Which store are you managing?</div>
+
+        <form method="POST" action="{{ url_for('portal.vendor_select') }}">
+
+            {% if vendors %}
+            <div class="vendor-grid">
+                {% for v in vendors %}
+                <div class="vendor-option">
+                    <input type="radio" name="vendor_id" id="v_{{ v.id }}" value="{{ v.id }}"
+                           {% if session.get('vendor_id') == v.id %}checked
+                           {% elif loop.first and not session.get('vendor_id') %}checked{% endif %}>
+                    <label class="vendor-card" for="v_{{ v.id }}">
+                        <div class="check-indicator">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="vendor-card-emoji">
+                            {% if v.type == 'restaurant' %}🍽️
+                            {% elif v.type == 'pharmacy' %}💊
+                            {% elif v.type == 'grocery' %}🛒
+                            {% else %}🏪{% endif %}
+                        </div>
+                        <div class="vendor-card-name">{{ v.name }}</div>
+                        {% if v.zone %}
+                        <div class="vendor-card-meta">{{ v.zone }}</div>
+                        {% endif %}
+                        <div class="vendor-card-type">{{ v.type or 'store' }}</div>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-vendors">
+                <div class="icon">🏪</div>
+                <p>No active vendors found.<br>Please check your database.</p>
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn-enter" {% if not vendors %}disabled{% endif %}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+                Enter Dashboard
+            </button>
+        </form>
+    </div>
+
+    <div class="footer-note">Lola Multi-Vendor Bot · Portal v1.0</div>
+</div>
+
+</body>
+</html>

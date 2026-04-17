@@ -9,7 +9,11 @@ Register in app.py:
 """
 import logging
 import requests as _requests
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from functools import wraps
+from flask import (
+    Blueprint, render_template, request, redirect, url_for,
+    flash, jsonify, session
+)
 from db_manager import DBManager
 
 logger = logging.getLogger(__name__)
@@ -37,10 +41,97 @@ def init_portal(
     _notification_service = notification_service
 
 
+# ── Vendor session helpers ──────────────────────────────────────────────────────
+
+def get_current_vendor():
+    """Return the vendor dict stored in session, or None."""
+    return session.get("vendor")
+
+
+def require_vendor(f):
+    """Decorator: redirect to vendor select if no vendor in session."""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not get_current_vendor():
+            flash("Please select a vendor to continue.", "error")
+            return redirect(url_for("portal.vendor_select"))
+        return f(*args, **kwargs)
+    return decorated
+
+
+def _get_all_vendors():
+    """Fetch all active vendors from DB."""
+    try:
+        rows = _db._execute(
+            "SELECT id, name, description, type, zone, order_ref_prefix FROM vendors WHERE is_active = TRUE ORDER BY name",
+            fetch='all'
+        )
+        return [dict(r) for r in rows] if rows else []
+    except Exception as e:
+        logger.error(f"_get_all_vendors error: {e}")
+        return []
+
+
+# ── Vendor Select / Login ───────────────────────────────────────────────────────
+
+@portal_bp.route("/", methods=["GET"])
+def index():
+    """Root: redirect to dashboard if vendor in session, else vendor select."""
+    if get_current_vendor():
+        return redirect(url_for("portal.dashboard"))
+    return redirect(url_for("portal.vendor_select"))
+
+
+@portal_bp.route("/select", methods=["GET", "POST"])
+def vendor_select():
+    """Simple vendor selection 'login' — no password, just pick a vendor."""
+    if request.method == "POST":
+        vendor_id = request.form.get("vendor_id")
+        if not vendor_id:
+            flash("Please select a vendor.", "error")
+            return redirect(url_for("portal.vendor_select"))
+
+        try:
+            row = _db._execute(
+                "SELECT id, name, description, type, zone, order_ref_prefix, logo_url FROM vendors WHERE id = %s AND is_active = TRUE",
+                (int(vendor_id),),
+                fetch='one'
+            )
+            if not row:
+                flash("Vendor not found or inactive.", "error")
+                return redirect(url_for("portal.vendor_select"))
+
+            session["vendor"] = dict(row)
+            session.permanent = True
+            flash(f"Welcome to {row['name']}!", "success")
+            return redirect(url_for("portal.dashboard"))
+
+        except Exception as e:
+            logger.error(f"vendor_select POST error: {e}")
+            flash("Something went wrong. Please try again.", "error")
+            return redirect(url_for("portal.vendor_select"))
+
+    vendors = _get_all_vendors()
+    return render_template("vendor_select.html", vendors=vendors)
+
+
+@portal_bp.route("/logout")
+def logout():
+    """Clear vendor session and return to select screen."""
+    vendor_name = (get_current_vendor() or {}).get("name", "")
+    session.pop("vendor", None)
+    flash(f"Switched out of {vendor_name}." if vendor_name else "Logged out.", "success")
+    return redirect(url_for("portal.vendor_select"))
+
+
 # ── Dashboard ──────────────────────────────────────────────────────────────────
 
-@portal_bp.route("/")
+@portal_bp.route("/dashboard")
+@require_vendor
 def dashboard():
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     stats = {
         "total_customers": 0,
         "total_orders":    0,
@@ -49,21 +140,41 @@ def dashboard():
         "total_revenue":   0,
         "recent_orders":   [],
         "error":           None,
+        "vendor":          vendor,
     }
     try:
-        row = _db._execute("SELECT COUNT(*) as c FROM customers", fetch='one')
+        # Customers who placed orders with this vendor
+        row = _db._execute(
+            "SELECT COUNT(DISTINCT customer_id) as c FROM orders WHERE vendor_id = %s",
+            (vendor_id,), fetch='one'
+        )
         stats["total_customers"] = row['c'] if row else 0
 
-        row = _db._execute("SELECT COUNT(*) as c FROM orders", fetch='one')
+        row = _db._execute(
+            "SELECT COUNT(*) as c FROM orders WHERE vendor_id = %s",
+            (vendor_id,), fetch='one'
+        )
         stats["total_orders"] = row['c'] if row else 0
 
-        row = _db._execute("SELECT COUNT(*) as c FROM orders WHERE payment_status = 'paid'", fetch='one')
+        row = _db._execute(
+            "SELECT COUNT(*) as c FROM orders WHERE vendor_id = %s AND payment_status = 'paid'",
+            (vendor_id,), fetch='one'
+        )
         stats["paid_orders"] = row['c'] if row else 0
 
-        row = _db._execute("SELECT COUNT(*) as c FROM conversations", fetch='one')
+        row = _db._execute(
+            """SELECT COUNT(cv.id) as c FROM conversations cv
+               JOIN customers cu ON cv.customer_id = cu.id
+               JOIN orders o ON o.customer_id = cu.id
+               WHERE o.vendor_id = %s""",
+            (vendor_id,), fetch='one'
+        )
         stats["total_messages"] = row['c'] if row else 0
 
-        row = _db._execute("SELECT COALESCE(SUM(total),0) as c FROM orders WHERE payment_status='paid'", fetch='one')
+        row = _db._execute(
+            "SELECT COALESCE(SUM(total),0) as c FROM orders WHERE vendor_id = %s AND payment_status='paid'",
+            (vendor_id,), fetch='one'
+        )
         stats["total_revenue"] = row['c'] if row else 0
 
         recent = _db._execute(
@@ -71,7 +182,9 @@ def dashboard():
                       c.name, c.phone_number
                FROM orders o
                LEFT JOIN customers c ON o.customer_id = c.id
+               WHERE o.vendor_id = %s
                ORDER BY o.created_at DESC LIMIT 5""",
+            (vendor_id,),
             fetch='all'
         )
         stats["recent_orders"] = [dict(r) for r in recent] if recent else []
@@ -80,29 +193,38 @@ def dashboard():
         logger.error(f"Dashboard DB error: {e}")
         stats["error"] = str(e)
 
-    return render_template("dashboard.html", stats=stats)
+    return render_template("dashboard.html", stats=stats, vendor=vendor)
 
 
 # ── Conversations ──────────────────────────────────────────────────────────────
 
 @portal_bp.route("/conversations")
+@require_vendor
 def conversations():
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     rows = _db._execute(
         """SELECT c.id, c.phone_number, c.name, c.created_at,
                   COUNT(cv.id) as message_count,
                   MAX(cv.created_at) as last_message
            FROM customers c
            LEFT JOIN conversations cv ON c.id = cv.customer_id
+           WHERE c.id IN (SELECT DISTINCT customer_id FROM orders WHERE vendor_id = %s)
            GROUP BY c.id, c.phone_number, c.name, c.created_at
            ORDER BY last_message DESC NULLS LAST""",
+        (vendor_id,),
         fetch='all'
     )
     customers = [dict(r) for r in rows] if rows else []
-    return render_template("conversations.html", customers=customers)
+    return render_template("conversations.html", customers=customers, vendor=vendor)
 
 
 @portal_bp.route("/conversations/<phone>")
+@require_vendor
 def conversation_detail(phone):
+    vendor = get_current_vendor()
+
     customer = _db._execute(
         "SELECT * FROM customers WHERE phone_number = %s", (phone,), fetch='one'
     )
@@ -120,39 +242,50 @@ def conversation_detail(phone):
     )
     messages = [dict(m) for m in messages] if messages else []
     return render_template("conversation_detail.html",
-                           customer=dict(customer), messages=messages)
+                           customer=dict(customer), messages=messages, vendor=vendor)
 
 
 # ── Orders ─────────────────────────────────────────────────────────────────────
 
 @portal_bp.route("/orders")
+@require_vendor
 def orders():
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
     status_filter = request.args.get("status", "")
+
     if status_filter:
         rows = _db._execute(
             """SELECT o.*, c.name, c.phone_number
                FROM orders o LEFT JOIN customers c ON o.customer_id = c.id
-               WHERE o.status = %s ORDER BY o.created_at DESC""",
-            (status_filter,), fetch='all'
+               WHERE o.vendor_id = %s AND o.status = %s
+               ORDER BY o.created_at DESC""",
+            (vendor_id, status_filter), fetch='all'
         )
     else:
         rows = _db._execute(
             """SELECT o.*, c.name, c.phone_number
                FROM orders o LEFT JOIN customers c ON o.customer_id = c.id
+               WHERE o.vendor_id = %s
                ORDER BY o.created_at DESC""",
-            fetch='all'
+            (vendor_id,), fetch='all'
         )
     orders_list = [dict(r) for r in rows] if rows else []
-    return render_template("orders.html", orders=orders_list, status_filter=status_filter)
+    return render_template("orders.html", orders=orders_list,
+                           status_filter=status_filter, vendor=vendor)
 
 
 @portal_bp.route("/orders/<order_ref>")
+@require_vendor
 def order_detail(order_ref):
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     order = _db._execute(
         """SELECT o.*, c.name, c.phone_number
            FROM orders o LEFT JOIN customers c ON o.customer_id = c.id
-           WHERE o.order_ref = %s""",
-        (order_ref,), fetch='one'
+           WHERE o.order_ref = %s AND o.vendor_id = %s""",
+        (order_ref, vendor_id), fetch='one'
     )
     if not order:
         flash("Order not found", "error")
@@ -162,11 +295,16 @@ def order_detail(order_ref):
         "SELECT * FROM order_items WHERE order_id = %s", (order['id'],), fetch='all'
     )
     items = [dict(i) for i in items] if items else []
-    return render_template("order_detail.html", order=dict(order), items=items)
+    return render_template("order_detail.html", order=dict(order),
+                           items=items, vendor=vendor)
 
 
 @portal_bp.route("/orders/<order_ref>/status", methods=["POST"])
+@require_vendor
 def update_order_status(order_ref):
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     new_status = request.form.get("status")
     allowed = ["pending", "payment_sent", "paid", "preparing", "on_the_way", "delivered", "cancelled"]
     if new_status not in allowed:
@@ -174,8 +312,8 @@ def update_order_status(order_ref):
         return redirect(url_for('portal.order_detail', order_ref=order_ref))
 
     _db._execute(
-        "UPDATE orders SET status = %s, updated_at = NOW() WHERE order_ref = %s",
-        (new_status, order_ref)
+        "UPDATE orders SET status = %s, updated_at = NOW() WHERE order_ref = %s AND vendor_id = %s",
+        (new_status, order_ref, vendor_id)
     )
     flash(f"Order status updated to {new_status}", "success")
     return redirect(url_for('portal.order_detail', order_ref=order_ref))
@@ -184,9 +322,14 @@ def update_order_status(order_ref):
 # ── Products ───────────────────────────────────────────────────────────────────
 
 @portal_bp.route("/products")
+@require_vendor
 def products():
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     rows = _db._execute(
-        "SELECT * FROM products ORDER BY category, name", fetch='all'
+        "SELECT * FROM products WHERE vendor_id = %s ORDER BY category, name",
+        (vendor_id,), fetch='all'
     )
     products_list = [dict(r) for r in rows] if rows else []
 
@@ -195,11 +338,16 @@ def products():
     for p in products_list:
         grouped[p['category']].append(p)
 
-    return render_template("products.html", products=products_list, grouped=grouped)
+    return render_template("products.html", products=products_list,
+                           grouped=grouped, vendor=vendor)
 
 
 @portal_bp.route("/products/add", methods=["POST"])
+@require_vendor
 def add_product():
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     name        = request.form.get("name", "").strip()
     description = request.form.get("description", "").strip()
     price       = request.form.get("price", 0)
@@ -211,8 +359,8 @@ def add_product():
 
     try:
         _db._execute(
-            "INSERT INTO products (name, description, price, category) VALUES (%s, %s, %s, %s)",
-            (name, description, int(price), category)
+            "INSERT INTO products (vendor_id, name, description, price, category) VALUES (%s, %s, %s, %s, %s)",
+            (vendor_id, name, description, int(price), category)
         )
         flash(f'"{name}" added successfully', "success")
     except Exception as e:
@@ -222,7 +370,11 @@ def add_product():
 
 
 @portal_bp.route("/products/<int:product_id>/edit", methods=["POST"])
+@require_vendor
 def edit_product(product_id):
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     name         = request.form.get("name", "").strip()
     description  = request.form.get("description", "").strip()
     price        = request.form.get("price", 0)
@@ -234,8 +386,8 @@ def edit_product(product_id):
             """UPDATE products
                SET name=%s, description=%s, price=%s, category=%s,
                    is_available=%s, updated_at=NOW()
-               WHERE id=%s""",
-            (name, description, int(price), category, is_available, product_id)
+               WHERE id=%s AND vendor_id=%s""",
+            (name, description, int(price), category, is_available, product_id, vendor_id)
         )
         flash(f'"{name}" updated successfully', "success")
     except Exception as e:
@@ -245,9 +397,16 @@ def edit_product(product_id):
 
 
 @portal_bp.route("/products/<int:product_id>/delete", methods=["POST"])
+@require_vendor
 def delete_product(product_id):
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     try:
-        _db._execute("DELETE FROM products WHERE id = %s", (product_id,))
+        _db._execute(
+            "DELETE FROM products WHERE id = %s AND vendor_id = %s",
+            (product_id, vendor_id)
+        )
         flash("Product deleted", "success")
     except Exception as e:
         flash(f"Error deleting product: {e}", "error")
@@ -255,17 +414,19 @@ def delete_product(product_id):
 
 
 @portal_bp.route("/products/<int:product_id>/toggle", methods=["POST"])
+@require_vendor
 def toggle_product(product_id):
+    vendor = get_current_vendor()
+    vendor_id = vendor["id"]
+
     _db._execute(
-        "UPDATE products SET is_available = NOT is_available, updated_at=NOW() WHERE id=%s",
-        (product_id,)
+        "UPDATE products SET is_available = NOT is_available, updated_at=NOW() WHERE id=%s AND vendor_id=%s",
+        (product_id, vendor_id)
     )
     return jsonify({"ok": True})
 
 
 # ── Payment success callback ───────────────────────────────────────────────────
-# Paystack redirects the customer browser here after payment.
-# All messaging (vendor, rider group, customer) is handled by NotificationService.
 
 @portal_bp.route("/payment/success")
 def payment_success():
@@ -287,7 +448,6 @@ def payment_success():
         ctx["error_message"] = "No payment reference provided."
         return render_template("payment_success.html", **ctx)
 
-    # ── 1. Verify with Paystack ────────────────────────────────────────────────
     try:
         paystack_secret = getattr(_config, "PAYSTACK_SECRET_KEY", "") or ""
         resp = _requests.get(
@@ -313,7 +473,6 @@ def payment_success():
         )
         return render_template("payment_success.html", **ctx)
 
-    # ── 2. Extract payment data ────────────────────────────────────────────────
     amount_kobo       = pdata.get("amount", 0)
     amount_naira      = amount_kobo // 100
     metadata          = pdata.get("metadata") or {}
@@ -325,7 +484,6 @@ def payment_success():
     ctx["success"]      = True
     ctx["channel"]      = customer_platform
 
-    # ── 3. Update DB ───────────────────────────────────────────────────────────
     if _db:
         try:
             _db.update_order_payment(
@@ -334,7 +492,6 @@ def payment_success():
                 payment_ref=reference,
                 status="preparing",
             )
-            # Log payment record
             order = _db.get_order_by_ref(reference)
             if order:
                 _db.log_payment(
@@ -346,18 +503,14 @@ def payment_success():
                     status='success',
                     webhook_payload=pdata,
                 )
-                # Use vendor_id from order if not in metadata
                 if not vendor_id and order.get('vendor_id'):
                     vendor_id = order['vendor_id']
-                # Use platform from order if not in metadata
                 if not customer_platform and order.get('platform'):
                     customer_platform = order['platform']
-
             logger.info(f"payment_success: DB updated for ref={reference}")
         except Exception as e:
             logger.error(f"payment_success: DB update failed: {e}")
 
-    # ── 4. Resolve customer contact ────────────────────────────────────────────
     customer_name = None
     if not customer_phone and _db:
         try:
@@ -391,7 +544,6 @@ def payment_success():
         p = str(customer_phone)
         ctx["phone_display"] = p[:4] + " *** *** " + p[-4:] if len(p) >= 8 else p
 
-    # ── 4b. Resolve vendor name & support contact ──────────────────────────────
     if _db and vendor_id:
         try:
             vendor_row = _db._execute(
@@ -404,8 +556,6 @@ def payment_success():
         except Exception as e:
             logger.error(f"payment_success: vendor lookup failed: {e}")
 
-    # ── 5. Fire all notifications via NotificationService ─────────────────────
-    # This handles: vendor Telegram, vendor WhatsApp, rider group post, customer confirmation.
     if customer_phone:
         if _notification_service:
             try:
@@ -416,22 +566,17 @@ def payment_success():
                     customer_platform=customer_platform,
                     vendor_id=int(vendor_id) if vendor_id else None,
                 )
-                logger.info(f"payment_success: NotificationService fired for ref={reference}")
             except Exception as e:
                 logger.error(f"payment_success: NotificationService failed: {e}", exc_info=True)
-                # Fallback — send basic confirmation directly so customer isn't left hanging
                 _send_fallback_confirmation(
                     customer_phone, customer_platform, reference,
                     amount_naira, customer_name, vendor_id
                 )
         else:
-            logger.warning("payment_success: NotificationService not available — using fallback.")
             _send_fallback_confirmation(
                 customer_phone, customer_platform, reference,
                 amount_naira, customer_name, vendor_id
             )
-    else:
-        logger.warning(f"payment_success: no customer phone for ref={reference} — no notification sent.")
 
     return render_template("payment_success.html", **ctx)
 
@@ -461,10 +606,6 @@ def _send_fallback_confirmation(
     customer_name: str = None,
     vendor_id=None,
 ):
-    """
-    Last-resort confirmation when NotificationService is unavailable.
-    Sends a basic message to the customer only — no vendor/rider notification.
-    """
     vendor_name = "our kitchen"
     if _db and vendor_id:
         try:
@@ -486,7 +627,6 @@ def _send_fallback_confirmation(
     try:
         if platform == "telegram" and _telegram_service:
             _telegram_service.create_text_message(str(customer_phone), msg)
-            logger.info(f"Fallback Telegram confirmation sent to {customer_phone}")
         elif _whatsapp_service:
             payload = {
                 "messaging_product": "whatsapp",
@@ -496,6 +636,5 @@ def _send_fallback_confirmation(
                 "text":              {"body": msg},
             }
             _whatsapp_service.send_message(payload)
-            logger.info(f"Fallback WhatsApp confirmation sent to {customer_phone}")
     except Exception as e:
         logger.error(f"_send_fallback_confirmation failed: {e}")

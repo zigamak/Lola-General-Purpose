@@ -13,6 +13,36 @@
 
 {% block extra_styles %}
 <style>
+    /* ── Vendor context strip ── */
+    .vendor-strip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, rgba(37,99,235,0.04), rgba(14,165,233,0.04));
+        border: 1px solid rgba(37,99,235,0.12);
+        border-radius: var(--radius-sm);
+        margin-bottom: 20px;
+        font-size: 11.5px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+    }
+
+    .vendor-strip strong { color: var(--text-2); font-weight: 600; }
+
+    .vendor-strip-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+    }
+
+    .vendor-strip-sep {
+        margin: 0 4px;
+        color: var(--border);
+    }
+
     /* ── Two-column layout ── */
     .chat-layout {
         display: grid;
@@ -72,6 +102,21 @@
         font-size: 11px; font-family: var(--font-mono);
         color: rgba(255,255,255,0.45);
         margin-top: 4px;
+    }
+
+    /* Vendor tag inside info panel */
+    .info-vendor-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 10px;
+        padding: 3px 10px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: rgba(255,255,255,0.6);
+        letter-spacing: 0.3px;
     }
 
     .info-body { padding: 16px 0; }
@@ -260,22 +305,12 @@
        CHAT DETAIL — Mobile (≤ 900px)
     ════════════════════════════════════════ */
     @media (max-width: 900px) {
-        /* Stack: info panel goes above chat */
-        .chat-layout {
-            grid-template-columns: 1fr;
-        }
-
-        /* Un-sticky the info panel when stacked */
-        .info-panel {
-            position: static;
-        }
-
-        /* Compact the info panel header */
+        .chat-layout { grid-template-columns: 1fr; }
+        .info-panel  { position: static; }
         .info-panel-header { padding: 18px 16px; }
         .info-avatar { width: 44px; height: 44px; font-size: 16px; margin-bottom: 8px; }
         .info-name   { font-size: 14px; }
 
-        /* Make info-body a 2-col grid instead of vertical stack */
         .info-body {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -291,30 +326,36 @@
             padding: 10px 16px;
         }
 
-        /* Remove right border on even items */
         .info-row:nth-child(even) { border-right: none; }
     }
 
     @media (max-width: 768px) {
         .chat-feed { padding: 16px; gap: 10px; }
         .chat-panel-header { padding: 14px 16px; }
-
-        /* Wider bubbles on mobile */
         .msg { max-width: 90%; }
-
-        /* Hide legend badges */
         .chat-panel-header > div:last-child { display: none; }
     }
 
     @media (max-width: 480px) {
-        /* Full-width bubbles */
         .msg { max-width: 95%; }
         .bubble { font-size: 13px; padding: 9px 13px; }
+        .vendor-strip { display: none; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
+
+<!-- Vendor context strip -->
+{% if vendor %}
+<div class="vendor-strip">
+    <div class="vendor-strip-dot"></div>
+    <span>Viewing conversation from <strong>{{ vendor.name }}</strong></span>
+    <span class="vendor-strip-sep">·</span>
+    <span>{{ vendor.type or 'store' }}{% if vendor.zone %} · {{ vendor.zone }}{% endif %}</span>
+</div>
+{% endif %}
+
 <div class="chat-layout">
 
     <!-- Left: Customer info panel -->
@@ -325,6 +366,12 @@
             </div>
             <div class="info-name">{{ customer.name or 'Unknown' }}</div>
             <div class="info-phone">{{ customer.phone_number }}</div>
+            {% if vendor %}
+            <div class="info-vendor-tag">
+                {% if vendor.type == 'restaurant' %}🍽️{% elif vendor.type == 'pharmacy' %}💊{% elif vendor.type == 'grocery' %}🛒{% else %}🏪{% endif %}
+                {{ vendor.name }}
+            </div>
+            {% endif %}
         </div>
 
         <div class="info-body">

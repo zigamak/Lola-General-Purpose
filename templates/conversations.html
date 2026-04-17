@@ -29,6 +29,72 @@
         margin-top: 4px;
     }
 
+    /* ── Vendor context banner ── */
+    .vendor-context-banner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(14,165,233,0.05));
+        border: 1px solid rgba(37,99,235,0.15);
+        border-radius: var(--radius);
+        padding: 14px 20px;
+        margin-bottom: 24px;
+    }
+
+    .vendor-context-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--accent-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .vendor-context-info { flex: 1; min-width: 0; }
+
+    .vendor-context-name {
+        font-family: var(--font-head);
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .vendor-context-meta {
+        font-size: 11px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        margin-top: 2px;
+    }
+
+    .vendor-switch-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 11.5px;
+        font-family: var(--font-body);
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+
+    .vendor-switch-btn:hover {
+        background: var(--surface2);
+        color: var(--text);
+        border-color: var(--accent);
+    }
+
+    .vendor-switch-btn svg { width: 12px; height: 12px; }
+
     /* ── Summary stat strip ── */
     .conv-stats {
         display: grid;
@@ -224,11 +290,8 @@
         .table-search { width: 100%; }
         .table-search:focus { width: 100%; }
 
-        /* Hide Phone column (it's already in the customer chip) */
+        /* Hide Phone column */
         th:nth-child(2), td:nth-child(2) { display: none; }
-
-        /* Hide Last Active on very small screens */
-        /* keep it at 768, hide at 480 */
     }
 
     @media (max-width: 480px) {
@@ -249,6 +312,31 @@
         <p>All customer chat threads via WhatsApp</p>
     </div>
 </div>
+
+<!-- Vendor context banner -->
+{% if vendor %}
+<div class="vendor-context-banner">
+    <div class="vendor-context-icon">
+        {% if vendor.type == 'restaurant' %}🍽️
+        {% elif vendor.type == 'pharmacy' %}💊
+        {% elif vendor.type == 'grocery' %}🛒
+        {% else %}🏪{% endif %}
+    </div>
+    <div class="vendor-context-info">
+        <div class="vendor-context-name">{{ vendor.name }}</div>
+        <div class="vendor-context-meta">
+            Showing conversations for this store only
+            · {{ vendor.type or 'store' }}{% if vendor.zone %} · {{ vendor.zone }}{% endif %}
+        </div>
+    </div>
+    <a href="{{ url_for('portal.vendor_select') }}" class="vendor-switch-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+        Switch store
+    </a>
+</div>
+{% endif %}
 
 <!-- Stat strip -->
 <div class="conv-stats">
@@ -374,7 +462,7 @@
     {% else %}
     <div class="empty">
         <div class="empty-icon">💬</div>
-        <div class="empty-text">No conversations yet — they'll show up here</div>
+        <div class="empty-text">No conversations yet for {{ vendor.name if vendor else 'this store' }} — they'll show up here once customers start chatting</div>
     </div>
     {% endif %}
 </div>

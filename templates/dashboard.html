@@ -357,7 +357,7 @@
 <div class="welcome-bar">
     <div class="welcome-text">
         <h1>Welcome back 👋</h1>
-        <p>Here's what's happening with Makinde Kitchen today.</p>
+        <p>Here's what's happening with {{ vendor.name if vendor else 'your store' }} today.</p>
     </div>
     <div class="welcome-actions">
         <a href="{{ url_for('portal.orders') }}" class="btn btn-ghost btn-sm">

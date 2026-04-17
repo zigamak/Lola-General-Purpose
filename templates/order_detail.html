@@ -452,6 +452,10 @@
         </div>
         <div class="info-rows">
             <div class="info-row">
+                <div class="info-row-label">Vendor</div>
+                <div class="info-row-value" style="font-weight:600; color:var(--accent);">{{ vendor.name if vendor else '—' }}</div>
+            </div>
+            <div class="info-row">
                 <div class="info-row-label">Ref</div>
                 <div class="info-row-value mono" style="color:var(--accent); font-weight:600;">{{ order.order_ref }}</div>
             </div>
