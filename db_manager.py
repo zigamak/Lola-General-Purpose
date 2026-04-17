@@ -73,7 +73,8 @@ class DBManager:
             """
             SELECT id, name, description, type, logo_url, menu_image_url,
                    zone, delivery_fee, free_delivery_min, opening_hours,
-                   delivery_areas, support_contact, order_ref_prefix
+                   delivery_areas, support_contact, order_ref_prefix,
+                   rider_group_chat_id, telegram_chat_id, whatsapp_number
             FROM vendors
             WHERE is_active = TRUE
             ORDER BY name
@@ -89,7 +90,7 @@ class DBManager:
             SELECT id, name, description, type, logo_url, menu_image_url,
                    telegram_chat_id, whatsapp_number, zone, delivery_fee,
                    free_delivery_min, opening_hours, delivery_areas,
-                   support_contact, order_ref_prefix
+                   support_contact, order_ref_prefix, rider_group_chat_id
             FROM vendors
             WHERE id = %s AND is_active = TRUE
             """,
@@ -521,6 +522,92 @@ class DBManager:
         except Exception as e:
             logger.error(f"DBManager.log_notification error: {e}")
             return None
+
+    # ── Riders ────────────────────────────────────────────────────────────────
+
+    def get_rider_by_telegram_id(self, telegram_id: str) -> Optional[Dict]:
+        """Get rider record by their personal Telegram chat_id."""
+        row = self._execute(
+            "SELECT * FROM riders WHERE telegram_id = %s AND is_active = TRUE",
+            (telegram_id,),
+            fetch='one'
+        )
+        return dict(row) if row else None
+
+    def get_all_riders(self) -> List[Dict]:
+        """Get all active riders."""
+        rows = self._execute(
+            "SELECT * FROM riders WHERE is_active = TRUE ORDER BY name",
+            fetch='all'
+        )
+        return [dict(r) for r in rows] if rows else []
+
+    def get_delivery_by_order_ref(self, order_ref: str) -> Optional[Dict]:
+        """Get the most recent delivery record for an order reference."""
+        row = self._execute(
+            """
+            SELECT d.*
+            FROM deliveries d
+            JOIN orders o ON d.order_id = o.id
+            WHERE o.order_ref = %s
+            ORDER BY d.created_at DESC
+            LIMIT 1
+            """,
+            (order_ref,),
+            fetch='one'
+        )
+        return dict(row) if row else None
+
+    def get_vendor_with_rider_group(self, vendor_id: int) -> Optional[Dict]:
+        """Get vendor including rider_group_chat_id."""
+        row = self._execute(
+            """
+            SELECT id, name, telegram_chat_id, whatsapp_number,
+                   rider_group_chat_id, delivery_fee, free_delivery_min
+            FROM vendors
+            WHERE id = %s AND is_active = TRUE
+            """,
+            (vendor_id,),
+            fetch='one'
+        )
+        return dict(row) if row else None
+
+    def assign_rider(self, delivery_id: int, rider_telegram_id: str, rider_id: int = None) -> bool:
+        """Assign a rider to a delivery record."""
+        try:
+            self._execute(
+                """
+                UPDATE deliveries
+                SET rider_telegram_id = %s,
+                    rider_id          = COALESCE(%s, rider_id),
+                    status            = 'accepted',
+                    accepted_at       = NOW()
+                WHERE id = %s
+                """,
+                (rider_telegram_id, rider_id, delivery_id)
+            )
+            return True
+        except Exception as e:
+            logger.error(f"DBManager.assign_rider error: {e}")
+            return False
+
+    def get_pending_deliveries_past_timeout(self) -> List[Dict]:
+        """
+        Get all deliveries that are still pending but past their timeout.
+        Used by a scheduled job to trigger re-posting to the rider group.
+        """
+        rows = self._execute(
+            """
+            SELECT d.*, o.order_ref, o.vendor_id
+            FROM deliveries d
+            JOIN orders o ON d.order_id = o.id
+            WHERE d.status = 'pending'
+              AND d.timeout_at IS NOT NULL
+              AND d.timeout_at < NOW()
+            """,
+            fetch='all'
+        )
+        return [dict(r) for r in rows] if rows else []
 
     # ── Cleanup ────────────────────────────────────────────────────────────────
 

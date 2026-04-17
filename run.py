@@ -1,118 +1,117 @@
 #!/usr/bin/env python3
 """
-Lola — Makinde Kitchen WhatsApp Order Bot
+Lola — Multi-Vendor Order Bot
 Runner Script
 """
 
 import os
 import sys
 
-# Ensure project root is always on the path — must be before any local imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import logging
 import warnings
 from pathlib import Path
 
-# Suppress deprecation warning from old google-generativeai package
 warnings.filterwarnings("ignore", category=FutureWarning, module="langchain_google_genai")
 
 
 def check_environment():
-    """Check required environment variables and folder structure."""
-    print("Checking environment setup...")
-
     if not os.path.exists('.env'):
-        print("ERROR: .env file not found!")
-        print("Create a .env file with your configuration.")
+        print("ERROR: .env file not found.")
         return False
 
     from dotenv import load_dotenv
     load_dotenv()
 
-    required_vars = [
-        'WHATSAPP_ACCESS_TOKEN',
-        'WHATSAPP_PHONE_NUMBER_ID',
-        'VERIFY_TOKEN',
-    ]
-
-    missing = [v for v in required_vars if not os.getenv(v)]
+    # Required
+    required = {
+        'WHATSAPP_ACCESS_TOKEN':    'WhatsApp messaging',
+        'WHATSAPP_PHONE_NUMBER_ID': 'WhatsApp messaging',
+        'VERIFY_TOKEN':             'WhatsApp webhook verification',
+    }
+    missing = [k for k in required if not os.getenv(k)]
     if missing:
         print("ERROR: Missing required environment variables:")
         for var in missing:
-            print(f"   - {var}")
+            print(f"   {var}  ({required[var]})")
         return False
 
-    # Optional but important
-    if os.getenv('GEMINI_API_KEY'):
-        print("Gemini AI key found — AI ordering enabled.")
-    else:
-        print("WARNING: GEMINI_API_KEY not set — AI features disabled.")
-        print("Get a free key at: https://aistudio.google.com/app/apikey")
+    # Optional — warn but don't block
+    optional = {
+        'GEMINI_API_KEY':        'AI ordering (required for bot to work)',
+        'PAYSTACK_SECRET_KEY':   'Payment links',
+        'DB_URL':                'Conversation + order history',
+        'TELEGRAM_BOT_TOKEN':    'Telegram bot',
+        'RIDER_GROUP_CHAT_ID':   'Rider delivery notifications',
+        'CALLBACK_BASE_URL':     'Paystack webhooks + Telegram registration',
+    }
+    for var, desc in optional.items():
+        val = os.getenv(var)
+        status = "✓" if val else "✗ not set"
+        print(f"   {status}  {var:30s} {desc}")
 
-    if os.getenv('PAYSTACK_SECRET_KEY'):
-        print("Paystack key found — payments enabled.")
-    else:
-        print("WARNING: PAYSTACK_SECRET_KEY not set — payment links will not generate.")
-
-    if os.getenv('DB_URL'):
-        print("DB_URL found — database saving enabled.")
-    else:
-        print("WARNING: DB_URL not set — conversations will not be saved.")
-
-    # Ensure __init__.py exists in all package folders
+    # Validate package folders exist
     for directory in ['handlers', 'services', 'utils', 'portal']:
         if not os.path.exists(directory):
-            print(f"ERROR: Directory '{directory}' not found!")
+            print(f"ERROR: Directory '{directory}' not found.")
             return False
         init_file = os.path.join(directory, '__init__.py')
         if not os.path.exists(init_file):
-            print(f"Creating missing {init_file}...")
             Path(init_file).touch()
 
-    print("Environment check passed.")
     return True
 
 
 def setup_logging(debug=False):
-    log_level = logging.DEBUG if debug else logging.INFO
+    import io
     logging.basicConfig(
-        level=log_level,
+        level=logging.DEBUG if debug else logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler("lola_bot.log"),
-            logging.StreamHandler(sys.stdout)
+            logging.FileHandler("lola.log", encoding='utf-8'),
+            logging.StreamHandler(io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')),
         ]
     )
-    logging.getLogger("requests").setLevel(logging.WARNING)
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    for noisy in ("requests", "urllib3", "httpx", "httpcore"):
+        logging.getLogger(noisy).setLevel(logging.WARNING)
 
 
 def print_startup_info(port):
-    print("\n" + "=" * 60)
-    print("  Lola — Makinde Kitchen WhatsApp Order Bot")
-    print("=" * 60)
+    from dotenv import load_dotenv
+    load_dotenv()
+    base = os.getenv('CALLBACK_BASE_URL', f'http://localhost:{port}')
+
     print()
-    print("Local development setup:")
-    print(f"  1. Run ngrok:   ngrok http {port}")
-    print("  2. Copy the ngrok HTTPS URL")
-    print("  3. Meta Developer Console -> WhatsApp -> Configuration")
-    print("  4. Webhook URL:    https://<ngrok-url>/webhook")
-    print("  5. Verify Token:   match VERIFY_TOKEN in .env")
-    print("  6. Click Verify and Save")
+    print("=" * 55)
+    print("  Lola — Multi-Vendor Order Bot")
+    print("=" * 55)
     print()
-    print("URLs:")
-    print(f"  Bot webhook:   http://localhost:{port}/webhook")
-    print(f"  Health check:  http://localhost:{port}/health")
-    print(f"  Portal:        http://localhost:{port}/portal")
-    print(f"  Pay webhook:   http://localhost:{port}/paystack/webhook")
-    print("=" * 60 + "\n")
+    print("Local URLs:")
+    print(f"  Health:           http://localhost:{port}/health")
+    print(f"  Portal:           http://localhost:{port}/portal")
+    print(f"  WhatsApp webhook: http://localhost:{port}/webhook")
+    print(f"  Telegram webhook: http://localhost:{port}/telegram/webhook")
+    print(f"  Paystack webhook: http://localhost:{port}/paystack/webhook")
+    print()
+    print("Production (ngrok / Render):")
+    print(f"  WhatsApp webhook: {base}/webhook")
+    print(f"  Telegram webhook: {base}/telegram/webhook")
+    print(f"  Paystack webhook: {base}/paystack/webhook")
+    print()
+    print("WhatsApp setup:")
+    print("  1. Run: ngrok http {port}")
+    print("  2. Meta Developer Console → WhatsApp → Configuration")
+    print(f"  3. Webhook URL: {base}/webhook")
+    print(f"  4. Verify Token: match VERIFY_TOKEN in .env")
+    print("=" * 55)
+    print()
 
 
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description='Lola — Makinde Kitchen WhatsApp Bot')
+    parser = argparse.ArgumentParser(description='Lola — Multi-Vendor Order Bot')
     parser.add_argument('--debug',      action='store_true', help='Enable debug logging')
     parser.add_argument('--port',       type=int, default=8000, help='Port (default: 8000)')
     parser.add_argument('--host',       type=str, default='127.0.0.1', help='Host to bind')
@@ -125,33 +124,34 @@ def main():
 
     try:
         if not args.no_check:
+            print("\nChecking environment...")
             if not check_environment():
                 logger.error("Environment check failed.")
                 sys.exit(1)
+            print("Environment check passed.\n")
 
         print_startup_info(args.port)
 
         if args.production:
-            print("Production — run with gunicorn:")
+            print("Production command:")
             print(f"  gunicorn -w 4 -k gevent --timeout 120 --preload -b 0.0.0.0:{args.port} app:app")
             return
 
-        logger.info("Starting Lola — Makinde Kitchen bot...")
+        logger.info("Starting Lola...")
         from app import app
         app.run(
             host=args.host,
             port=args.port,
             debug=args.debug,
-            use_reloader=False
+            use_reloader=False,
         )
 
     except KeyboardInterrupt:
-        logger.info("Bot stopped.")
-        print("\nLola stopped. Goodbye!")
+        print("\nLola stopped.")
 
     except ImportError as e:
         logger.error(f"Import error: {e}")
-        print("Could not import required modules.")
+        print(f"Import error: {e}")
         print("Run: pip install -r requirements.txt")
         sys.exit(1)
 

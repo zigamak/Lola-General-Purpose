@@ -8,39 +8,41 @@ logger = logging.getLogger(__name__)
 
 payment_webhook_bp = Blueprint("payment_webhook", __name__)
 
-_config = None
-_session_manager = None
-_whatsapp_service = None
-_db_manager = None
+_config               = None
+_session_manager      = None
+_whatsapp_service     = None
+_db_manager           = None
+_notification_service = None
 
-# ── Callback URL (Paystack redirects customers here after payment) ────────────
-# This is set on the Paystack payment initialisation in ai_handler.
-# Customers land on this page after completing payment.
 PAYMENT_CALLBACK_URL = "https://afyabot-7w4j.onrender.com/portal/payment/success"
 
 
-def init_payment_webhook(config, session_manager, whatsapp_service, db_manager=None):
-    global _config, _session_manager, _whatsapp_service, _db_manager
-    _config = config
-    _session_manager = session_manager
-    _whatsapp_service = whatsapp_service
-    _db_manager = db_manager
+def init_payment_webhook(
+    config,
+    session_manager,
+    whatsapp_service,
+    db_manager=None,
+    notification_service=None,
+):
+    global _config, _session_manager, _whatsapp_service, _db_manager, _notification_service
+    _config               = config
+    _session_manager      = session_manager
+    _whatsapp_service     = whatsapp_service
+    _db_manager           = db_manager
+    _notification_service = notification_service
     logger.info("PaymentWebhook initialised.")
 
 
-# ── Webhook route (Paystack calls this automatically after payment) ────────────
+# ── Webhook route ─────────────────────────────────────────────────────────────
 
 @payment_webhook_bp.route("/paystack/webhook", methods=["POST"])
 def paystack_webhook():
     raw_body = request.data
 
-    # Verify Paystack signature using PAYSTACK_SECRET_KEY
     paystack_secret = getattr(_config, 'PAYSTACK_SECRET_KEY', '') or ''
-    signature = request.headers.get("x-paystack-signature", "")
+    signature       = request.headers.get("x-paystack-signature", "")
 
     if paystack_secret:
-        # FIX: hmac.new() does not exist — correct call is hmac.new from stdlib
-        # which is exposed as hmac.new(key_bytes, msg_bytes, digestmod)
         expected = hmac.new(
             paystack_secret.encode("utf-8"),
             raw_body,
@@ -56,10 +58,10 @@ def paystack_webhook():
         payload = request.get_json(force=True, silent=True) or {}
     except Exception as e:
         logger.error(f"Paystack webhook: bad JSON: {e}")
-        return jsonify({"status": "ok"}), 200  # always 200 so Paystack does not retry
+        return jsonify({"status": "ok"}), 200
 
     event = payload.get("event")
-    data = payload.get("data", {})
+    data  = payload.get("data", {})
     logger.info(f"Paystack webhook: event={event}, ref={data.get('reference')}")
 
     if event == "charge.success":
@@ -67,12 +69,11 @@ def paystack_webhook():
             _handle_charge_success(data)
         except Exception as e:
             logger.error(f"Error handling charge.success: {e}", exc_info=True)
-            # still return 200 — Paystack must not retry
 
     return jsonify({"status": "ok"}), 200
 
 
-# ── Core payment confirmation logic ───────────────────────────────────────────
+# ── Core payment confirmation ─────────────────────────────────────────────────
 
 def _handle_charge_success(data: dict):
     reference    = data.get("reference", "")
@@ -80,7 +81,9 @@ def _handle_charge_success(data: dict):
     amount_naira = amount_kobo // 100
     metadata     = data.get("metadata", {})
 
-    customer_phone = metadata.get("customer_phone", "")
+    customer_phone    = metadata.get("customer_phone", "")
+    vendor_id         = metadata.get("vendor_id")
+    customer_platform = metadata.get("channel", "whatsapp")
 
     logger.info(f"Confirmed payment: ref={reference}, NGN{amount_naira}, phone={customer_phone}")
 
@@ -88,7 +91,7 @@ def _handle_charge_success(data: dict):
         logger.warning("charge.success: no reference — skipping.")
         return
 
-    # 1. Update database
+    # 1. Update DB
     if _db_manager:
         _db_manager.update_order_payment(
             order_ref=reference,
@@ -96,21 +99,70 @@ def _handle_charge_success(data: dict):
             payment_ref=reference,
             status="preparing",
         )
+        # Log payment record
+        order = _db_manager.get_order_by_ref(reference)
+        if order:
+            _db_manager.log_payment(
+                order_id=order['id'],
+                order_ref=reference,
+                amount=amount_kobo,
+                payment_ref=reference,
+                gateway='paystack',
+                status='success',
+                webhook_payload=data,
+            )
+
         logger.info(f"DB updated: {reference} -> paid / preparing")
 
-    # 2. Resolve phone from DB if not in metadata (safety net)
+    # 2. Resolve phone from DB if not in metadata
     if not customer_phone and _db_manager:
         customer_phone = _get_phone_from_order(reference)
 
     if not customer_phone:
-        logger.warning(f"No phone found for ref {reference} — cannot send WhatsApp.")
+        logger.warning(f"No phone found for ref {reference} — cannot notify customer.")
         return
 
     # 3. Update in-memory session
     _mark_session_paid(customer_phone, reference)
 
-    # 4. Send WhatsApp confirmation
-    _send_confirmation(customer_phone, reference, amount_naira)
+    # 4. Fire all delivery notifications via NotificationService
+    if _notification_service:
+        try:
+            _notification_service.handle_order_confirmed(
+                order_ref=reference,
+                amount_naira=amount_naira,
+                customer_phone=customer_phone,
+                customer_platform=customer_platform,
+                vendor_id=int(vendor_id) if vendor_id else None,
+            )
+        except Exception as e:
+            logger.error(f"NotificationService.handle_order_confirmed failed: {e}", exc_info=True)
+            # Fall back to basic confirmation so customer is not left in the dark
+            # Get vendor name for fallback message
+        _vendor_name = "our kitchen"
+        if _db_manager:
+            try:
+                _order = _db_manager.get_order_by_ref(reference)
+                if _order and _order.get("vendor_id"):
+                    _vendor = _db_manager.get_vendor_by_id(_order["vendor_id"])
+                    if _vendor:
+                        _vendor_name = _vendor["name"]
+            except Exception:
+                pass
+        _send_basic_confirmation(customer_phone, customer_platform, reference, amount_naira, _vendor_name)
+    else:
+        # NotificationService not injected — send basic confirmation only
+        _vendor_name = "our kitchen"
+        if _db_manager:
+            try:
+                _order = _db_manager.get_order_by_ref(reference)
+                if _order and _order.get("vendor_id"):
+                    _vendor = _db_manager.get_vendor_by_id(_order["vendor_id"])
+                    if _vendor:
+                        _vendor_name = _vendor["name"]
+            except Exception:
+                pass
+        _send_basic_confirmation(customer_phone, customer_platform, reference, amount_naira, _vendor_name)
 
 
 def _get_phone_from_order(order_ref: str) -> str:
@@ -143,42 +195,42 @@ def _mark_session_paid(phone: str, reference: str):
         logger.warning(f"Could not update session for {phone}: {e}")
 
 
-def _send_confirmation(phone: str, reference: str, amount_naira: int):
-    """
-    Send a WhatsApp payment confirmation.
-
-    Builds the payload dict manually and passes it to send_message() once.
-    Does NOT call create_text_message() — that method sends internally AND
-    returns the API response dict. Passing that response dict to send_message()
-    would fail with "Missing required fields: ['to', 'type']".
-    """
-    if not _whatsapp_service:
-        logger.error("_whatsapp_service not initialised.")
-        return
-
+def _send_basic_confirmation(
+    phone: str,
+    platform: str,
+    reference: str,
+    amount_naira: int,
+    vendor_name: str = "our kitchen",
+):
+    """Fallback confirmation when NotificationService is unavailable."""
     message = (
         f"Payment confirmed! Thank you 🎉\n\n"
         f"Order Ref: {reference}\n"
-        f"Amount Paid: NGN{amount_naira:,}\n\n"
-        f"Your order is now being prepared in our kitchen 🍛\n"
-        f"We will notify you once it is on its way.\n\n"
-        f"Thank you for choosing Makinde Kitchen!"
+        f"Amount Paid: ₦{amount_naira:,}\n\n"
+        f"Your order is now being prepared by {vendor_name}.\n"
+        f"We will notify you once a rider is on the way."
     )
     try:
-        payload = {
-            "messaging_product": "whatsapp",
-            "recipient_type": "individual",
-            "to": str(phone),
-            "type": "text",
-            "text": {"body": message},
-        }
-        _whatsapp_service.send_message(payload)
-        logger.info(f"Confirmation sent to {phone} for ref {reference}.")
+        if platform == 'telegram':
+            from services.telegram_service import TelegramService
+            # telegram_service is not directly injected here — log and skip
+            logger.warning("Basic confirmation: Telegram service not available in fallback.")
+            return
+        if _whatsapp_service:
+            payload = {
+                "messaging_product": "whatsapp",
+                "recipient_type":    "individual",
+                "to":                str(phone),
+                "type":              "text",
+                "text":              {"body": message},
+            }
+            _whatsapp_service.send_message(payload)
+            logger.info(f"Basic confirmation sent to {phone}")
     except Exception as e:
-        logger.error(f"Failed to send confirmation to {phone}: {e}", exc_info=True)
+        logger.error(f"_send_basic_confirmation failed for {phone}: {e}")
 
 
-# ── Manual fallback: call from ai_handler when user says "I've paid" ──────────
+# ── Manual payment check ──────────────────────────────────────────────────────
 
 PAYMENT_KEYWORDS = {
     "i paid", "i have paid", "i've paid", "payment done", "payment made",
@@ -194,10 +246,6 @@ def is_payment_claim(message: str) -> bool:
 
 
 def handle_manual_payment_check(phone: str, order_ref: str) -> str:
-    """
-    Verify payment with Paystack manually.
-    Returns a reply string — caller is responsible for sending it.
-    """
     if not _config or not order_ref:
         return "I could not find your order. Please contact support if you have already paid."
 
@@ -220,14 +268,35 @@ def handle_manual_payment_check(phone: str, order_ref: str) -> str:
             )
 
         _mark_session_paid(phone, order_ref)
-        logger.info(f"Manual check: verified ref={order_ref}")
 
+        # Trigger full notification flow if available
+        if _notification_service:
+            try:
+                order = _db_manager.get_order_by_ref(order_ref) if _db_manager else None
+                customer_platform = 'whatsapp'
+                vendor_id = None
+                if order:
+                    vendor_id = order.get('vendor_id')
+                    # Detect platform from phone format
+                    customer_platform = 'telegram' if str(phone).isdigit() and len(str(phone)) < 15 else 'whatsapp'
+
+                _notification_service.handle_order_confirmed(
+                    order_ref=order_ref,
+                    amount_naira=amount_naira,
+                    customer_phone=phone,
+                    customer_platform=customer_platform,
+                    vendor_id=vendor_id,
+                )
+            except Exception as e:
+                logger.error(f"Manual check: NotificationService failed: {e}")
+
+        logger.info(f"Manual check: verified ref={order_ref}")
         return (
             f"Payment confirmed! Thank you 🎉\n\n"
             f"Order Ref: {order_ref}\n"
-            f"Amount Paid: NGN{amount_naira:,}\n\n"
-            f"Your order is now being prepared in our kitchen 🍛\n"
-            f"We will update you when it is on its way!"
+            f"Amount Paid: ₦{amount_naira:,}\n\n"
+            f"Your order is now being prepared.\n"
+            f"We will update you when a rider is on the way!"
         )
     else:
         paystack_status = (payment_data or {}).get("status", "unknown")
