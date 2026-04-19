@@ -355,6 +355,17 @@ They will resolve this for you as quickly as possible."
 
 ---
 
+CHANGING VENDOR:
+If the customer says anything like "I want to order from someone else", "change vendor",
+"go back to vendor list", "pick a different restaurant", or similar — respond warmly,
+tell them you will take them back to the vendor list, and append [CHANGE_VENDOR] on the
+very last line of your response (never show this tag to the customer).
+Example response:
+"No problem! Let me take you back so you can choose another vendor."
+[CHANGE_VENDOR]
+
+---
+
 TONE:
 - Warm, clear, professional
 - Light Nigerian expressions are fine (e.g. "No wahala") but keep it measured
@@ -384,10 +395,23 @@ TONE:
             if not executor:
                 continue
             try:
-                result     = executor.invoke(input_data)
+                result      = executor.invoke(input_data)
                 ai_response = result.get("output", "").strip()
+
+                # Agent went silent after a tool call — nudge it for a text reply
                 if not ai_response:
-                    raise ValueError("Empty response")
+                    logger.warning(f"'{model_name}' returned empty output — nudging for text reply.")
+                    nudge_data = dict(input_data)
+                    nudge_data["input"] = (
+                        "[SYSTEM: Your last turn produced no text. "
+                        "Please reply to the customer now in plain text.]"
+                    )
+                    result      = executor.invoke(nudge_data)
+                    ai_response = result.get("output", "").strip()
+
+                if not ai_response:
+                    raise ValueError("Empty response after nudge")
+
                 if self.active_model != model_name:
                     logger.info(f"Active model switched to: {model_name}")
                     self.active_model = model_name
@@ -423,12 +447,12 @@ TONE:
             (clean_response, payment_triggered, order_ref, raw_response)
         """
         if not user_message or not isinstance(user_message, str):
-            return "Hey! What would you like to order today?", False, None, None
+            return "Hey! What would you like to order today?", False, None, None, False
 
         if not self.ai_enabled or not self._llms:
             return (
                 "Sorry, our ordering system is having a moment. Please try again shortly!",
-                False, None, None
+                False, None, None, False
             )
 
         if not order_ref:
@@ -494,6 +518,7 @@ TONE:
 
             # Strip both tags from customer-facing response
             payment_triggered = False
+            vendor_change     = False
             clean_response    = raw_response
 
             payment_match = re.search(r'\[PAYMENT_READY:amount=(\d+)\]', raw_response)
@@ -502,15 +527,20 @@ TONE:
                 clean_response = re.sub(r'\[ORDER_ITEMS:[^\]]+\]', '', clean_response).strip()
                 clean_response = re.sub(r'\[PAYMENT_READY:amount=\d+\]', '', clean_response).strip()
 
+            if '[CHANGE_VENDOR]' in raw_response:
+                vendor_change  = True
+                clean_response = clean_response.replace('[CHANGE_VENDOR]', '').strip()
+
             logger.info(
                 f"[{self.active_model}] [{session_id}] vendor={vendor_name} "
-                f"returning={is_returning} payment={payment_triggered}: {clean_response[:100]}"
+                f"returning={is_returning} payment={payment_triggered} "
+                f"vendor_change={vendor_change}: {clean_response[:100]}"
             )
-            return clean_response, payment_triggered, order_ref, raw_response
+            return clean_response, payment_triggered, order_ref, raw_response, vendor_change
 
         except Exception as e:
             logger.error(f"All models failed [{session_id}]: {e}", exc_info=True)
             return (
                 "Something went wrong on our end. Try again or send 'menu' to browse!",
-                False, None, None
+                False, None, None, False
             )

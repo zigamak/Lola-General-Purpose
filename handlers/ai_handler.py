@@ -154,7 +154,7 @@ class AIHandler(BaseHandler):
                 platform=platform,
             )
 
-            clean_response, payment_triggered, order_ref, raw_response = \
+            clean_response, payment_triggered, order_ref, raw_response, vendor_change = \
                 self.ai_service.generate_order_response(
                     user_message=user_message,
                     conversation_history=conversation_history,
@@ -184,6 +184,18 @@ class AIHandler(BaseHandler):
                 conversation_history = conversation_history[-10:]
             state["conversation_history"] = conversation_history
             self.session_manager.update_session_state(session_id, state)
+
+            # ── Vendor change requested ───────────────────────────────────────
+            if vendor_change:
+                self.messaging_service.send_text(session_id, clean_response)
+                self.db.save_message(
+                    phone_number=phone_number,
+                    role='assistant',
+                    message=clean_response,
+                    order_id=state.get('db_order_id'),
+                    platform=platform,
+                )
+                return self.handle_back_to_main(state, session_id)
 
             # ── Payment flow ──────────────────────────────────────────────────
             if payment_triggered and raw_response:
