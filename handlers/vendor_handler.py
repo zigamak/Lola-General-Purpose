@@ -100,15 +100,7 @@ class VendorHandler(BaseHandler):
             f"VendorHandler: {session_id} selected vendor '{vendor['name']}' (id={vendor_id})."
         )
 
-        # Send menu image if available
-        menu_image_url = vendor.get('menu_image_url', '')
-        if menu_image_url:
-            try:
-                self.messaging_service.send_image_message(session_id, menu_image_url, caption="")
-            except Exception as e:
-                self.logger.warning(f"Could not send menu image for {session_id}: {e}")
-
-        # Send welcome prompt -- one place only, never via _handle_start
+        # Send welcome prompt first -- one place only, never via _handle_start
         user_name     = state.get("user_name", "")
         greeting_name = f", {user_name}" if user_name and user_name not in ("Guest", "") else ""
         welcome_text  = (
@@ -116,6 +108,29 @@ class VendorHandler(BaseHandler):
             "Here's our menu - what would you like to order today?"
         )
         self.messaging_service.send_text(session_id, welcome_text)
+
+        # Send menu image if available, otherwise fall back to formatted text menu
+        menu_image_url = vendor.get('menu_image_url', '')
+        if menu_image_url:
+            try:
+                self.messaging_service.send_image_message(session_id, menu_image_url, caption="")
+            except Exception as e:
+                self.logger.warning(
+                    f"Could not send menu image for {session_id}: {e} — sending text menu instead."
+                )
+                if menu_text and menu_text != "Menu currently unavailable.":
+                    self.messaging_service.send_text(session_id, menu_text)
+        else:
+            # No image URL — send the DB product list as plain text
+            self.logger.info(
+                f"VendorHandler: no menu image for vendor {vendor_id} — sending text menu."
+            )
+            if menu_text and menu_text != "Menu currently unavailable.":
+                self.messaging_service.send_text(session_id, menu_text)
+            else:
+                self.logger.warning(
+                    f"VendorHandler: no menu image and no menu text for vendor {vendor_id}."
+                )
 
         return {"status": "vendor_selected", "vendor": vendor['name']}
 
