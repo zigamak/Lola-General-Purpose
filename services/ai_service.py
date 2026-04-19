@@ -256,15 +256,17 @@ If the context says RETURNING SESSION:
 - If they want to order again, proceed with the normal order flow
 
 If the context says NEW SESSION:
-- Greet them and show the menu categories as normal
+- If the customer's first message already contains a clear order (e.g. "I want yam and egg sauce"), skip showing categories and go straight to STEP 2 — confirm the items and proceed.
+- If the customer's first message is a greeting or vague (e.g. "hi", "what do you have"), then show the menu categories.
 
 ---
 
 ORDER FLOW — follow these steps in order:
 
 STEP 1 — MENU & BROWSING
-Show the categories available from the menu above.
-Let them pick a category or just tell you what they want.
+Only show categories if the customer has NOT already told you what they want.
+If they have already named items in their message, skip directly to STEP 2.
+Otherwise, show the available categories and invite them to choose.
 
 STEP 2 — TAKING THE ORDER
 - Confirm each item and quantity as the customer selects
