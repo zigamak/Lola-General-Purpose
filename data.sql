@@ -49,12 +49,18 @@ CREATE TABLE vendors (
 -- tap Accept in the rider group. No manual setup needed.
 -- ============================================================
 CREATE TABLE riders (
-    id               SERIAL PRIMARY KEY,
-    name             VARCHAR(100),
-    phone_number     VARCHAR(20),
-    telegram_id      VARCHAR(50) UNIQUE,               -- personal Telegram chat_id
-    is_active        BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at       TIMESTAMP NOT NULL DEFAULT NOW()
+    id                  SERIAL PRIMARY KEY,
+    name                VARCHAR(100),
+    phone_number        VARCHAR(20),
+    email               VARCHAR(150),
+    telegram_id         VARCHAR(50) UNIQUE,               -- personal Telegram chat_id
+    hall                VARCHAR(100),                     -- campus hall of residence
+    room_number         VARCHAR(20),
+    course              VARCHAR(150),
+    onboarding_complete BOOLEAN NOT NULL DEFAULT FALSE,   -- TRUE after /register KYC flow
+    is_active           BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at          TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at          TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 -- ============================================================
@@ -354,3 +360,14 @@ INSERT INTO products (vendor_id, name, description, category, price, is_availabl
 (3, 'Kunu (500ml)',         'Chilled millet drink',                                        'Drinks',         500, TRUE),
 (3, 'Palm Wine (500ml)',    'Fresh palm wine',                                             'Drinks',         800, TRUE),
 (3, 'Bottled Water (75cl)', NULL,                                                          'Drinks',         200, TRUE);
+
+-- ============================================================
+-- MIGRATION: Rider KYC columns (run on existing databases)
+-- Safe to re-run — uses IF NOT EXISTS
+-- ============================================================
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS email               VARCHAR(150);
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS hall                VARCHAR(100);
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS room_number         VARCHAR(20);
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS course              VARCHAR(150);
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS onboarding_complete BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS updated_at          TIMESTAMP NOT NULL DEFAULT NOW();

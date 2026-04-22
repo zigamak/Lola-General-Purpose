@@ -542,6 +542,47 @@ class DBManager:
         )
         return [dict(r) for r in rows] if rows else []
 
+    def save_rider_onboarding(
+        self,
+        telegram_id: str,
+        name: str,
+        email: str,
+        phone: str,
+        hall: str,
+        room_number: str,
+        course: str,
+    ) -> bool:
+        """
+        Upsert a rider's KYC details.
+        Creates the row if it doesn't exist; updates it if the rider was
+        auto-created when they first tapped Accept.
+        """
+        try:
+            self._execute(
+                """
+                INSERT INTO riders
+                    (telegram_id, name, phone_number, email, hall,
+                     room_number, course, onboarding_complete, is_active)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, TRUE, TRUE)
+                ON CONFLICT (telegram_id)
+                DO UPDATE SET
+                    name                = EXCLUDED.name,
+                    phone_number        = EXCLUDED.phone_number,
+                    email               = EXCLUDED.email,
+                    hall                = EXCLUDED.hall,
+                    room_number         = EXCLUDED.room_number,
+                    course              = EXCLUDED.course,
+                    onboarding_complete = TRUE,
+                    updated_at          = NOW()
+                """,
+                (telegram_id, name, phone, email, hall, room_number, course),
+            )
+            logger.info(f"Rider onboarding saved for telegram_id={telegram_id}")
+            return True
+        except Exception as e:
+            logger.error(f"save_rider_onboarding error: {e}")
+            return False
+
     def get_delivery_by_order_ref(self, order_ref: str) -> Optional[Dict]:
         """Get the most recent delivery record for an order reference."""
         row = self._execute(

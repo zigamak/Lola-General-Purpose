@@ -11,6 +11,7 @@ from services.telegram_service import TelegramService
 from services.notification_service import NotificationService
 from message_processor import MessageProcessor
 from handlers.delivery_handler import DeliveryHandler
+from handlers.rider_onboarding_handler import RiderOnboardingHandler
 from payment_webhook import payment_webhook_bp, init_payment_webhook
 from db_manager import DBManager
 from portal.routes import portal_bp, init_portal
@@ -51,11 +52,15 @@ try:
     delivery_handler = DeliveryHandler(
         config, db_manager, notification_service, session_manager
     )
-    logger.info("NotificationService and DeliveryHandler initialised.")
+    rider_onboarding_handler = RiderOnboardingHandler(
+        config, db_manager, telegram_service
+    )
+    logger.info("NotificationService, DeliveryHandler and RiderOnboardingHandler initialised.")
 except Exception as e:
     logger.error(f"Failed to initialise notification/delivery services: {e}", exc_info=True)
-    notification_service = None
-    delivery_handler     = None
+    notification_service     = None
+    delivery_handler         = None
+    rider_onboarding_handler = None
 
 # ── Message processors (one per platform) ────────────────────────────────────
 try:
@@ -102,6 +107,7 @@ if telegram_service and telegram_processor:
         telegram_service,
         telegram_processor,
         delivery_handler,
+        rider_onboarding_handler,
     )
     app.register_blueprint(telegram_bp)
     telegram_service.register_webhook(f"{config.CALLBACK_BASE_URL}/telegram/webhook")

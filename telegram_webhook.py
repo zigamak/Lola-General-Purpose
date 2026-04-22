@@ -19,12 +19,13 @@ logger = logging.getLogger(__name__)
 
 telegram_bp = Blueprint("telegram", __name__)
 
-_config            = None
-_session_manager   = None
-_telegram_service  = None
-_message_processor = None
-_delivery_handler  = None
-_rider_group_chat_id = None
+_config                   = None
+_session_manager          = None
+_telegram_service         = None
+_message_processor        = None
+_delivery_handler         = None
+_rider_onboarding_handler = None
+_rider_group_chat_id      = None
 
 
 def init_telegram_webhook(
@@ -33,15 +34,19 @@ def init_telegram_webhook(
     telegram_service,
     message_processor,
     delivery_handler=None,
+    rider_onboarding_handler=None,
 ):
     global _config, _session_manager, _telegram_service
-    global _message_processor, _delivery_handler, _rider_group_chat_id
+    global _message_processor, _delivery_handler
+    global _rider_onboarding_handler, _rider_group_chat_id
 
-    _config              = config
-    _session_manager     = session_manager
-    _telegram_service    = telegram_service
-    _message_processor   = message_processor
-    _delivery_handler    = delivery_handler
+    _config                   = config
+    _session_manager          = session_manager
+    _telegram_service         = telegram_service
+    _message_processor        = message_processor
+    _delivery_handler         = delivery_handler
+    _rider_onboarding_handler = rider_onboarding_handler
+
     # Try config first, fall back to DB (vendors.rider_group_chat_id)
     _rider_group_chat_id = str(getattr(config, 'RIDER_GROUP_CHAT_ID', '') or '')
     if not _rider_group_chat_id:
@@ -101,6 +106,18 @@ def telegram_webhook():
             else:
                 logger.debug("Ignored non-delivery message from rider group: '%s'", text)
             return jsonify({"status": "ok"}), 200
+
+        # ── Rider onboarding — /register command starts KYC flow ──────────
+        if _rider_onboarding_handler:
+            if text and text.strip().lower() in ("/register", "/join"):
+                logger.info("Rider onboarding started for %s (%s)", sender_id, user_name)
+                _rider_onboarding_handler.start(sender_id, user_name)
+                return jsonify({"status": "ok"}), 200
+
+            if _rider_onboarding_handler.is_onboarding(sender_id):
+                logger.info("Rider onboarding step for %s: '%s'", sender_id, text)
+                _rider_onboarding_handler.handle(sender_id, text or "")
+                return jsonify({"status": "ok"}), 200
 
         # ── Private message from a known rider — route to DeliveryHandler ─
         # Rider tapped Picked Up / Delivered from their private chat
